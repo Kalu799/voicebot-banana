@@ -167,3 +167,27 @@
   mis à jour. Étape du store terminée ; interface encore statique.
 - Prochaine action : présenter l'interface minimale de gestion des notes et
   attendre le go avant les modifications.
+
+## 8 novembre 2026 — Interface de création et de lecture
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre ; code présenté avant modification.
+- Réalisation : composants `NoteForm`, `NotesList`, `NoteCard`, assemblage dans
+  `App`, styles adaptatifs et messages de chargement, confirmation et erreur.
+- Décisions : brouillon local au formulaire, store pour les notes enregistrées,
+  formulaire vidé après succès uniquement, verrou de double soumission, corbeille
+  masquée et tri décroissant sans mutation du store. Reprise par bouton de
+  rechargement si les notes sont indisponibles. Aucun service distant ajouté.
+- Vérifications réussies : compilation et essais Chrome sur la compilation réelle,
+  avec profil isolé. Création, validation, contenu exact, persistance, corbeille
+  masquée, erreurs de stockage sans perte de saisie, reprise, attente de transaction,
+  double soumission, texte échappé, tri et récupération après échec de lecture.
+- Présentation : rendu contrôlé à 1280, 390 et 320 px, captures ordinateur/mobile
+  inspectées et conservées dans `docs/images`. Aperçu Vite vérifié dans le
+  navigateur intégré. Aucun test n'utilise les données du navigateur habituel.
+- Documentation : README, guide `INTERFACE.md`, démarche, store et suivi actualisés.
+- Limites : modification, corbeille et export/import pas encore disponibles dans
+  l'interface ; simulation et voix à venir. Autres navigateurs, lecteur d'écran et
+  quota réel non vérifiés.
+- Prochaine action : présenter les commandes de modification et de corbeille dans
+  l'interface, puis attendre le go.

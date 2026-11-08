@@ -105,6 +105,18 @@ actualiser la liste. Distinguer un import refusé d'un import enregistré dont l
 relecture échoue : exposer les compteurs dans l'erreur et bloquer les actions sur
 l'état périmé via `rechargementRequis` jusqu'au rechargement.
 
+## Interface — 8 novembre 2026
+
+Commencer par la création et la lecture des notes actives. Séparer le formulaire,
+la liste et la carte dans `components`, avec assemblage et messages d'état dans
+`App`. Conserver les brouillons dans l'état local du formulaire et les notes
+sauvegardées dans le store. Ne vider les champs qu'après réussite de la sauvegarde.
+
+Conserver la palette initiale et adapter les deux colonnes à une seule sur mobile.
+Prévoir les étiquettes, le focus clavier, les annonces d'erreur et de confirmation,
+ainsi qu'un bouton de récupération après erreur de lecture. Documenter les
+vérifications avec des captures sans données personnelles.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :
@@ -134,3 +146,5 @@ personnelles pour la démonstration.
 - [Reducer et contexte](https://react.dev/learn/scaling-up-with-reducer-and-context)
   et [useEffect](https://react.dev/reference/react/useEffect), documentation React
   consultée le 8 novembre 2026 : état partagé et nettoyage des lectures asynchrones.
+- [Champs contrôlés React](https://react.dev/reference/react-dom/components/input),
+  consulté le 8 novembre 2026 : synchronisation de la saisie via `value` et `onChange`.

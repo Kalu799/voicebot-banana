@@ -7,8 +7,14 @@ lecture, modification, classement, corbeille et restauration.
 IndexedDB pour enregistrer et récupérer les notes, export/import JSON validé.
 Le store Context + useReducer charge les notes au démarrage et permet de les créer,
 modifier, mettre en corbeille et restaurer après sauvegarde réussie. L'import via
-le store actualise aussi la liste sans rechargement. La gestion des notes dans l'interface, les boutons de
-sauvegarde, la simulation et la conversation vocale restent à développer.
+le store actualise aussi la liste sans rechargement. L'interface permet de créer
+des notes et de consulter les notes actives. Les commandes de modification,
+corbeille et sauvegarde dans l'interface, la simulation et la conversation vocale
+restent à développer.
+
+![Interface avec une note de démonstration](docs/images/interface-notes-ordinateur.png)
+
+Voir aussi [la capture mobile](docs/images/interface-notes-mobile.png).
 
 ## Démarrer
 
@@ -34,8 +40,9 @@ npm run preview
 ```
 
 `build` compile le projet dans `dist/`. `preview` sert cette compilation localement ;
-ce n'est pas un serveur de production. Dans le navigateur, vérifier que le titre et
-l'encadré de progression apparaissent, puis recharger la page.
+ce n'est pas un serveur de production. Dans le navigateur, créer une note avec
+le formulaire, vérifier qu'elle apparaît dans la liste puis recharger la page :
+la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFACE.md).
 
 ## Comprendre les fichiers
 
@@ -43,7 +50,10 @@ l'encadré de progression apparaissent, puis recharger la page.
 | --- | --- |
 | `index.html` | Document HTML français, point d'entrée et élément `root` |
 | `src/main.jsx` | Monte l'application React dans `root` |
-| `src/App.jsx` | Premier composant de l'interface |
+| `src/App.jsx` | Assemble formulaire, liste et messages d'état |
+| `src/components/NoteForm.jsx` | Saisie et création de notes via le store |
+| `src/components/NotesList.jsx` | Liste des notes actives ou message de liste vide |
+| `src/components/NoteCard.jsx` | Affichage d'une note, de ses informations et de sa date |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
 | `src/utils/note.js` | Création, règles de modification et de corbeille |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
@@ -56,7 +66,8 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `docs/` | Démarche, journal et suivi des tâches |
 
 Pour le moment : `index.html` → `main.jsx` → `NotesProvider` → `App` → affichage.
-Le provider charge les notes depuis IndexedDB ; `App` ne les affiche pas encore.
+Le provider charge les notes depuis IndexedDB ; `App` sélectionne les notes
+actives et les affiche des plus récentes aux plus anciennes.
 
 L'organisation reprend les habitudes des projets Vue de l'utilisateur :
 `components`, `data`, `services`, `stores`, `utils`, et selon les besoins de
@@ -160,7 +171,8 @@ le panneau de stockage IndexedDB des outils de développement.
 
 Garder exactement la même origine (protocole, hôte et port) pour les deux essais :
 `localhost` et `127.0.0.1`, ou deux ports différents, ont des stockages distincts.
-Ces essais créent de vraies notes locales. L'interface actuelle ne les affiche pas.
+Ces essais créent de vraies notes locales. Recharger la page après une écriture
+directe par le service pour les relire et les afficher dans l'interface.
 
 Vérifications effectuées le 8 novembre 2026 dans un profil Chrome temporaire :
 création, remplacement sans doublon, conservation des notes de la corbeille,
@@ -267,15 +279,31 @@ les pull requests et les merges. Les fonctionnalités terminées et testées son
 intégrées dans `dev`, puis une V1 acceptable dans `main` pour la présentation.
 La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
 
+## Interface de création et de lecture
+
+Le formulaire propose titre, contenu, catégorie et projet. Seul le titre est
+obligatoire. Les champs sont conservés localement dans `NoteForm` pendant la
+saisie ; une soumission appelle `ajouterNote` du store. Après sauvegarde réussie,
+la nouvelle note apparaît, les champs sont vidés et une confirmation est affichée.
+En cas d'erreur, la saisie reste disponible et le message du store est affiché.
+
+Le formulaire est désactivé pendant le chargement, la sauvegarde ou lorsqu'un
+rechargement est requis. Un verrou empêche les soumissions simultanées. Une erreur
+de lecture affiche un bouton de rechargement. La liste masque la corbeille et
+préserve les retours à la ligne des notes.
+
+La disposition utilise deux colonnes sur ordinateur et une seule jusqu'à 760 px.
+Les champs sont étiquetés, le focus clavier est visible et les confirmations et
+erreurs utilisent des régions accessibles. Voir [le guide de l'interface](docs/INTERFACE.md)
+pour le scénario de vérification et les limites.
+
 ## Limites et suite
 
-La page actuelle est statique. Aucun microphone n'est sollicité. Le provider
-charge les notes, mais aucun composant ne les affiche ou ne déclenche encore
-d'action utilisateur. L'export produit un
-fichier en mémoire ; son téléchargement et la sélection d'un fichier d'import
-restent à relier à l'interface. Le store prend maintenant en charge l'import ;
-la prochaine étape concerne l'interface de gestion des notes.
-La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
+La création et la lecture sont disponibles depuis la page. Aucun microphone n'est
+sollicité. Les boutons de modification, corbeille et export/import restent à
+ajouter. Le mode de simulation vocale, le scénario final complet et le lien public
+seront ajoutés plus tard. Les captures actuelles utilisent une note de démonstration
+sans données personnelles.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans
 synchronisation. L'export/import permet une sauvegarde manuelle. Les informations
