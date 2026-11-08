@@ -1,0 +1,45 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #172638;
+  background: #f6f5ef;
+  line-height: 1.6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.application {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(24px, 6vw, 72px) 24px;
+}
+
+.marque {
+  font-weight: 700;
+  color: #465b33;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+section {
+  margin-top: 40px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #d9dfd3;
+  border-radius: 16px;
+}
