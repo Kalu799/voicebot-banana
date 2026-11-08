@@ -515,3 +515,30 @@
   vocal ni activation payante effectué.
 - Suite : expliquer l’exécution locale de la route et la vérification de la
   limitation sur Vercel avec un fournisseur simulé, avant tout accès ElevenLabs réel.
+
+## 8 novembre 2026 — Exécution de la route avec Vercel local
+
+- Préparation : commit `8d67d3b` confirmé, branche propre. Installation de la CLI,
+  commande locale avec verrou fermé et contrôles HTTP expliqués puis autorisés.
+- Réalisation : CLI Vercel 65.12.1 en dépendance de développement exacte,
+  `dev:api` lançant `vercel dev --local --listen 127.0.0.1:3000` avec
+  `VOICEBOT_VOIX_ACTIVE=false`. Écoute limitée à la boucle locale, sans liaison
+  de projet ni connexion au compte Vercel et sans déploiement.
+- Environnement : téléchargement npm et première création du dossier utilisateur
+  de la CLI autorisés après blocage du bac à sable. Écoute et contrôles HTTP
+  locaux également autorisés après refus de permission du bac à sable.
+- Vérifications HTTP : interface `200`, GET de la route `405` avec `Allow: POST`,
+  POST `503` avec message de verrou fermé. `Cache-Control: no-store` sur les deux
+  réponses de route. Interface React observée dans le navigateur, sans mutation
+  des notes ni appel du simulateur.
+- Non-régression : `npm test`, `npm run build` et `npm ls --depth=0` réussis.
+  Versions directes React et Vite conservées ; aucune clé ni conversation réelle.
+- Audit npm : 38 avis dans l’arbre de développement de la CLI (16 modérés,
+  21 élevés, un critique), zéro dans les dépendances de production selon
+  `npm audit --omit=dev`. Pas de correction automatique ni rétrogradation vers
+  la version 65.2.0 suggérée par npm ; résolution de ces avis encore ouverte.
+- Documentation : README, guide API, suivi et journal actualisés. Le lancement
+  local ne valide ni le pare-feu ni le déploiement distant, ni un plafond de coût.
+- Suite : expliquer la préparation du projet Vercel et le contrôle de la règle
+  de limitation avec fournisseur simulé, puis attendre le go ; traiter également
+  les avis de dépendances de la CLI avant d’élargir son usage.

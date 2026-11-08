@@ -37,6 +37,21 @@ pour la gestion locale et le simulateur. La future connexion vocale utilisera la
 route serveur décrite dans [le guide API](api/README.md), désactivée par défaut.
 Ne jamais enregistrer de secrets dans Git.
 
+Pour démarrer aussi la route serveur dans l’environnement Vercel local :
+
+```bash
+npm run dev:api
+```
+
+Ouvrir `http://127.0.0.1:3000`. Cette commande Linux utilise la CLI Vercel
+65.12.1 installée dans le projet, sans connexion au compte ni liaison distante,
+et force `VOICEBOT_VOIX_ACTIVE=false`. L’interface fonctionne, mais un POST vers
+la route de jetons renvoie volontairement `503` : aucun accès vocal n’est ouvert.
+Voir [le guide API](api/README.md) pour les contrôles et les limites de l’outillage.
+`npm run dev` reste disponible pour Vite seul. Arrêter le serveur précédent avant
+de réutiliser son port. Les notes de `127.0.0.1:3000` sont distinctes de celles
+d’une autre origine, par exemple `localhost:5173`.
+
 ## Vérifier et compiler
 
 ```bash

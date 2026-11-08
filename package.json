@@ -9,6 +9,7 @@
   "scripts": {
     "test": "node --test",
     "dev": "vite",
+    "dev:api": "VOICEBOT_VOIX_ACTIVE=false vercel dev --local --listen 127.0.0.1:3000",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "6.2.1",
+    "vercel": "65.12.1",
     "vite": "8.3.6"
   }
 }

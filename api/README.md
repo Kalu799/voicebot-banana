@@ -114,11 +114,73 @@ expiration simulée. Ils ne mesurent pas une attente réelle de dix secondes et
 ne vérifient pas le pare-feu, la facturation ni un déploiement Vercel.
 
 `npm run dev` démarre Vite uniquement : il ne sert pas cette route et ne charge
-pas son environnement serveur pour les tests Node. Une future étape présentera
-`vercel dev`, son installation et l’exécution locale de l’interface et des fonctions
-ensemble, avec le port réellement utilisé. Aucune CLI Vercel n’a été ajoutée ici.
-La compilation Vite vérifie l’interface ; elle ne valide pas le runtime serveur
-Vercel. Le module d’entrée est importé et exercé directement dans les tests Node.
+pas son environnement serveur pour les tests Node. La compilation Vite vérifie
+l’interface ; le module serveur est exercé directement dans les tests Node.
+
+### Interface et fonction avec Vercel local
+
+La CLI officielle `vercel` **65.12.1** est installée dans les dépendances de
+développement, avec version exacte dans `package.json` et dépendances résolues
+dans le lockfile. Après `npm ci`, lancer depuis la racine de `voicebot` :
+
+```bash
+npm run dev:api
+```
+
+La commande ajoutée est :
+
+```bash
+VOICEBOT_VOIX_ACTIVE=false vercel dev --local --listen 127.0.0.1:3000
+```
+
+La syntaxe de variable en début de commande est destinée à l’environnement Linux
+du projet. La CLI n’est pas installée globalement. À son premier lancement, elle
+crée son dossier de configuration utilisateur. `--local` permet de démarrer sans
+connexion au compte, création ou liaison de projet Vercel ; aucune variable
+distante n’est récupérée. La CLI détecte Vite, lance son serveur et sert aussi
+les fonctions du dossier `api/`. Elle affiche également des ports de ressources
+locales (Queues, Schedules, Runtime Cache) ; ils ne correspondent pas à des
+services distants créés ou utilisés par notre route.
+
+Le serveur principal écoute sur la boucle locale uniquement. Ouvrir
+`http://127.0.0.1:3000` ; conserver cette origine pour retrouver les mêmes notes.
+L’application utilise IndexedDB propre à l’origine : changer d’hôte ou de port
+ne transfère pas les notes. Cette commande maintient volontairement le verrou
+vocal fermé. Aucune clé réelle n’est nécessaire pour les contrôles ci-dessous.
+Le futur lancement de sessions réelles nécessitera une étape distincte, après
+vérification de la protection et des coûts. Le pare-feu Vercel distant n’est pas
+reproduit ou validé par ce lancement local.
+
+Contrôles effectués le 8 novembre 2026 :
+
+| Demande | Résultat constaté |
+| --- | --- |
+| GET `/` | `200`, interface React affichée dans le navigateur, notes et simulateur accessibles |
+| GET `/api/conversation-token` | `405`, JSON « Méthode non autorisée. », `Allow: POST`, `Cache-Control: no-store` |
+| POST `/api/conversation-token` | `503`, JSON « L’accès vocal est désactivé. », `Cache-Control: no-store` |
+
+Le `503` confirme ici que Vercel local reconnaît le module d’entrée et exécute le
+verrou du gestionnaire, sans demander de jeton à ElevenLabs. Le parcours autorisé
+avec un fournisseur simulé reste couvert par les tests Node. Aucun déploiement,
+appel vocal ou clé réelle utilisé. Ces résultats ne valident pas un déploiement
+Vercel en production.
+
+Pour arrêter un serveur lancé dans son terminal : `Ctrl+C`. Arrêter l’instance
+précédente avant de relancer la commande sur le même port.
+
+### Audit de l’outillage ajouté
+
+Le 8 novembre 2026, `npm audit` signale **38 vulnérabilités** dans l’arbre de
+dépendances de développement introduit par la CLI : 16 modérées, 21 élevées et
+une critique. `npm audit --omit=dev` ne signale aucune vulnérabilité dans les
+dépendances de production. Ce résultat ne constitue pas une garantie de sécurité
+générale ; il décrit les avis connus au moment du contrôle.
+
+La suggestion npm pour certains avis rétrograde la CLI vers 65.2.0. Aucun
+`npm audit fix`, rétrogradation ou remplacement forcé de dépendance n’a été
+appliqué automatiquement. La résolution des avis de la CLI reste un point ouvert.
+La commande locale est limitée à `127.0.0.1`. La CLI est un outil de développement,
+distinct du code livré dans le navigateur ; elle n’est pas importée par la route.
 
 ## Sources officielles consultées le 8 novembre 2026
 
