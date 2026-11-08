@@ -170,7 +170,7 @@ précédente avant de relancer la commande sur le même port.
 
 ### Audit de l’outillage ajouté
 
-Le 8 novembre 2026, `npm audit` signale **38 vulnérabilités** dans l’arbre de
+Lors de l’installation le 8 novembre 2026, `npm audit` signalait **38 vulnérabilités** dans l’arbre de
 dépendances de développement introduit par la CLI : 16 modérées, 21 élevées et
 une critique. `npm audit --omit=dev` ne signale aucune vulnérabilité dans les
 dépendances de production. Ce résultat ne constitue pas une garantie de sécurité
@@ -181,6 +181,41 @@ La suggestion npm pour certains avis rétrograde la CLI vers 65.2.0. Aucun
 appliqué automatiquement. La résolution des avis de la CLI reste un point ouvert.
 La commande locale est limitée à `127.0.0.1`. La CLI est un outil de développement,
 distinct du code livré dans le navigateur ; elle n’est pas importée par la route.
+
+### Correction ciblée de tar — 8 novembre 2026
+
+Après explication et accord, `package.json` contient cette substitution limitée
+aux descendants de la CLI Vercel :
+
+```json
+"overrides": {
+  "vercel": {
+    "tar": "7.5.22"
+  }
+}
+```
+
+Le lockfile remplace `tar@7.5.11` par `7.5.22` et retire la copie imbriquée
+désormais redondante sous `@vercel/fun`. `npm ls tar --all` confirme que
+`@vercel/container`, `@mapbox/node-pre-gyp` et `@vercel/fun` utilisent tous cette
+version. La CLI reste en 65.12.1 ; React, Vite et le code applicatif sont inchangés.
+
+Cette règle remplace notamment la version exacte demandée par
+`@vercel/container` : il s’agit d’une substitution du projet, pas d’une mise à
+jour validée par tous les mainteneurs des composants Vercel. Les contrôles locaux
+vérifient notre parcours ; ils ne couvrent pas toutes les fonctions de la CLI.
+Réexaminer l’override lors d’une future mise à jour de Vercel, puis le retirer
+si ses dépendances corrigées le rendent inutile.
+
+Nouvel audit : **37 signalements** (16 modérés, 21 élevés, zéro critique),
+aucun signalement pour `tar`. L’audit des seules dépendances de production
+reste à zéro. Les autres avis ne sont pas corrigés par cette substitution.
+Les tests, la compilation et le redémarrage Vercel local réussissent ; l’interface
+répond `200`, la route refuse GET en `405` et POST en `503` avec le verrou fermé.
+Aucun accès ElevenLabs réel utilisé.
+
+Sources de cette décision : [overrides npm](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#overrides)
+et [avis tar corrigé à partir de 7.5.21](https://github.com/advisories/GHSA-r292-9mhp-454m).
 
 ## Sources officielles consultées le 8 novembre 2026
 

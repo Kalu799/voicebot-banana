@@ -542,3 +542,26 @@
 - Suite : expliquer la préparation du projet Vercel et le contrôle de la règle
   de limitation avec fournisseur simulé, puis attendre le go ; traiter également
   les avis de dépendances de la CLI avant d’élargir son usage.
+
+## 8 novembre 2026 — Correction ciblée de tar dans la CLI Vercel
+
+- Préparation : commit `66f4b2b` confirmé et arbre propre. Audit en lecture seule,
+  chaîne des dépendances et correction ciblée expliqués avant accord.
+- Réalisation : override `vercel` → `tar: 7.5.22` dans `package.json`, puis
+  `npm install` pour actualiser le lockfile. Aucune correction automatique globale
+  ni rétrogradation de Vercel ; code applicatif et versions directes conservés.
+- Résolution : tar 7.5.22 pour `@vercel/container`, `@mapbox/node-pre-gyp` et
+  `@vercel/fun`, sans copie 7.5.11 restante. Copie imbriquée redondante retirée.
+  Cette substitution devra être réexaminée lors des mises à jour de la CLI.
+- Audit : de 38 à 37 signalements, 16 modérés et 21 élevés, zéro critique ;
+  aucune entrée tar dans le rapport. `npm audit --omit=dev` reste à zéro.
+- Vérifications : `npm test`, `npm run build`, `npm ls tar --all` et
+  `npm ls --depth=0` réussis. Ancien serveur local arrêté puis redémarré avec
+  les dépendances corrigées ; interface `200`, route GET `405` et POST `503`,
+  en-têtes de méthode et absence de cache contrôlés. Verrou vocal fermé.
+- Documentation : guide API, suivi et journal actualisés. Aucun déploiement ni
+  appel ElevenLabs réel. Les 37 autres signalements restent ouverts ; les
+  vérifications ne couvrent pas toutes les fonctions de la CLI.
+- Suite : examiner les autres dépendances concernées et distinguer les correctifs
+  compatibles des changements de version majeure, avant de proposer une nouvelle
+  modification après explication et go.

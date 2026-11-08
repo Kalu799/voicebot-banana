@@ -21,7 +21,9 @@ testée avec un fournisseur simulé, désactivée par défaut. La règle de limi
 Vercel n’est pas encore configurée et doit être vérifiée avant activation.
 La commande `npm run dev:api` sert l’interface et la route avec le verrou fermé,
 sans compte lié. Les avis npm des dépendances de développement de la CLI sont
-documentés dans le [guide API](../api/README.md) et restent à traiter.
+documentés dans le [guide API](../api/README.md). Une correction ciblée impose
+`tar@7.5.22` sous Vercel ; il reste 37 signalements de développement, sans critique,
+et zéro pour les dépendances de production selon l’audit du 8 novembre 2026.
 Aucun essai vocal n’a été lancé.
 
 Les essais vocaux dépendront de la route serveur protégée, même si sa finalisation
