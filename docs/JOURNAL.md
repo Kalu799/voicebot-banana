@@ -403,3 +403,20 @@
   applicatif modifié et aucune conversation lancée.
 - Suite : proposer le nettoyage des valeurs de test inutilisées, puis présenter
   la configuration de `creer_note` avant application après go.
+
+## 8 novembre 2026 — Nettoyage des variables de démonstration
+
+- Préparation : commit `619489c` confirmé, branche propre. Nettoyage des huit
+  valeurs de test expliqué et autorisé avant modification.
+- Réalisation : absence de bouton de suppression dans le panneau Variables.
+  Copie JSON via le menu de l’agent, objet `dynamic_variable_placeholders` vidé,
+  comparaison en mémoire limitée au retrait des huit entrées, puis import dans
+  le brouillon et publication sur la branche distante ElevenLabs `Main`.
+- Vérification : aperçu synthétique affichant « Aucun changement », mais diff
+  JSON brut montrant uniquement le retrait du bloc des variables devenu vide.
+  Après rechargement, panneau Variables vide, consignes et véritable message
+  d’accueil français conservés, aucune publication en attente.
+- Documentation : guide de l’agent et journal actualisés. Aucun code applicatif,
+  workflow ou outil modifié ; aucune conversation lancée.
+- Suite : présenter les champs du client tool `creer_note`, puis attendre le go
+  avant sa configuration distante.

@@ -49,7 +49,7 @@ variables résiduelles du modèle sont détaillés dans le contrôle ci-dessous.
 
 ### Contrôle des variables et du workflow — 8 novembre 2026
 
-Examen en lecture seule, sans modification distante ni conversation :
+Constat initial en lecture seule, avant le nettoyage décrit plus bas :
 
 - Le panneau Variables conserve huit valeurs de remplacement pour les tests :
   `book_title`, `book_subtitle`, `book_author`, `book_description`, `ai_summary`,
@@ -63,10 +63,30 @@ Examen en lecture seule, sans modification distante ni conversation :
   pour activer un workflow. Aucun parcours de lecture actif n’a été constaté.
 - Aucune modification n’est en attente de publication.
 
-Il n’y a pas de workflow à corriger dans ce contrôle. Un nettoyage des valeurs de
-test héritées est proposé pour rendre la configuration plus lisible ; il devra
-être expliqué et autorisé avant application. Il ne doit pas être présenté comme
-la correction d’un dysfonctionnement vocal déjà reproduit.
+Il n’y a pas de workflow à corriger dans ce contrôle. Le nettoyage des valeurs
+de test a ensuite été expliqué et autorisé pour rendre la configuration plus
+lisible. Il ne corrige pas un dysfonctionnement vocal déjà reproduit.
+
+### Nettoyage des valeurs de test — 8 novembre 2026
+
+Le panneau Variables ne propose pas de commande de suppression. Le menu
+« Actions de l’agent » permet de copier puis d’importer sa configuration JSON.
+La copie courante a été reprise en vidant uniquement
+`conversation_config.agent.dynamic_variables.dynamic_variable_placeholders`.
+La comparaison en mémoire montrait exactement le retrait des huit entrées
+listées ci-dessus.
+
+Après import dans le brouillon, le diff **JSON brut** d’ElevenLabs montrait
+uniquement la disparition du bloc `dynamic_variables` devenu vide. L’aperçu
+synthétique indiquait « Aucun changement » : il ne suffit donc pas à vérifier
+ce type de nettoyage. Le véritable `first_message`, contenant l’accueil français,
+restait identique ; il est distinct de l’ancienne valeur de test du même nom.
+
+Le nettoyage a été publié sur la branche distante `Main`. Après rechargement,
+le panneau Variables est vide et indique que les variables personnalisées
+apparaîtront ici. L’invite BananaNavy et l’accueil français sont toujours
+présents ; aucune modification n’est en attente de publication. Le workflow
+n’a pas été modifié et aucun appel vocal n’a été lancé.
 
 Confidentialité constatée : enregistrement audio désactivé, conservation des
 conversations réglée sur 30 jours, mode sans rétention désactivé. Ces réglages
