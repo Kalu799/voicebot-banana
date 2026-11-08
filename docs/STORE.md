@@ -226,5 +226,5 @@ Un appel direct au service `importerNotes` depuis la console ne rafraîchit pas
 le provider ; il faut alors recharger la page pour relire ses résultats.
 Aucune synchronisation automatique entre onglets n'est implémentée.
 Les composants de liste et de formulaire sont désormais présents : création et
-lecture des notes actives sont raccordées au store. Les commandes de modification,
-corbeille et sauvegarde restent à relier à l'interface.
+lecture des notes actives sont raccordées au store, ainsi que modification,
+mise en corbeille et restauration. Les boutons d'export/import restent à ajouter.

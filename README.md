@@ -8,13 +8,13 @@ IndexedDB pour enregistrer et récupérer les notes, export/import JSON validé.
 Le store Context + useReducer charge les notes au démarrage et permet de les créer,
 modifier, mettre en corbeille et restaurer après sauvegarde réussie. L'import via
 le store actualise aussi la liste sans rechargement. L'interface permet de créer
-des notes et de consulter les notes actives. Les commandes de modification,
-corbeille et sauvegarde dans l'interface, la simulation et la conversation vocale
-restent à développer.
+des notes, de les consulter et modifier, de les mettre en corbeille et de les
+restaurer. Les commandes de sauvegarde dans l'interface, la simulation et la
+conversation vocale restent à développer.
 
-![Interface avec une note de démonstration](docs/images/interface-notes-ordinateur.png)
+![Modification d'une note de démonstration](docs/images/interface-edition-ordinateur.png)
 
-Voir aussi [la capture mobile](docs/images/interface-notes-mobile.png).
+Voir aussi [la corbeille sur mobile](docs/images/interface-corbeille-mobile.png).
 
 ## Démarrer
 
@@ -51,9 +51,9 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `index.html` | Document HTML français, point d'entrée et élément `root` |
 | `src/main.jsx` | Monte l'application React dans `root` |
 | `src/App.jsx` | Assemble formulaire, liste et messages d'état |
-| `src/components/NoteForm.jsx` | Saisie et création de notes via le store |
-| `src/components/NotesList.jsx` | Liste des notes actives ou message de liste vide |
-| `src/components/NoteCard.jsx` | Affichage d'une note, de ses informations et de sa date |
+| `src/components/NoteForm.jsx` | Champs partagés pour la création et la modification |
+| `src/components/NotesList.jsx` | Liste de notes ou état vide adapté à la vue |
+| `src/components/NoteCard.jsx` | Présentation, édition, mise en corbeille et restauration |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
 | `src/utils/note.js` | Création, règles de modification et de corbeille |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
@@ -279,7 +279,7 @@ les pull requests et les merges. Les fonctionnalités terminées et testées son
 intégrées dans `dev`, puis une V1 acceptable dans `main` pour la présentation.
 La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
 
-## Interface de création et de lecture
+## Interface de gestion des notes
 
 Le formulaire propose titre, contenu, catégorie et projet. Seul le titre est
 obligatoire. Les champs sont conservés localement dans `NoteForm` pendant la
@@ -289,8 +289,20 @@ En cas d'erreur, la saisie reste disponible et le message du store est affiché.
 
 Le formulaire est désactivé pendant le chargement, la sauvegarde ou lorsqu'un
 rechargement est requis. Un verrou empêche les soumissions simultanées. Une erreur
-de lecture affiche un bouton de rechargement. La liste masque la corbeille et
-préserve les retours à la ligne des notes.
+de lecture affiche un bouton de rechargement. Les retours à la ligne des notes
+sont préservés.
+
+Chaque note active propose « Modifier » et « Mettre en corbeille ». L'édition
+ouvre le formulaire prérempli dans la carte ; « Annuler » abandonne la saisie sans
+modifier la note. Un échec garde le formulaire et son brouillon. Les identifiants
+des champs sont propres à chaque formulaire grâce à `useId`.
+
+Les boutons « Mes notes » et « Corbeille » affichent leurs compteurs et changent
+la vue. Les notes en corbeille proposent uniquement « Restaurer » et affichent
+leur date de mise en corbeille. Les actions attendent la sauvegarde avant de
+déplacer les cartes et d'annoncer leur réussite. Aucune suppression définitive
+n'est proposée. Les listes restent montées : un brouillon d'édition est conservé
+lors d'un aller-retour entre les vues, tant que la page n'est pas rechargée.
 
 La disposition utilise deux colonnes sur ordinateur et une seule jusqu'à 760 px.
 Les champs sont étiquetés, le focus clavier est visible et les confirmations et
@@ -299,9 +311,9 @@ pour le scénario de vérification et les limites.
 
 ## Limites et suite
 
-La création et la lecture sont disponibles depuis la page. Aucun microphone n'est
-sollicité. Les boutons de modification, corbeille et export/import restent à
-ajouter. Le mode de simulation vocale, le scénario final complet et le lien public
+Création, lecture, modification et corbeille sont disponibles depuis la page.
+Aucun microphone n'est sollicité. Les boutons d'export/import restent à ajouter.
+Le mode de simulation vocale, le scénario final complet et le lien public
 seront ajoutés plus tard. Les captures actuelles utilisent une note de démonstration
 sans données personnelles.
 

@@ -4,10 +4,15 @@ import { useNotes } from './stores/useNotes.js'
 
 export default function App() {
   const { notes, chargement, erreur, rechargementRequis } = useNotes()
+  const [vue, setVue] = useState('actives')
+  const [confirmation, setConfirmation] = useState('')
   // filter produit une nouvelle liste : le tri ne modifie pas celle du store.
   const notesActives = notes
     .filter(note => note.deletedAt === null)
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+  const notesSupprimees = notes
+    .filter(note => note.deletedAt !== null)
+    .sort((a, b) => Date.parse(b.deletedAt) - Date.parse(a.deletedAt))
 
   return (
     <main className="application">
@@ -35,17 +40,36 @@ export default function App() {
           <NoteForm />
         </section>
 
-        <section className="panneau" aria-labelledby="notes-actives"
+        <section className="panneau" aria-labelledby="notes-enregistrees"
           aria-busy={chargement}>
-          <h2 id="notes-actives">
-            Mes notes{!chargement && ` (${notesActives.length})`}
+          <h2 id="notes-enregistrees">
+            {vue === 'actives' ? 'Mes notes' : 'Corbeille'}
           </h2>
+          <div className="choix-vue" role="group" aria-label="Afficher les notes">
+            <button type="button" aria-pressed={vue === 'actives'}
+              onClick={() => setVue('actives')}>
+              Mes notes{!chargement && ` (${notesActives.length})`}
+            </button>
+            <button type="button" aria-pressed={vue === 'corbeille'}
+              onClick={() => setVue('corbeille')}>
+              Corbeille{!chargement && ` (${notesSupprimees.length})`}
+            </button>
+          </div>
+          <p className="confirmation" role="status">{confirmation}</p>
           {chargement ? (
             <p role="status">Chargement des notes…</p>
-          ) : rechargementRequis && notesActives.length === 0 ? (
+          ) : rechargementRequis && notes.length === 0 ? (
             <p>Rechargez la page pour retrouver vos notes.</p>
           ) : (
-            <NotesList notes={notesActives} />
+            <>
+              {/* Garder les listes montées préserve un brouillon lors du changement de vue. */}
+              <div hidden={vue !== 'actives'}>
+                <NotesList notes={notesActives} onConfirmer={setConfirmation} />
+              </div>
+              <div hidden={vue !== 'corbeille'}>
+                <NotesList notes={notesSupprimees} corbeille onConfirmer={setConfirmation} />
+              </div>
+            </>
           )}
         </section>
       </div>
@@ -54,3 +78,4 @@ export default function App() {
     </main>
   )
 }
+import { useState } from 'react'

@@ -117,6 +117,13 @@ Prévoir les étiquettes, le focus clavier, les annonces d'erreur et de confirma
 ainsi qu'un bouton de récupération après erreur de lecture. Documenter les
 vérifications avec des captures sans données personnelles.
 
+Étendre ensuite le formulaire avec une note facultative pour partager les champs
+entre création et édition. Initialiser le brouillon à l'ouverture et employer
+`useId` pour éviter les collisions d'étiquettes. Piloter l'édition depuis la carte,
+et les vues actives/corbeille depuis `App`. Conserver les deux listes montées pour
+préserver les brouillons lors d'un changement de vue. Annoncer les confirmations
+dans `App`, où elles restent visibles après le déplacement d'une carte.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :
@@ -148,3 +155,5 @@ personnelles pour la démonstration.
   consultée le 8 novembre 2026 : état partagé et nettoyage des lectures asynchrones.
 - [Champs contrôlés React](https://react.dev/reference/react-dom/components/input),
   consulté le 8 novembre 2026 : synchronisation de la saisie via `value` et `onChange`.
+- [useId](https://react.dev/reference/react/useId), consulté le 8 novembre 2026 :
+  identifiants distincts pour les champs de plusieurs instances du formulaire.

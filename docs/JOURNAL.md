@@ -191,3 +191,26 @@
   quota réel non vérifiés.
 - Prochaine action : présenter les commandes de modification et de corbeille dans
   l'interface, puis attendre le go.
+
+## 8 novembre 2026 — Interface de modification et de corbeille
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre ; code présenté avant intégration.
+- Réalisation : `NoteForm` partagé entre création et modification, identifiants
+  `useId`, commandes d'édition/annulation et corbeille/restauration dans les cartes.
+  Vues avec compteurs, confirmations partagées et styles des groupes d'actions.
+- Décisions : garder les listes montées pour préserver les brouillons lors d'un
+  changement de vue ; attendre la sauvegarde avant confirmation et déplacement.
+  Aucune suppression définitive. Store et services conservés.
+- Vérifications réussies : compilation et parcours via le navigateur intégré sur
+  une origine de test dédiée. Préremplissage, annulation sans changement, refus
+  d'un titre vide avec brouillon conservé, navigation entre vues sans perte du
+  brouillon, modification retrouvée après rechargement.
+- Corbeille : compteurs, date, confirmation, persistance de la suppression et de la
+  restauration après rechargement. Champs à identifiants uniques, navigation Tab
+  et rendu à 1280/390 px contrôlés, absence de débordement à 320 px.
+- Captures d'édition et de corbeille sur ordinateur/mobile ajoutées et inspectées.
+  Les erreurs IndexedDB forcées n'ont pas été réinjectées dans les composants ;
+  les essais antérieurs du store restent la référence pour ces erreurs.
+- Documentation : README, guides, démarche et suivi actualisés.
+- Prochaine action : présenter les boutons d'export/import, puis attendre le go.

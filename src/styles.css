@@ -168,6 +168,48 @@ fieldset:disabled :is(input, textarea) {
   font-size: 1.125rem;
 }
 
+.note-edition h3 {
+  margin-bottom: 20px;
+}
+
+.actions-note,
+.choix-vue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.actions-note {
+  margin-top: 20px;
+}
+
+.actions-note button,
+.choix-vue button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.choix-vue {
+  margin-top: 20px;
+}
+
+.bouton-secondaire,
+.choix-vue button[aria-pressed="false"] {
+  background: #fff;
+  color: #344626;
+}
+
+.bouton-secondaire:hover:not(:disabled),
+.choix-vue button[aria-pressed="false"]:hover {
+  background: #eef1e8;
+}
+
+.bouton-secondaire:disabled,
+fieldset:disabled .bouton-secondaire {
+  background: #f0f1ed;
+  color: #526174;
+}
+
 .note-contenu {
   white-space: pre-wrap;
 }

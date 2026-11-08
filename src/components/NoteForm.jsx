@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 import { useNotes } from '../stores/useNotes.js'
 
 const champsVides = {
@@ -8,9 +8,16 @@ const champsVides = {
   projet: '',
 }
 
-export default function NoteForm() {
-  const { ajouterNote, chargement, rechargementRequis } = useNotes()
-  const [champs, setChamps] = useState(champsVides)
+export default function NoteForm({ note = null, onAnnuler, onEnregistre }) {
+  const { ajouterNote, modifierNote, chargement, rechargementRequis } = useNotes()
+  const identifiant = useId()
+  // Initialiser le brouillon à l'ouverture ; les rendus suivants ne l'écrasent pas.
+  const [champs, setChamps] = useState(() => note ? {
+    titre: note.titre,
+    contenu: note.contenu,
+    categorie: note.categorie,
+    projet: note.projet,
+  } : champsVides)
   const [sauvegarde, setSauvegarde] = useState(false)
   const [confirmation, setConfirmation] = useState('')
   const soumissionEnCours = useRef(false)
@@ -32,9 +39,14 @@ export default function NoteForm() {
     setConfirmation('')
 
     try {
-      await ajouterNote(champs)
-      setChamps(champsVides)
-      setConfirmation('Note enregistrée.')
+      if (note) {
+        await modifierNote(note.id, champs)
+        onEnregistre?.()
+      } else {
+        await ajouterNote(champs)
+        setChamps(champsVides)
+        setConfirmation('Note enregistrée.')
+      }
     } catch {
       // App affiche l'erreur du store ; le formulaire conserve la saisie.
     } finally {
@@ -46,27 +58,37 @@ export default function NoteForm() {
   return (
     <form onSubmit={soumettre} aria-busy={sauvegarde}>
       <fieldset disabled={indisponible}>
-        <legend className="sr-only">Détails de la nouvelle note</legend>
+        <legend className="sr-only">
+          {note ? 'Modifier les détails de la note' : 'Détails de la nouvelle note'}
+        </legend>
 
-        <label htmlFor="note-titre">Titre <span>(obligatoire)</span></label>
-        <input id="note-titre" name="titre" value={champs.titre}
+        <label htmlFor={`${identifiant}-titre`}>Titre <span>(obligatoire)</span></label>
+        <input id={`${identifiant}-titre`} name="titre" value={champs.titre}
           onChange={changerChamp} required />
 
-        <label htmlFor="note-contenu">Contenu</label>
-        <textarea id="note-contenu" name="contenu" value={champs.contenu}
+        <label htmlFor={`${identifiant}-contenu`}>Contenu</label>
+        <textarea id={`${identifiant}-contenu`} name="contenu" value={champs.contenu}
           onChange={changerChamp} rows={5} />
 
-        <label htmlFor="note-categorie">Catégorie</label>
-        <input id="note-categorie" name="categorie" value={champs.categorie}
+        <label htmlFor={`${identifiant}-categorie`}>Catégorie</label>
+        <input id={`${identifiant}-categorie`} name="categorie" value={champs.categorie}
           onChange={changerChamp} />
 
-        <label htmlFor="note-projet">Projet</label>
-        <input id="note-projet" name="projet" value={champs.projet}
+        <label htmlFor={`${identifiant}-projet`}>Projet</label>
+        <input id={`${identifiant}-projet`} name="projet" value={champs.projet}
           onChange={changerChamp} />
 
-        <button type="submit">
-          {sauvegarde ? 'Enregistrement…' : 'Enregistrer la note'}
-        </button>
+        <div className="actions-note">
+          <button type="submit">
+            {sauvegarde ? 'Enregistrement…'
+              : note ? 'Enregistrer les modifications' : 'Enregistrer la note'}
+          </button>
+          {note && (
+            <button type="button" className="bouton-secondaire" onClick={onAnnuler}>
+              Annuler
+            </button>
+          )}
+        </div>
       </fieldset>
       <p className="confirmation" role="status">{confirmation}</p>
     </form>
