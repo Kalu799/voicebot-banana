@@ -75,6 +75,19 @@ Le service `notesBackup.js` gère le format et la validation ; la nouvelle fonct
 renvoie des compteurs pour que l'interface puisse expliquer le résultat.
 Voir [le guide des sauvegardes](SAUVEGARDES.md) pour les règles et les essais.
 
+## Store — 8 novembre 2026
+
+Commencer par le chargement initial et la création pour garder une étape limitée.
+Utiliser Context et useReducer comme prévu au cadrage : le reducer pur calcule
+l'état, le provider effectue les opérations IndexedDB et le hook expose l'accès
+aux composants. Aucune bibliothèque de store supplémentaire n'est ajoutée.
+
+Attendre la sauvegarde avant d'ajouter une note en mémoire et propager l'erreur
+à l'appelant. Refuser la création avant un chargement réussi. Ignorer les lectures
+obsolètes lors du nettoyage d'un effet, notamment avec StrictMode. L'interface
+reste identique ; son raccordement aux actions sera une étape distincte.
+Voir [le guide du store](STORE.md) pour les flux, les limites et les vérifications.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :
@@ -101,3 +114,6 @@ personnelles pour la démonstration.
   [guide IndexedDB de Mozilla](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB),
   consultés le 8 novembre 2026 : transactions, création de structure et gestion
   des connexions bloquées ou concernées par un changement de version.
+- [Reducer et contexte](https://react.dev/learn/scaling-up-with-reducer-and-context)
+  et [useEffect](https://react.dev/reference/react/useEffect), documentation React
+  consultée le 8 novembre 2026 : état partagé et nettoyage des lectures asynchrones.

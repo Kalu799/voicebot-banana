@@ -100,3 +100,23 @@
 - Limites : téléchargement et sélection de fichier à relier à l'interface ;
   quota réellement épuisé et autres navigateurs non testés.
 - Prochaine action : présenter le store Context + useReducer, puis attendre le go.
+
+## 8 novembre 2026 — Store : chargement et création
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre ; code présenté avant intégration.
+- Réalisation : reducer, contexte, provider et hook dans `src/stores` ; provider
+  intégré dans `main.jsx`, sans modification de l'écran d'accueil.
+- Décisions : reducer pur, lecture IndexedDB au montage, lectures obsolètes ignorées,
+  création autorisée seulement après chargement réussi. Sauvegarder avant d'ajouter
+  en mémoire ; exposer les erreurs de création et rejeter la promesse de l'action.
+- Vérifications : assertions Node sur le reducer et compilation réussies.
+  Essais Chrome isolés avec React en développement et StrictMode : chargement,
+  ancienne lecture retardée sans écrasement, création après transaction complète,
+  titre invalide et sauvegarde annulée sans note fantôme, reprise après erreur,
+  créations concurrentes et hook hors provider. Échec initial de lecture signalé
+  et création refusée. Persistance après redémarrage du navigateur et rechargement.
+- Documentation : README, guide `STORE.md`, démarche et suivi mis à jour.
+- Limites : pas encore d'actions de modification/corbeille, d'import intégré au
+  store ou d'interface de notes. Une lecture initiale échouée nécessite de recharger.
+- Prochaine action : présenter la suite des actions du store et attendre le go.

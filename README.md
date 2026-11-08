@@ -5,8 +5,9 @@ lecture, modification, classement, corbeille et restauration.
 
 **État actuel :** base React + Vite, page d'accueil, modèle de note et service
 IndexedDB pour enregistrer et récupérer les notes, export/import JSON validé.
-La gestion des notes dans l'interface, les boutons de sauvegarde, la simulation
-et la conversation vocale restent à développer.
+Le store Context + useReducer charge les notes au démarrage et permet d'en créer
+après sauvegarde réussie. La gestion des notes dans l'interface, les boutons de
+sauvegarde, la simulation et la conversation vocale restent à développer.
 
 ## Démarrer
 
@@ -46,13 +47,15 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `src/utils/note.js` | Construit une note avec ses valeurs initiales |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
 | `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
+| `src/stores/` | État partagé des notes, chargement initial et action de création |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
 | `api/` | Emplacement documenté de la future fonction Vercel |
 | `docs/` | Démarche, journal et suivi des tâches |
 
-Pour le moment : `index.html` → `main.jsx` → `App.jsx` → affichage.
+Pour le moment : `index.html` → `main.jsx` → `NotesProvider` → `App` → affichage.
+Le provider charge les notes depuis IndexedDB ; `App` ne les affiche pas encore.
 
 L'organisation reprend les habitudes des projets Vue de l'utilisateur :
 `components`, `data`, `services`, `stores`, `utils`, et selon les besoins de
@@ -198,6 +201,26 @@ La confirmation de réussite devra attendre la sauvegarde effective.
 La configuration ElevenLabs, le mode de simulation et le déploiement seront
 documentés lorsqu'ils seront implémentés. Aucun service payant n'est activé.
 
+## Store des notes
+
+`NotesProvider`, installé dans `main.jsx`, rend le store accessible à tous ses
+composants enfants. Le hook `useNotes()` expose :
+
+- `notes` : toutes les notes chargées, corbeille comprise ;
+- `chargement` : vrai pendant la lecture initiale, faux après réussite ou échec ;
+- `erreur` : message de la dernière erreur gérée, ou `null` ;
+- `ajouterNote(champs)` : construit une note, attend sa sauvegarde puis demande
+  au reducer de l'ajouter en mémoire. Renvoie la note sauvegardée ou rejette
+  la promesse en cas d'erreur.
+
+La création est refusée avant un chargement réussi. Si la lecture initiale échoue,
+recharger la page après avoir résolu le problème. Une erreur de création conserve
+les notes existantes et permet de réessayer.
+
+Le reducer est indépendant de React et du stockage : il calcule les nouveaux
+états sans modifier les précédents. Voir [le guide du store](docs/STORE.md) pour
+les responsabilités des fichiers, le flux et les vérifications.
+
 ## Démarche et présentation
 
 Voir [la démarche](docs/DEMARCHE.md), [le journal](docs/JOURNAL.md) et
@@ -224,11 +247,12 @@ La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
 
 ## Limites et suite
 
-La page actuelle est statique. Aucun microphone n'est sollicité. Le modèle et le
-service de stockage ne sont pas encore utilisés par l'interface : les notes sont
-manipulables via les modules, mais pas encore depuis la page. L'export produit un
+La page actuelle est statique. Aucun microphone n'est sollicité. Le provider
+charge les notes, mais aucun composant ne les affiche ou ne déclenche encore
+d'action utilisateur. L'export produit un
 fichier en mémoire ; son téléchargement et la sélection d'un fichier d'import
-restent à relier à l'interface. La prochaine étape concerne le store Context + useReducer.
+restent à relier à l'interface. Le store doit encore recevoir les actions de
+modification, suppression et restauration, ainsi que l'intégration de l'import.
 La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans
