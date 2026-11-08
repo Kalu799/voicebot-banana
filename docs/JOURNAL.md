@@ -331,3 +331,30 @@
   du dossier parent. `git diff --check` réussi. Aucun code applicatif modifié.
 - Prochaine action : commit et pull request des corrections vers `dev` par
   l'utilisateur, puis préparation de l'intégration vocale après explication et go.
+
+## 8 novembre 2026 — Préparation de l’agent français
+
+- Reprise : fusion des deux corrections confirmée dans l’historique local de
+  `dev`, merge `4adac56` de la PR nº 2. Arbre de travail propre ; aucun contact
+  avec le dépôt distant pour cette vérification.
+- Préparation : branche `feature/integration-elevenlabs` créée depuis `dev`
+  après accord. Consignes, contrat et fichiers présentés avant le go documentaire.
+- Réalisation : guide `AGENT-ELEVENLABS.md`, lien du README et suivi actualisés.
+  Aucun agent distant créé ou configuré, aucune dépendance ajoutée et aucun
+  changement du code applicatif.
+- Décisions : français, six client tools avec attente de réponse, identifiants
+  exacts, clarification des ambiguïtés, lecture complète avant ajout au contenu,
+  confirmation après succès et textes des notes traités comme données.
+- Sources : documentation officielle ElevenLabs des client tools, SDK React,
+  authentification et tarifs consultée. Offre publique affichant 15 minutes
+  gratuites et coût LLM séparé ; conditions du compte à vérifier avant les essais.
+  Étude historique du 5 novembre conservée sans modification.
+- Limites : pas de connexion vocale validée, de déduplication des créations ni
+  de protection atomique entre lecture et modification ultérieure. Route serveur
+  protégée et limitée indispensable avant les essais ; aucun paiement autorisé.
+- Vérifications : 42 liens locaux valides dans les 12 documents Markdown du
+  README et de `docs/`, sept exemples JSON valides et `git diff --check` réussi.
+  Tests applicatifs et compilation non relancés pour cette étape documentaire.
+- Prochaine action : présenter la configuration distante de l’agent français et
+  de ses outils, puis attendre le go avant sa réalisation. Le choix de voix et
+  de modèle dépendra des options et conditions effectivement accessibles au compte.

@@ -244,8 +244,10 @@ effectué par cette couche.
 Flux cible : parole → agent → client tool → store → IndexedDB → confirmation à l'agent.
 La confirmation de réussite devra attendre la sauvegarde effective.
 
-La configuration ElevenLabs et le déploiement seront documentés lorsqu'ils seront
-implémentés. Aucun service payant n'est activé.
+La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
+proposées, le contrat des six outils et les prérequis aux essais vocaux. La
+configuration distante, le SDK et la route serveur restent à réaliser. Le
+déploiement sera documenté lors de son implémentation. Aucun service payant n'est activé.
 
 ## Store des notes
 
