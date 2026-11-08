@@ -87,12 +87,14 @@ label span {
 
 input,
 textarea,
+select,
 button {
   font: inherit;
 }
 
 input,
-textarea {
+textarea,
+select {
   display: block;
   width: 100%;
   min-width: 0;
@@ -128,7 +130,7 @@ button:hover:not(:disabled) {
   background: #344626;
 }
 
-:is(input, textarea, button):focus-visible {
+:is(input, textarea, select, button, .resultat-simulation pre):focus-visible {
   outline: 3px solid #315f94;
   outline-offset: 3px;
 }
@@ -139,7 +141,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-fieldset:disabled :is(input, textarea) {
+fieldset:disabled :is(input, textarea, select) {
   background: #f0f1ed;
   color: #526174;
 }
@@ -268,6 +270,33 @@ fieldset:disabled .bouton-secondaire {
 
 .sauvegardes {
   margin-top: 32px;
+}
+
+.simulateur {
+  margin-top: 24px;
+}
+
+.parametres-json,
+.resultat-simulation pre {
+  font-family: ui-monospace, monospace;
+  font-size: 0.875rem;
+  tab-size: 2;
+}
+
+.resultat-simulation h3 {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.resultat-simulation pre {
+  max-height: 400px;
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid #d9dfd3;
+  border-radius: 8px;
+  background: #f6f7f2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .sauvegardes-entete {

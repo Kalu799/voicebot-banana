@@ -2,6 +2,7 @@ import { useState } from 'react'
 import NoteForm from './components/NoteForm.jsx'
 import NotesList from './components/NotesList.jsx'
 import NotesBackup from './components/NotesBackup.jsx'
+import ToolsSimulator from './components/ToolsSimulator.jsx'
 import { useNotes } from './stores/useNotes.js'
 
 export default function App() {
@@ -77,6 +78,8 @@ export default function App() {
           )}
         </section>
       </div>
+
+      <ToolsSimulator />
 
       <p className="pied-page">Vos notes sont conservées dans ce navigateur.</p>
     </main>

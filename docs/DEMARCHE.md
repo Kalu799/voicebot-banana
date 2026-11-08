@@ -137,6 +137,12 @@ la lecture d'une note. Ajouter une lecture en file dans le store pour éviter le
 captures périmées. Conserver des tests Node reproductibles, complétés par des
 essais ponctuels avec le vrai provider et IndexedDB avant de créer le panneau.
 
+Assembler le panneau `ToolsSimulator` avec un sélecteur, des exemples de JSON et
+le dernier résultat associé à son outil. Lire les paramètres avec `JSON.parse`,
+réutiliser l'adaptateur commun et signaler clairement que la simulation n'utilise
+pas la voix, tout en appliquant de vraies modifications. Conserver les paramètres
+après erreur et préparer une démonstration reproductible des six outils.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :

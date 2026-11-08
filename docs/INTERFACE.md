@@ -9,6 +9,7 @@
 | `components/NotesList.jsx` | Affiche les cartes ou un message de liste vide |
 | `components/NoteCard.jsx` | Présentation, édition, mise en corbeille et restauration |
 | `components/NotesBackup.jsx` | Téléchargement, sélection de fichier et compteurs d'import |
+| `components/ToolsSimulator.jsx` | Sélection d'outil, paramètres et dernier résultat JSON |
 | `styles.css` | Présentation commune, focus, états et adaptation mobile |
 
 `App` filtre sur `deletedAt === null`, puis trie par date de création décroissante.
@@ -84,6 +85,12 @@ le rendre accessible dans la vue masquée. Un rechargement de page perd les
 brouillons non enregistrés. Les listes vides et confirmations reflètent le store.
 
 ## Présentation et accessibilité
+
+Le panneau « Simulation des outils » sous les listes appelle la couche commune
+sans microphone ni réseau. Ses actions sur les notes sont réelles et annoncées
+comme telles. Le sélecteur et la zone JSON possèdent des étiquettes, le résultat
+est associé au nom de l'outil et possède une zone défilable accessible au clavier.
+Voir [SIMULATION.md](SIMULATION.md) pour le scénario et les contrôles effectués.
 
 Le panneau Sauvegardes propose désormais l'export JSON et la sélection d'une
 sauvegarde à importer, avec compteurs et messages. Il réutilise les services et

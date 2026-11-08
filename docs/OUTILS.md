@@ -3,9 +3,9 @@
 ## Objectif et fichiers
 
 `src/services/notesTools.js` expose `creerOutilsNotes(store)`. Cette fonction
-construit les six outils qui seront réutilisés par le simulateur puis les client
+construit les six outils utilisés par le simulateur puis les futurs client
 tools ElevenLabs. Elle ne dépend ni du SDK ni du microphone et ne réalise aucun
-appel réseau. Le panneau de simulation n'est pas encore implémenté.
+appel réseau. Le panneau est documenté dans [SIMULATION.md](SIMULATION.md).
 
 `src/utils/rechercheNotes.js` contient la recherche et la lecture pures. Le provider
 expose désormais `obtenirNotes()` : cette action attend les opérations précédentes
@@ -81,7 +81,7 @@ Les outils attendent la fin des actions du store avant de renvoyer un succès.
 Les erreurs techniques non standard conservent un message générique ; la cause
 et la pile ne sont pas incluses dans le résultat destiné au futur agent.
 
-## Futur branchement
+## Branchement au simulateur
 
 Dans un composant React, le point d'accès sera :
 
@@ -89,14 +89,14 @@ Dans un composant React, le point d'accès sera :
 const store = useNotes()
 const outils = creerOutilsNotes(store)
 
-// À appeler depuis un événement du futur simulateur.
+// À appeler depuis un événement du simulateur.
 const resultat = await outils.creer_note({
   titre: 'Idée de vidéo BananaNavy',
   contenu: 'Durée : trente secondes.',
 })
 ```
 
-Cette couche n'est pas encore branchée à un composant de l'application. Les
+Cette couche est branchée à `ToolsSimulator.jsx`. Les
 identifiants d'appel et la déduplication des créations répétées par l'agent seront
 à traiter lors de l'intégration vocale : deux appels distincts à `creer_note`
 créent actuellement deux notes.
@@ -125,4 +125,4 @@ store ont aussi été exécutés par ce banc temporaire.
 
 Deux corrections ont été obtenues grâce aux tests : ignorer un filtre composé
 d'espaces et garantir un message d'erreur même pour un rejet non standard.
-La voix, le SDK ElevenLabs et l'interface du simulateur restent à développer.
+La voix et le SDK ElevenLabs restent à intégrer ; le panneau de simulation est présent.

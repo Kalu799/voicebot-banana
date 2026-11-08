@@ -9,13 +9,15 @@ Le store Context + useReducer charge les notes au démarrage et permet de les cr
 modifier, mettre en corbeille et restaurer après sauvegarde réussie. L'import via
 le store actualise aussi la liste sans rechargement. L'interface permet de créer
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
-restaurer, ainsi que de télécharger et importer une sauvegarde JSON. La simulation
-et la conversation vocale restent à développer. La couche commune des six outils
-locaux est prête et testable ; son panneau de simulation sera ajouté ensuite.
+restaurer, ainsi que de télécharger et importer une sauvegarde JSON. Le panneau
+de simulation permet d'exécuter les six outils locaux sans microphone ni appel
+ElevenLabs. La conversation vocale reste à développer.
 
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
 
 Voir aussi [l'interface mobile](docs/images/interface-sauvegardes-mobile.png).
+Le [guide du simulateur](docs/SIMULATION.md) propose un scénario reproductible
+avec les six outils et des notes de démonstration.
 
 ## Démarrer
 
@@ -57,6 +59,7 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `src/components/NotesList.jsx` | Liste de notes ou état vide adapté à la vue |
 | `src/components/NoteCard.jsx` | Présentation, édition, mise en corbeille et restauration |
 | `src/components/NotesBackup.jsx` | Téléchargement, sélection de fichier et résultat de l'import |
+| `src/components/ToolsSimulator.jsx` | Appels locaux des six outils avec paramètres et résultats JSON |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
 | `src/utils/note.js` | Création, règles de modification et de corbeille |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
@@ -220,7 +223,7 @@ et les vérifications effectuées.
 
 ## Architecture prévue
 
-La couche commune au futur simulateur et aux client tools est documentée dans
+La couche commune au simulateur et aux futurs client tools est documentée dans
 [OUTILS.md](docs/OUTILS.md). `creerOutilsNotes(store)` expose `creer_note`,
 `chercher_notes`, `lire_note`, `modifier_note`, `supprimer_note` et `restaurer_note`.
 Les mutations passent par le store ; les lectures utilisent `obtenirNotes()` pour
@@ -228,8 +231,9 @@ attendre les opérations précédentes et consulter les dernières notes sauvega
 Le format est `{ succes: true, ... }` ou `{ succes: false, erreur }`.
 
 La recherche retourne cinq résultats par défaut (maximum vingt), avec extraits,
-sans envoyer toute la bibliothèque. La voix et le panneau de simulation ne sont
-pas encore connectés. Aucun appel ElevenLabs n'est effectué par cette couche.
+sans envoyer toute la bibliothèque. Le simulateur appelle cette couche depuis
+l'interface ; la voix n'est pas encore connectée. Aucun appel ElevenLabs n'est
+effectué par cette couche.
 
 - React + Vite : interface et outils de développement.
 - Context + useReducer : centralisation des notes et des actions.
@@ -240,8 +244,8 @@ pas encore connectés. Aucun appel ElevenLabs n'est effectué par cette couche.
 Flux cible : parole → agent → client tool → store → IndexedDB → confirmation à l'agent.
 La confirmation de réussite devra attendre la sauvegarde effective.
 
-La configuration ElevenLabs, le mode de simulation et le déploiement seront
-documentés lorsqu'ils seront implémentés. Aucun service payant n'est activé.
+La configuration ElevenLabs et le déploiement seront documentés lorsqu'ils seront
+implémentés. Aucun service payant n'est activé.
 
 ## Store des notes
 
@@ -336,12 +340,28 @@ Les champs sont étiquetés, le focus clavier est visible et les confirmations e
 erreurs utilisent des régions accessibles. Voir [le guide de l'interface](docs/INTERFACE.md)
 pour le scénario de vérification et les limites.
 
+## Mode de simulation locale
+
+Le panneau « Simulation des outils », sous les listes, propose les six outils,
+des exemples de paramètres JSON et un bouton d'exécution. Les appels sont simulés,
+mais leurs effets sur IndexedDB sont réels. Le panneau le précise explicitement.
+Il ne sollicite ni microphone, ni SDK, ni minutes ElevenLabs.
+
+Choisir l'outil prépare un exemple ; renseigner l'identifiant obtenu par création
+ou recherche pour cibler une note. Le résultat reste associé au nom de l'outil
+exécuté, même après changement de sélection. Un JSON invalide n'appelle aucun
+outil. Les contrôles sont désactivés pendant l'exécution ou si le store est indisponible.
+
+Voir [SIMULATION.md](docs/SIMULATION.md) pour le parcours complet, les règles et
+les limites. Les paramètres et le dernier résultat ne sont pas conservés après
+rechargement ; les notes enregistrées le sont.
+
 ## Limites et suite
 
 Création, lecture, modification et corbeille sont disponibles depuis la page.
 Aucun microphone n'est sollicité. L'export/import est disponible dans l'interface.
-Le mode de simulation vocale, le scénario final complet et le lien public
-seront ajoutés plus tard. Les captures actuelles utilisent une note de démonstration
+L'agent vocal, le scénario final vocal complet et le lien public seront ajoutés
+plus tard. Les captures actuelles utilisent une note de démonstration
 sans données personnelles.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans

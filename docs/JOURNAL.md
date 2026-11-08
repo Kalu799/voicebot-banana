@@ -263,3 +263,31 @@
 - Limites : pas de panneau de simulation ni de connexion vocale. Déduplication
   des créations par identifiant d'appel à prévoir avec l'intégration de l'agent.
 - Prochaine action : présenter le panneau de simulation, puis attendre le go.
+
+## 8 novembre 2026 — Panneau de simulation
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre ; code présenté avant intégration.
+- Réalisation : `ToolsSimulator` sous les listes, sélection parmi les six outils,
+  exemples de paramètres JSON et dernier résultat structuré. Styles du sélecteur,
+  code et résultat, étiquettes et annonces d'état.
+- Décisions : aucun microphone ni appel ElevenLabs, mais effets réels sur les
+  notes. JSON lu sans exécution de code, identifiants renseignés manuellement,
+  contrôles bloqués pendant l'appel et verrou de soumission simultanée. Résultat
+  conservé avec le nom de son outil lors d'un changement de sélection.
+- Vérifications réussies : tests Node et compilation. Six outils exercés depuis
+  le panneau dans le navigateur intégré sur une origine de démonstration dédiée.
+  Listes et compteurs actualisés ; modification et corbeille retrouvées après
+  rechargement, restauration puis lecture de la note active sauvegardée.
+- Erreurs contrôlées : JSON mal formé, identifiant non textuel ou inconnu, champ
+  protégé. Saisie conservée et résultats d'échec explicites. Présentation inspectée
+  sur ordinateur/mobile, sans débordement à 320/390 px ; contrôles à identifiants
+  uniques et navigation Tab jusqu'au bouton.
+- Documentation : guide `SIMULATION.md`, README, guides, démarche et suivi
+  actualisés, captures conservées dans `docs/images`.
+- État : gestion locale et simulation terminées. La conversation vocale et le
+  premier jalon vocal restent à réaliser. Les appels répétés après réussite ne
+  sont pas dédupliqués, et les autres navigateurs restent à vérifier.
+- Prochaine action : revue de la fonctionnalité locale et pull request vers `dev`
+  par l'utilisateur, puis préparation de l'intégration ElevenLabs après explication
+  et nouveau go.
