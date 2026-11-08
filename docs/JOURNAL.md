@@ -442,3 +442,23 @@
   notes n’est donc pas encore disponible. Aucun essai vocal effectué.
 - Suite : présenter `chercher_notes` et `lire_note`, puis attendre le go avant
   leur configuration distante.
+
+## 8 novembre 2026 — Définitions distantes de recherche et de lecture
+
+- Préparation : commit `6d3a70a` confirmé sur une branche propre. Descriptions,
+  paramètres, attente du résultat et délais de 10 secondes expliqués puis autorisés.
+- Réalisation : client tool `chercher_notes`, cinq paramètres facultatifs :
+  trois textes, `corbeille` booléen et `limite` entier. Client tool `lire_note`,
+  seul `id` textuel obligatoire. Attente de réponse activée et délai de 10 secondes
+  pour chacun, sans mock ni affectation de variable dynamique.
+- Décision : type `integer` disponible dans ElevenLabs. Bornes de 1 à 20 et
+  valeurs par défaut décrites ; leur validation effective reste dans le code local.
+  Recherche avec extraits distincte de la lecture du contenu complet.
+- Vérifications : formulaires contrôlés, associations publiées, rechargement et
+  synchronisation de la vue avec la version publiée, fiches rouvertes confirmant
+  types, champs requis, attente et délais. Trois outils associés à l’agent,
+  aucune publication en attente. Aucun appel d’outil ni essai vocal lancé.
+- Documentation : guide agent, suivi et journal actualisés. Aucun code applicatif
+  ou SDK ajouté ; les définitions distantes ne valident pas encore un parcours vocal.
+- Suite : présenter `modifier_note`, `supprimer_note` et `restaurer_note`, puis
+  attendre le go avant leur configuration distante.

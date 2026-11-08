@@ -3,8 +3,9 @@
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
 Aucun SDK, microphone ou appel ElevenLabs n’est branché à l’application. Les
 consignes sont enregistrées dans l’agent distant, mais aucune conversation réelle
-n’a validé son comportement. La définition distante de `creer_note` est configurée ;
-les cinq autres outils et le branchement au navigateur restent à réaliser.
+n’a validé son comportement. Les définitions distantes de `creer_note`,
+`chercher_notes` et `lire_note` sont configurées ; les trois autres outils et
+le branchement au navigateur restent à réaliser.
 
 ## Configuration distante constatée le 8 novembre 2026
 
@@ -130,6 +131,70 @@ en attente, puis outil rouvert après rechargement avec les quatre paramètres,
 le seul titre requis et le délai de 10 secondes conservés. Aucun appel d’outil
 ou test vocal effectué. Le SDK n’est pas branché : la définition distante seule
 ne permet pas encore de créer une note dans IndexedDB depuis une conversation.
+
+## Recherche et lecture configurées
+
+Définitions distantes créées le 8 novembre 2026, puis associations publiées sur
+la branche ElevenLabs `Main`. Les deux outils sont de type **Client**, attendent
+la réponse et ont un délai de 10 secondes. Aucun mock ni affectation de variable
+dynamique ajouté. Leurs valeurs sont extraites par le LLM (`Invite LLM`).
+
+### chercher_notes
+
+Identifiant : `tool_7901m6y2jeyje72v5wz6rg97y2yd`.
+
+Description enregistrée :
+
+```text
+Rechercher des notes pour retrouver leurs identifiants.
+Les résultats contiennent des extraits, pas le contenu complet.
+Si plusieurs notes correspondent, demander une précision avant
+de choisir une cible. Utiliser lire_note pour lire son contenu complet.
+```
+
+| Paramètre | Type ElevenLabs | Requis | Description |
+| --- | --- | --- | --- |
+| `texte` | string | Non | Termes à rechercher. |
+| `categorie` | string | Non | Filtre exact sur la catégorie après normalisation. |
+| `projet` | string | Non | Filtre exact sur le projet après normalisation. |
+| `corbeille` | boolean | Non | `false` : notes actives ; `true` : corbeille uniquement. Si absent, notre code utilise `false`. |
+| `limite` | integer | Non | Entier de 1 à 20. Si absent, notre code utilise 5. |
+
+Le formulaire ElevenLabs propose bien un type `integer`. La plage de 1 à 20
+est décrite dans le paramètre et reste validée par le code local ; elle n’a pas
+été ajoutée comme contrainte numérique au schéma distant. Les valeurs par
+défaut sont appliquées par notre code lorsque les paramètres sont omis.
+
+La recherche renvoie `total` et une liste bornée : un seul résultat affiché ne
+garantit pas qu’une seule note corresponde. Le contenu complet est réservé à
+la lecture de la note choisie. Voir le [contrat local](OUTILS.md).
+
+### lire_note
+
+Identifiant : `tool_7401m6y2m2x6ft7az3vqw2ja1yvw`.
+
+Description enregistrée :
+
+```text
+Lire une note complète à partir de son identifiant exact,
+obtenu par une recherche ou une création précédente.
+Ne jamais inventer l’identifiant. Cet outil permet aussi
+de consulter une note en corbeille.
+```
+
+Son seul paramètre est `id`, de type `string`, obligatoire, décrit comme
+l’identifiant exact et non vide obtenu par recherche ou création. La validation
+du texte non vide et de l’existence de la note reste dans notre code local.
+
+### Vérifications de cette étape
+
+Formulaires contrôlés après préparation en JSON. Après publication et rechargement,
+la vue a demandé une synchronisation avec la version publiée ; elle a été
+effectuée. Les trois outils sont associés à l’agent, sans publication en attente.
+Les fiches rouvertes confirment les cinq champs facultatifs de recherche avec
+leurs types, le seul `id` obligatoire de lecture, l’attente de réponse et les
+deux délais de 10 secondes. Aucun appel d’outil ou essai vocal n’a été lancé.
+Ces contrôles valident les définitions, pas encore leur exécution via le SDK.
 
 ## Objectif et responsabilités
 
