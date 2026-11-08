@@ -45,7 +45,28 @@ Contrôles dans l’interface : authentification activée après navigation,
 publication sans modification en attente, aucun outil personnalisé associé et
 aucune procédure. Deux outils système hérités sont actifs : terminer la
 conversation et détecter la langue. Les autres paramètres de workflow et les
-variables résiduelles du modèle restent à examiner avant les essais.
+variables résiduelles du modèle sont détaillés dans le contrôle ci-dessous.
+
+### Contrôle des variables et du workflow — 8 novembre 2026
+
+Examen en lecture seule, sans modification distante ni conversation :
+
+- Le panneau Variables conserve huit valeurs de remplacement pour les tests :
+  `book_title`, `book_subtitle`, `book_author`, `book_description`, `ai_summary`,
+  `current_chapter`, `current_paragraph`, `first_message`. Elles proviennent du
+  modèle de lecture et contiennent notamment un exemple autour de *Dracula*.
+- L’invite système BananaNavy et le premier message français ne référencent plus
+  ces variables. Leur présence dans le panneau ne prouve donc pas qu’elles sont
+  utilisées dans nos consignes ; le comportement en conversation reste à valider.
+- Le workflow contient uniquement le nœud « Démarrer », sans connexion ni autre
+  étape. L’interface indique qu’il faut connecter le départ à un nœud d’entrée
+  pour activer un workflow. Aucun parcours de lecture actif n’a été constaté.
+- Aucune modification n’est en attente de publication.
+
+Il n’y a pas de workflow à corriger dans ce contrôle. Un nettoyage des valeurs de
+test héritées est proposé pour rendre la configuration plus lisible ; il devra
+être expliqué et autorisé avant application. Il ne doit pas être présenté comme
+la correction d’un dysfonctionnement vocal déjà reproduit.
 
 Confidentialité constatée : enregistrement audio désactivé, conservation des
 conversations réglée sur 30 jours, mode sans rétention désactivé. Ces réglages

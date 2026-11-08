@@ -388,3 +388,18 @@
 - Suite : expliquer puis configurer les six client tools après go ; contrôler
   aussi les variables et le workflow hérités, puis finaliser voix, LLM et budget
   avant les essais via une route serveur protégée.
+
+## 8 novembre 2026 — Contrôle des variables et du workflow
+
+- Préparation : commit `cf892b0` confirmé sur la branche
+  `feature/integration-elevenlabs`, contrôle en lecture seule autorisé.
+- Variables : huit valeurs de remplacement héritées du modèle de lecture restent
+  visibles, dont le titre et un extrait de *Dracula*. Les consignes BananaNavy et
+  le message d’accueil français ne les référencent plus.
+- Workflow : seul nœud « Démarrer », sans connexion. L’interface indique qu’un
+  nœud d’entrée doit être connecté pour activer le workflow ; aucun parcours de
+  lecture actif constaté. Aucune modification distante ni publication effectuée.
+- Documentation : constat ajouté au guide de l’agent et au journal. Aucun code
+  applicatif modifié et aucune conversation lancée.
+- Suite : proposer le nettoyage des valeurs de test inutilisées, puis présenter
+  la configuration de `creer_note` avant application après go.
