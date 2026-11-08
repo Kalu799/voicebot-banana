@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from 'react'
 import { useNotes } from '../stores/useNotes.js'
+import { preparerChangementsEdition } from '../utils/note.js'
 
 const champsVides = {
   titre: '',
@@ -11,13 +12,14 @@ const champsVides = {
 export default function NoteForm({ note = null, onAnnuler, onEnregistre }) {
   const { ajouterNote, modifierNote, chargement, rechargementRequis } = useNotes()
   const identifiant = useId()
-  // Initialiser le brouillon à l'ouverture ; les rendus suivants ne l'écrasent pas.
-  const [champs, setChamps] = useState(() => note ? {
+  // Garder la version d'ouverture, même si la note change pendant la saisie.
+  const champsInitiaux = useRef(note ? {
     titre: note.titre,
     contenu: note.contenu,
     categorie: note.categorie,
     projet: note.projet,
   } : champsVides)
+  const [champs, setChamps] = useState(champsInitiaux.current)
   const [sauvegarde, setSauvegarde] = useState(false)
   const [confirmation, setConfirmation] = useState('')
   const soumissionEnCours = useRef(false)
@@ -40,7 +42,8 @@ export default function NoteForm({ note = null, onAnnuler, onEnregistre }) {
 
     try {
       if (note) {
-        await modifierNote(note.id, champs)
+        const changements = preparerChangementsEdition(champsInitiaux.current, champs)
+        await modifierNote(note.id, changements, champsInitiaux.current)
         onEnregistre?.()
       } else {
         await ajouterNote(champs)

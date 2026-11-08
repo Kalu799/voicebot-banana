@@ -291,3 +291,25 @@
 - Prochaine action : revue de la fonctionnalité locale et pull request vers `dev`
   par l'utilisateur, puis préparation de l'intégration ElevenLabs après explication
   et nouveau go.
+
+## 8 novembre 2026 — Correction des conflits d'édition
+
+- Préparation : revue globale après intégration sur `dev`, puis branche
+  `fix/revue-gestion-notes` créée depuis `dev`. Correction expliquée avant application.
+- Problème reproduit : un formulaire ancien renvoyait tous ses champs et écrasait
+  un contenu récemment modifié par le simulateur, même en ne changeant que le titre.
+- Correction : référence aux champs d'ouverture dans `NoteForm`, extraction des
+  changements réels et troisième argument facultatif de `modifierNote` pour
+  vérifier les valeurs initiales dans la file du store.
+- Comportement : préserver les changements sur des champs distincts ; refuser
+  toute écriture en cas de conflit sur le même champ et conserver le brouillon.
+  Les outils restent compatibles avec leur signature à deux arguments.
+- Vérifications : six scénarios de non-régression ajoutés dans
+  `tests/noteEdition.test.js`. Tests Node et compilation réussis. Scénario original
+  corrigé dans le navigateur de production, avec conservation après rechargement.
+  Conflit sur le contenu sans enregistrement partiel du titre, brouillon conservé,
+  absence de changement après rechargement et reprise après réouverture vérifiés.
+- Documentation : README, guides du store et de l'interface actualisés.
+- Limite conservée : aucune synchronisation entre onglets.
+- Prochaine action : présenter la correction des liens vers les documents situés
+  hors du dépôt et attendre le go avant de l'appliquer.

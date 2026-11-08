@@ -282,6 +282,13 @@ erreur. Une note en corbeille doit être restaurée avant modification. Supprime
 une note déjà supprimée, restaurer une note active ou appliquer une modification
 équivalente ne provoque ni écriture ni changement de date.
 
+Le formulaire envoie uniquement les champs modifiés depuis son ouverture. Si un
+outil change un autre champ pendant la saisie, sa nouvelle valeur est conservée.
+Si le même champ a changé, le store refuse l'enregistrement et le brouillon reste
+disponible. Copier la saisie utile avant d'annuler et de rouvrir la dernière version.
+Cette protection concerne les changements connus du provider ; elle n'ajoute pas
+de synchronisation entre onglets.
+
 Le reducer est indépendant de React et du stockage : il calcule les nouveaux
 états sans modifier les précédents. Voir [le guide du store](docs/STORE.md) pour
 les responsabilités des fichiers, le flux et les vérifications.
