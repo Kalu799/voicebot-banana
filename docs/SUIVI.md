@@ -4,9 +4,9 @@
 | --- | --- | --- |
 | 1. Initialiser React + Vite et préparer le dossier API | Terminé | Installation et compilation réussies, page accessible localement (HTTP vérifié) |
 | 2. Définir le modèle de note | Terminé | Champs, règles et exemples documentés ; création, valeurs initiales et refus des titres vides vérifiés avec Node |
-| 3. Stockage IndexedDB et export/import | Terminé (services) | Persistance, aller-retour JSON, validation, conflits et annulation complète vérifiés dans Chrome ; boutons à intégrer à l'étape 5 |
+| 3. Stockage IndexedDB et export/import | Terminé | Services et commandes d'interface vérifiés : persistance, JSON téléchargé, restauration, validation et conflits |
 | 4. Store Context + useReducer | Terminé | Chargement, création, modification, corbeille et import avec actualisation vérifiés ; erreurs et besoin de rechargement gérés |
-| 5. Interface minimale et simulation | En cours | Création, lecture, modification, annulation et corbeille vérifiées sur ordinateur/mobile ; sauvegarde et simulation à faire |
+| 5. Interface minimale et simulation | En cours | Gestion manuelle et export/import vérifiés sur ordinateur/mobile ; mode de simulation à faire |
 | 6. Agent ElevenLabs français | À faire | Consignes et voix configurées |
 | 7. Client tools | À faire | Actions vocales reliées au store |
 | 8. Route serveur protégée | À faire | Jetons obtenus sans exposer la clé, accès contrôlé et demandes limitées |

@@ -214,3 +214,28 @@
   les essais antérieurs du store restent la référence pour ces erreurs.
 - Documentation : README, guides, démarche et suivi actualisés.
 - Prochaine action : présenter les boutons d'export/import, puis attendre le go.
+
+## 8 novembre 2026 — Commandes d'export/import
+
+- Préparation : commit précédent effectué par l'utilisateur ; branche
+  `feature/gestion-notes` propre et code présenté avant intégration.
+- Réalisation : `NotesBackup` au-dessus du formulaire et des listes, téléchargement
+  du fichier JSON, sélecteur natif, compteurs d'import, messages et verrou d'opération.
+- Décisions : réutiliser les services et le store, réinitialiser le sélecteur,
+  libérer les URL temporaires, annoncer le téléchargement comme demandé. Conserver
+  les compteurs connus si l'import est enregistré mais la relecture échoue.
+- Correction observée : le style commun des champs rendait visible l'input masqué.
+  Ajouter `input[hidden]` pour respecter le masquage du sélecteur.
+- Vérifications réussies : compilation finale et parcours via le navigateur intégré
+  sur des origines de test distinctes. Import valide, réimport, JSON invalide avec
+  une seule alerte, import vide, conservation d'une modification locale et
+  réutilisation des commandes après refus.
+- Téléchargement réellement reçu et JSON inspecté : version 1 et deux notes,
+  corbeille comprise, identiques aux données attendues. Ce même fichier restauré
+  dans une origine vide ; notes et corbeille conservées après rechargement.
+- Présentation : captures ordinateur/mobile inspectées, absence de débordement
+  à 320 et 390 px. Documents et suivi mis à jour.
+- Limites : erreurs transactionnelles couvertes par les essais antérieurs du store,
+  sans nouvelle injection dans le panneau ; annulation du sélecteur, refus de
+  téléchargement et autres navigateurs non vérifiés.
+- Prochaine action : présenter le mode de simulation des outils vocaux et attendre le go.

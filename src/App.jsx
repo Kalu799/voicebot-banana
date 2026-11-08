@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import NoteForm from './components/NoteForm.jsx'
 import NotesList from './components/NotesList.jsx'
+import NotesBackup from './components/NotesBackup.jsx'
 import { useNotes } from './stores/useNotes.js'
 
 export default function App() {
@@ -32,6 +34,8 @@ export default function App() {
           )}
         </div>
       )}
+
+      <NotesBackup />
 
       <div className="espace-notes">
         <section className="panneau" aria-labelledby="nouvelle-note">
@@ -78,4 +82,3 @@ export default function App() {
     </main>
   )
 }
-import { useState } from 'react'

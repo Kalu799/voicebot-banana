@@ -8,6 +8,7 @@
 | `components/NoteForm.jsx` | Champs partagés, brouillon de création ou de modification |
 | `components/NotesList.jsx` | Affiche les cartes ou un message de liste vide |
 | `components/NoteCard.jsx` | Présentation, édition, mise en corbeille et restauration |
+| `components/NotesBackup.jsx` | Téléchargement, sélection de fichier et compteurs d'import |
 | `styles.css` | Présentation commune, focus, états et adaptation mobile |
 
 `App` filtre sur `deletedAt === null`, puis trie par date de création décroissante.
@@ -83,6 +84,11 @@ le rendre accessible dans la vue masquée. Un rechargement de page perd les
 brouillons non enregistrés. Les listes vides et confirmations reflètent le store.
 
 ## Présentation et accessibilité
+
+Le panneau Sauvegardes propose désormais l'export JSON et la sélection d'une
+sauvegarde à importer, avec compteurs et messages. Il réutilise les services et
+le store et se place au-dessus du formulaire et des listes. Voir
+[le guide des sauvegardes](SAUVEGARDES.md) pour le fonctionnement et les essais.
 
 Conserver les couleurs initiales de BananaNavy : fond crème, texte bleu foncé et
 accent vert. Disposition en deux colonnes sur ordinateur, une colonne jusqu'à

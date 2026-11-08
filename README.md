@@ -9,12 +9,12 @@ Le store Context + useReducer charge les notes au démarrage et permet de les cr
 modifier, mettre en corbeille et restaurer après sauvegarde réussie. L'import via
 le store actualise aussi la liste sans rechargement. L'interface permet de créer
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
-restaurer. Les commandes de sauvegarde dans l'interface, la simulation et la
-conversation vocale restent à développer.
+restaurer, ainsi que de télécharger et importer une sauvegarde JSON. La simulation
+et la conversation vocale restent à développer.
 
-![Modification d'une note de démonstration](docs/images/interface-edition-ordinateur.png)
+![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
 
-Voir aussi [la corbeille sur mobile](docs/images/interface-corbeille-mobile.png).
+Voir aussi [l'interface mobile](docs/images/interface-sauvegardes-mobile.png).
 
 ## Démarrer
 
@@ -54,6 +54,7 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `src/components/NoteForm.jsx` | Champs partagés pour la création et la modification |
 | `src/components/NotesList.jsx` | Liste de notes ou état vide adapté à la vue |
 | `src/components/NoteCard.jsx` | Présentation, édition, mise en corbeille et restauration |
+| `src/components/NotesBackup.jsx` | Téléchargement, sélection de fichier et résultat de l'import |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
 | `src/utils/note.js` | Création, règles de modification et de corbeille |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
@@ -198,9 +199,19 @@ répétés dans le même fichier sont refusés. Une erreur pendant la transactio
 annule l'ensemble des ajouts. Identifiants, textes, dates et état de corbeille sont
 préservés ; seuls les champs connus sont retenus.
 
-Les boutons de téléchargement et de sélection de fichier ne sont pas encore
-implémentés. Voir [le guide des sauvegardes](docs/SAUVEGARDES.md) pour les règles,
-les exemples dans la console et les vérifications effectuées.
+Le panneau Sauvegardes propose « Exporter les notes » pour télécharger le fichier,
+et « Importer une sauvegarde » pour choisir un JSON puis actualiser le store.
+Le résultat indique le nombre de notes ajoutées et ignorées. La sélection est
+réinitialisée pour permettre de choisir à nouveau le même fichier après un refus.
+Les commandes sont bloquées pendant leur opération, le chargement ou lorsqu'un
+rechargement est requis.
+
+Le téléchargement est annoncé comme demandé : sa finalisation dépend du navigateur.
+Les erreurs d'export sont affichées dans le panneau ; celles d'import sont
+affichées par `App` depuis le store. Si un import est enregistré mais sa relecture
+échoue, le panneau conserve les compteurs connus et `App` demande un rechargement.
+Voir [le guide des sauvegardes](docs/SAUVEGARDES.md) pour les règles, les exemples
+et les vérifications effectuées.
 
 ## Architecture prévue
 
@@ -312,7 +323,7 @@ pour le scénario de vérification et les limites.
 ## Limites et suite
 
 Création, lecture, modification et corbeille sont disponibles depuis la page.
-Aucun microphone n'est sollicité. Les boutons d'export/import restent à ajouter.
+Aucun microphone n'est sollicité. L'export/import est disponible dans l'interface.
 Le mode de simulation vocale, le scénario final complet et le lien public
 seront ajoutés plus tard. Les captures actuelles utilisent une note de démonstration
 sans données personnelles.

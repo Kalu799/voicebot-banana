@@ -104,6 +104,11 @@ textarea {
   background: #fff;
 }
 
+/* Le style commun des champs ne doit pas rendre visible le sélecteur masqué. */
+input[hidden] {
+  display: none;
+}
+
 textarea {
   resize: vertical;
 }
@@ -259,6 +264,27 @@ fieldset:disabled .bouton-secondaire {
 
 .pied-page {
   margin-top: 24px;
+}
+
+.sauvegardes {
+  margin-top: 32px;
+}
+
+.sauvegardes-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.sauvegardes .aide {
+  max-width: 42em;
+  margin-bottom: 0;
+}
+
+.sauvegardes .actions-note {
+  margin-top: 0;
 }
 
 .sr-only {

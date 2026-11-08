@@ -221,10 +221,10 @@ restent à vérifier.
 
 ## Périmètre restant
 
-Utiliser `importerSauvegarde` depuis la future interface pour actualiser le store.
+Le panneau `NotesBackup` utilise `importerSauvegarde` pour actualiser le store.
 Un appel direct au service `importerNotes` depuis la console ne rafraîchit pas
 le provider ; il faut alors recharger la page pour relire ses résultats.
 Aucune synchronisation automatique entre onglets n'est implémentée.
 Les composants de liste et de formulaire sont désormais présents : création et
 lecture des notes actives sont raccordées au store, ainsi que modification,
-mise en corbeille et restauration. Les boutons d'export/import restent à ajouter.
+mise en corbeille et restauration. Les commandes d'export/import sont aussi présentes.

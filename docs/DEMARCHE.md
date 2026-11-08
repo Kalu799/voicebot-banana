@@ -124,6 +124,12 @@ et les vues actives/corbeille depuis `App`. Conserver les deux listes montées p
 préserver les brouillons lors d'un changement de vue. Annoncer les confirmations
 dans `App`, où elles restent visibles après le déplacement d'une carte.
 
+Compléter la gestion manuelle avec `NotesBackup` : produire et télécharger le
+fichier du service, utiliser le sélecteur natif pour fournir un `File` au store,
+afficher les compteurs et distinguer les erreurs d'export de celles d'import.
+Libérer l'URL de téléchargement, réinitialiser le sélecteur et annoncer le
+téléchargement comme demandé, sans promettre son enregistrement sur le disque.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :
