@@ -565,3 +565,26 @@
 - Suite : examiner les autres dépendances concernées et distinguer les correctifs
   compatibles des changements de version majeure, avant de proposer une nouvelle
   modification après explication et go.
+
+## 8 novembre 2026 — Correction ciblée d’Ajv, js-yaml et smol-toml
+
+- Préparation : commit `27d6d7c` confirmé, branche propre. Rôle, versions corrigées,
+  substitutions limitées à Vercel et vérifications présentés avant le go.
+- Réalisation : overrides `ajv: 8.18.0`, `js-yaml: 4.3.2`, `smol-toml: 1.9.0`
+  ajoutés sous Vercel, puis installation et actualisation du lockfile.
+  Override tar conservé, CLI 65.12.1, versions directes et code applicatif inchangés.
+- Audit : de 37 à 29 signalements, 10 modérés, 19 élevés, zéro critique.
+  Les trois bibliothèques ne figurent plus dans le rapport. Les dépendances de
+  production restent à zéro ; les autres signalements ne sont pas résolus.
+- Vérifications : tests, compilation, arbre npm et versions résolues réussis.
+  Ancien serveur arrêté puis redémarré avec les nouvelles dépendances ; interface
+  `200`, route GET `405`, POST `503`, méthode autorisée et absence de cache contrôlées.
+- Contrôles ponctuels : validation Ajv, lecture YAML et valeurs d’un aller-retour
+  TOML vérifiées. La première assertion TOML supposait à tort un prototype ordinaire ;
+  le contrôle a été corrigé pour vérifier explicitement le prototype nul et les
+  valeurs produites. Aucun changement du code de l’application nécessaire.
+- Documentation : guide API, suivi et journal actualisés. Verrou vocal fermé,
+  aucun déploiement ni appel ElevenLabs réel. Les contrôles ne valident pas tous
+  les usages de ces bibliothèques dans la CLI ; overrides à réexaminer à sa mise à jour.
+- Suite : examiner les avis restants, notamment les deux familles de versions de
+  `path-to-regexp`, avant de proposer une correction distincte après explication et go.

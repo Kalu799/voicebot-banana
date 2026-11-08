@@ -217,6 +217,45 @@ Aucun accès ElevenLabs réel utilisé.
 Sources de cette décision : [overrides npm](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#overrides)
 et [avis tar corrigé à partir de 7.5.21](https://github.com/advisories/GHSA-r292-9mhp-454m).
 
+### Correction ciblée des lecteurs et validateurs — 8 novembre 2026
+
+Après présentation et accord, trois substitutions complètent celle de tar :
+
+```json
+"overrides": {
+  "vercel": {
+    "tar": "7.5.22",
+    "ajv": "8.18.0",
+    "js-yaml": "4.3.2",
+    "smol-toml": "1.9.0"
+  }
+}
+```
+
+`npm ls ajv js-yaml smol-toml --all` confirme ces versions sous Vercel. Ajv passe
+de 8.6.3 à 8.18.0, js-yaml de 4.1.1 à 4.3.2 et smol-toml de 1.5.2 à 1.9.0.
+Le lockfile actualise aussi les dépendances d’Ajv : `fast-uri` remplace
+`uri-js` et son ancien descendant `punycode` devenu inutile. La CLI reste en
+65.12.1 et les versions directes React/Vite sont conservées.
+
+Nouvel audit : **29 signalements** (10 modérés, 19 élevés, zéro critique).
+Ajv, js-yaml et smol-toml ne figurent plus parmi les bibliothèques signalées.
+La baisse dépasse trois entrées car le rapport signale aussi des paquets parents
+affectés par leurs dépendances. Les dépendances de production restent à zéro.
+
+Tests, compilation, arbre npm et redémarrage Vercel local réussis. Contrôles HTTP :
+interface `200`, route GET `405` avec `Allow: POST`, POST `503` avec verrou fermé,
+réponses de route sans cache. Contrôles ponctuels supplémentaires : validation
+Ajv d’un objet valide et refus de types/champs incorrects, lecture YAML simple,
+aller-retour de valeurs TOML avec conservation des objets sans prototype.
+Ces essais ne couvrent pas tous les usages de ces bibliothèques dans la CLI.
+Les overrides restent à réexaminer lors des mises à jour de Vercel ; les 29 autres
+signalements restent ouverts. Aucun appel ElevenLabs réel effectué.
+
+Sources des versions corrigées : [Ajv](https://github.com/advisories/GHSA-2g4f-4pwh-qvx6),
+[js-yaml](https://github.com/advisories/GHSA-2883-xcg3-v3hh),
+[smol-toml](https://github.com/advisories/GHSA-r4xh-jqrq-34v2).
+
 ## Sources officielles consultées le 8 novembre 2026
 
 - [Jeton WebRTC ElevenLabs](https://elevenlabs.io/docs/eleven-agents/api-reference/conversations/get-webrtc-token)
