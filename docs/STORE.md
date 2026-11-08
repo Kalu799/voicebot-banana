@@ -133,6 +133,11 @@ préserve la version précédente en mémoire et en base et rejette la promesse.
 
 ## Ordre des actions et état récent
 
+`obtenirNotes()` attend son tour dans la même file et renvoie une copie des notes
+de `notesCourantes`. Cette action est utilisée par les outils de recherche/lecture
+pour accéder aux données récentes indépendamment du rendu React. L'appelant peut
+manipuler les objets retournés sans modifier directement ceux du store.
+
 `notesCourantes`, une référence interne, contient la dernière liste chargée ou
 sauvegardée, même avant le prochain rendu React. Les composants doivent consulter
 les données exposées par le contexte et appeler les actions, sans modifier eux-mêmes

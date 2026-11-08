@@ -130,6 +130,13 @@ afficher les compteurs et distinguer les erreurs d'export de celles d'import.
 Libérer l'URL de téléchargement, réinitialiser le sélecteur et annoncer le
 téléchargement comme demandé, sans promettre son enregistrement sur le disque.
 
+Préparer le simulateur avec une couche d'outils indépendante de React et du SDK :
+valider les paramètres, appeler les actions du store et normaliser les résultats.
+Séparer la recherche pure, borner ses résultats et réserver le contenu complet à
+la lecture d'une note. Ajouter une lecture en file dans le store pour éviter les
+captures périmées. Conserver des tests Node reproductibles, complétés par des
+essais ponctuels avec le vrai provider et IndexedDB avant de créer le panneau.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :

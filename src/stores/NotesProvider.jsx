@@ -76,6 +76,13 @@ export function NotesProvider({ children }) {
     return execution
   }
 
+  function obtenirNotes() {
+    // La lecture attend les actions précédentes et renvoie des objets indépendants.
+    return executerAction(() =>
+      notesCourantes.current.map(note => ({ ...note })),
+    )
+  }
+
   function ajouterNote(champs) {
     return executerAction(async () => {
       const note = creerNote(champs)
@@ -165,6 +172,7 @@ export function NotesProvider({ children }) {
   return (
     <NotesContext.Provider value={{
       ...etat,
+      obtenirNotes,
       ajouterNote,
       modifierNote,
       supprimerNote,

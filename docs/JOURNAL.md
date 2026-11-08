@@ -239,3 +239,27 @@
   sans nouvelle injection dans le panneau ; annulation du sélecteur, refus de
   téléchargement et autres navigateurs non vérifiés.
 - Prochaine action : présenter le mode de simulation des outils vocaux et attendre le go.
+
+## 8 novembre 2026 — Couche commune des outils
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre ; code présenté avant intégration.
+- Réalisation : recherche et lecture dans `utils/rechercheNotes.js`, six outils
+  validés dans `services/notesTools.js`, action `obtenirNotes` du provider.
+  Résultats réussis/échoués structurés et confirmation après sauvegarde.
+- Décisions : recherche active ou corbeille, casse/accents ignorés, filtres exacts,
+  cinq résultats par défaut et vingt au maximum, extraits plutôt que contenus
+  complets. Les mutations ciblent un identifiant ; la lecture renvoie une copie.
+- Vérifications persistantes : `npm test` ajouté avec huit scénarios Node couvrant
+  règles, validation avant appel au store, limites, six parcours et attente de
+  sauvegarde. Corrections : filtres composés d'espaces et rejets non standard.
+- Intégration ponctuelle : banc temporaire avec vrai provider, React en mode
+  développement et IndexedDB dans le navigateur intégré. Six outils vérifiés,
+  lecture immédiate via un accès capturé avant création, copies indépendantes,
+  recherche, modification, corbeille, restauration et transaction annulée sans
+  faux succès. Données retrouvées après rechargement, anciens parcours du store
+  réexécutés. Compilation réussie.
+- Documentation : guide `OUTILS.md`, README, store, démarche et suivi actualisés.
+- Limites : pas de panneau de simulation ni de connexion vocale. Déduplication
+  des créations par identifiant d'appel à prévoir avec l'intégration de l'agent.
+- Prochaine action : présenter le panneau de simulation, puis attendre le go.

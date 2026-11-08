@@ -10,7 +10,8 @@ modifier, mettre en corbeille et restaurer après sauvegarde réussie. L'import 
 le store actualise aussi la liste sans rechargement. L'interface permet de créer
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
 restaurer, ainsi que de télécharger et importer une sauvegarde JSON. La simulation
-et la conversation vocale restent à développer.
+et la conversation vocale restent à développer. La couche commune des six outils
+locaux est prête et testable ; son panneau de simulation sera ajouté ensuite.
 
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
 
@@ -35,6 +36,7 @@ Aucune clé API, aucun compte et aucune variable d'environnement ne sont nécess
 ## Vérifier et compiler
 
 ```bash
+npm test
 npm run build
 npm run preview
 ```
@@ -59,6 +61,9 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `src/utils/note.js` | Création, règles de modification et de corbeille |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
 | `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
+| `src/services/notesTools.js` | Six outils locaux avec validation et résultats structurés |
+| `src/utils/rechercheNotes.js` | Recherche normalisée, extraits et lecture par identifiant |
+| `tests/notesTools.test.js` | Tests automatisés de la recherche et des six outils |
 | `src/stores/` | État partagé, chargement et actions de gestion des notes |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
@@ -214,6 +219,17 @@ Voir [le guide des sauvegardes](docs/SAUVEGARDES.md) pour les règles, les exemp
 et les vérifications effectuées.
 
 ## Architecture prévue
+
+La couche commune au futur simulateur et aux client tools est documentée dans
+[OUTILS.md](docs/OUTILS.md). `creerOutilsNotes(store)` expose `creer_note`,
+`chercher_notes`, `lire_note`, `modifier_note`, `supprimer_note` et `restaurer_note`.
+Les mutations passent par le store ; les lectures utilisent `obtenirNotes()` pour
+attendre les opérations précédentes et consulter les dernières notes sauvegardées.
+Le format est `{ succes: true, ... }` ou `{ succes: false, erreur }`.
+
+La recherche retourne cinq résultats par défaut (maximum vingt), avec extraits,
+sans envoyer toute la bibliothèque. La voix et le panneau de simulation ne sont
+pas encore connectés. Aucun appel ElevenLabs n'est effectué par cette couche.
 
 - React + Vite : interface et outils de développement.
 - Context + useReducer : centralisation des notes et des actions.
