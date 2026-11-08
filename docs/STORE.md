@@ -153,6 +153,22 @@ La promesse retournée à l'appelant conserve son éventuelle erreur ; seule la
 promesse interne de file absorbe cet échec pour laisser passer l'action suivante.
 La file ne synchronise pas d'autres onglets ou d'autres instances de provider.
 
+## Valeurs initiales et conflits d'édition
+
+`modifierNote(id, changements, valeursInitiales)` accepte un troisième argument
+facultatif utilisé par le formulaire. Les outils conservent leur contrat à deux
+arguments et leurs modifications partielles.
+
+Le formulaire fournit uniquement ses champs modifiés et les valeurs d'ouverture.
+`preparerModification` vérifie dans la file du store que chaque champ modifié
+porte encore sa valeur initiale, ou déjà la valeur demandée. Une différence
+concurrente sur ce champ déclenche une erreur avant l'appel au stockage, sans
+écriture partielle. Une différence sur un champ intact du formulaire est conservée.
+
+Les références du formulaire ne sont pas rebâties au rendu suivant, ce qui évite
+de masquer un conflit. La protection concerne la version connue du provider et
+ne remplace pas une coordination entre onglets, qui reste hors du périmètre.
+
 ## Import et actualisation
 
 L'action `importerSauvegarde(fichier)`, exposée par `useNotes`, réutilise le service

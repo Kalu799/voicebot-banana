@@ -84,6 +84,33 @@ le brouillon d'une carte lorsque l'utilisateur change de vue puis revient, sans
 le rendre accessible dans la vue masquée. Un rechargement de page perd les
 brouillons non enregistrés. Les listes vides et confirmations reflètent le store.
 
+## Protection des éditions concurrentes
+
+Le formulaire conserve avec `useRef` les quatre valeurs présentes à son ouverture.
+Cette référence ne change pas lorsqu'un outil met la note à jour pendant la saisie.
+`preparerChangementsEdition` compare le brouillon à ces valeurs et renvoie uniquement
+les champs réellement modifiés, après nettoyage des textes hors contenu.
+
+Le formulaire transmet ces changements et ses valeurs initiales à `modifierNote`.
+La vérification se fait dans la file du store sur sa dernière note connue :
+
+- Champs distincts : appliquer les changements du formulaire et conserver ceux de l'outil.
+- Même champ modifié différemment : refuser toute la sauvegarde, garder le brouillon
+  et indiquer de le copier avant d'annuler et rouvrir la note.
+- Valeur du brouillon déjà identique à la dernière valeur : autoriser l'opération,
+  qui reste sans écriture si aucun autre champ ne change.
+
+Une édition sans changement ne réenregistre donc pas une ancienne version. Après
+un conflit, annuler puis rouvrir initialise un nouveau brouillon depuis la note
+récente. Cette protection ne synchronise pas les modifications d'autres onglets.
+
+Vérifications de non-régression : six scénarios Node dans `tests/noteEdition.test.js`,
+complétés dans le navigateur sur la compilation de production. Le scénario
+initial titre manuel/contenu du simulateur conserve les deux valeurs après
+rechargement. Un conflit sur le contenu refuse aussi le titre modifié dans le même
+brouillon : aucune sauvegarde partielle. Le brouillon reste ouvert et une édition
+après annulation/réouverture réussit.
+
 ## Présentation et accessibilité
 
 Le panneau « Simulation des outils » sous les listes appelle la couche commune

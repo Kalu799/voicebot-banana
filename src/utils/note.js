@@ -29,8 +29,26 @@ export function creerNote({
   }
 }
 
-/** Prépare uniquement les champs éditables, en conservant l'identité de la note. */
-export function preparerModification(note, changements) {
+/** Compare le brouillon à son état d'ouverture, sans inclure les champs intacts. */
+export function preparerChangementsEdition(initial, brouillon) {
+  const changements = {}
+
+  for (const champ of ['titre', 'contenu', 'categorie', 'projet']) {
+    const valeur = champ === 'contenu'
+      ? brouillon[champ] : brouillon[champ].trim()
+    const ancienne = champ === 'contenu'
+      ? initial[champ] : initial[champ].trim()
+
+    if (valeur !== ancienne) {
+      changements[champ] = valeur
+    }
+  }
+
+  return changements
+}
+
+/** Prépare les champs éditables et vérifie les éventuels conflits du formulaire. */
+export function preparerModification(note, changements, valeursInitiales) {
   if (note.deletedAt !== null) {
     throw new Error('Restaurez la note avant de la modifier.')
   }
@@ -39,6 +57,13 @@ export function preparerModification(note, changements) {
     || typeof changements !== 'object'
     || Array.isArray(changements)) {
     throw new Error('Les changements doivent être un objet.')
+  }
+
+  if (valeursInitiales !== undefined
+    && (valeursInitiales === null
+      || typeof valeursInitiales !== 'object'
+      || Array.isArray(valeursInitiales))) {
+    throw new Error('Les valeurs initiales doivent être un objet.')
   }
 
   const champsAutorises = ['titre', 'contenu', 'categorie', 'projet']
@@ -58,6 +83,20 @@ export function preparerModification(note, changements) {
 
     if (champ === 'titre' && !texte) {
       throw new Error('Le titre de la note est obligatoire.')
+    }
+
+    // Cette vérification utilise la dernière note connue au moment de l'action.
+    if (valeursInitiales !== undefined) {
+      if (!Object.hasOwn(valeursInitiales, champ)
+        || typeof valeursInitiales[champ] !== 'string') {
+        throw new Error(`La valeur initiale du champ ${champ} est requise.`)
+      }
+
+      if (note[champ] !== valeursInitiales[champ] && texte !== note[champ]) {
+        throw new Error(
+          `Le champ « ${champ} » a changé pendant l’édition. Copiez votre brouillon, puis annulez et rouvrez la note.`,
+        )
+      }
     }
 
     resultat[champ] = texte

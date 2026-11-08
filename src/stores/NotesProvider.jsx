@@ -123,8 +123,10 @@ export function NotesProvider({ children }) {
     })
   }
 
-  function modifierNote(id, changements) {
-    return changerNote(id, note => preparerModification(note, changements))
+  function modifierNote(id, changements, valeursInitiales) {
+    return changerNote(id, note =>
+      preparerModification(note, changements, valeursInitiales),
+    )
   }
 
   function supprimerNote(id) {
