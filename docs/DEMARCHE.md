@@ -23,8 +23,39 @@ vocaux pour limiter l'utilisation du quota gratuit.
 ## Méthode
 
 Pour chaque étape : annoncer l'objectif et les fichiers, présenter et expliquer
-le code avant sa mise en place, l'intégrer, vérifier et corriger, puis poursuivre.
+le code, puis attendre le **go de l'utilisateur avant toute modification**.
+Après accord, intégrer le code, vérifier et corriger, puis expliquer le résultat.
+Présenter ensuite l'étape suivante et attendre un nouvel accord avant de l'appliquer.
 Commenter en français les intentions et les mécanismes moins évidents.
+
+## Organisation Git
+
+Le dépôt est initialisé dans `voicebot`. `main` conserve la version stable pour
+la présentation ; `dev` reçoit les fonctionnalités terminées et testées.
+Une branche `feature/...` est créée depuis `dev` pour chaque grosse fonctionnalité.
+Elle peut contenir plusieurs étapes de développement et plusieurs commits.
+
+L'utilisateur réalise les commits, les push, les pull requests et les merges :
+d'abord de la branche de fonctionnalité vers `dev`, puis de `dev` vers `main`
+lorsqu'une V1 acceptable est prête. L'assistant modifie le code et la documentation,
+effectue les vérifications et peut créer la branche convenue après accord.
+
+La première branche, `feature/gestion-notes`, regroupe le modèle de note,
+le stockage IndexedDB et le store Context/useReducer.
+
+## Organisation des dossiers
+
+Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :
+`components` pour les composants, `data` pour les données d'exemple, `services`
+pour le stockage et les échanges externes, `stores` pour l'état partagé et `utils`
+pour les fonctions utilitaires indépendantes de l'interface. Les dossiers `pages`,
+`views` et `router` pourront être utilisés selon les besoins des futurs écrans ;
+ne pas créer de dossiers vides par anticipation.
+
+La fonction `creerNote` est placée dans `src/utils/note.js`. Le dossier `models`
+n'est pas retenu : son nom est moins parlant pour l'utilisateur à ce stade.
+
+## Documentation continue
 
 Mettre à jour le README, le journal et le suivi au fil de l'avancement. Distinguer
 ce qui est prévu, documenté, essayé et validé. Garder des exemples sans données

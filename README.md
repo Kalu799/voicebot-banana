@@ -3,8 +3,9 @@
 Application web personnelle pour gérer ses notes en parlant : création, recherche,
 lecture, modification, classement, corbeille et restauration.
 
-**État actuel :** base React + Vite et page d'accueil. Les fonctions de notes,
-le stockage, la simulation et la conversation vocale restent à développer.
+**État actuel :** base React + Vite, page d'accueil et modèle de note en mémoire.
+La gestion des notes dans l'interface, le stockage, la simulation et la conversation
+vocale restent à développer.
 
 ## Démarrer
 
@@ -41,6 +42,7 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `src/main.jsx` | Monte l'application React dans `root` |
 | `src/App.jsx` | Premier composant de l'interface |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
+| `src/utils/note.js` | Construit une note avec ses valeurs initiales |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
@@ -48,6 +50,53 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `docs/` | Démarche, journal et suivi des tâches |
 
 Pour le moment : `index.html` → `main.jsx` → `App.jsx` → affichage.
+
+L'organisation reprend les habitudes des projets Vue de l'utilisateur :
+`components`, `data`, `services`, `stores`, `utils`, et selon les besoins de
+navigation `pages`, `views`, `router`. Les dossiers sont créés lorsqu'ils deviennent
+utiles. `utils/note.js` contient la fonction de création d'une note ; aucun dossier
+`models` n'est utilisé.
+
+## Modèle de note
+
+La fonction `creerNote` de `src/utils/note.js` construit un objet en mémoire.
+Elle est indépendante de React et ne réalise aucune sauvegarde.
+
+| Champ | Règle à la création |
+| --- | --- |
+| `id` | UUID généré automatiquement, indépendant du titre |
+| `titre` | Texte obligatoire, espaces de début et de fin retirés ; titre vide refusé |
+| `contenu` | Texte conservé tel quel, vide par défaut |
+| `categorie` | Texte facultatif, espaces de début et de fin retirés |
+| `projet` | Texte facultatif, espaces de début et de fin retirés |
+| `createdAt` | Date de création au format ISO en UTC |
+| `updatedAt` | Même date que `createdAt` à la création |
+| `deletedAt` | `null` pour une note active ; accueillera la date de mise en corbeille |
+
+Les valeurs fournies sont des chaînes de caractères. Deux notes peuvent avoir
+le même titre ; leur identifiant les distingue. Les règles de modification et de
+mise en corbeille seront implémentées aux étapes suivantes.
+
+Exemple à exécuter depuis ce dossier, sans interface ni service externe :
+
+```bash
+node --input-type=module <<'JS'
+import { creerNote } from './src/utils/note.js'
+
+const note = creerNote({
+  titre: '  Idée de vidéo BananaNavy  ',
+  contenu: 'Présenter le projet en trente secondes.',
+  categorie: 'Idée',
+  projet: 'BananaNavy',
+})
+
+console.log(note)
+JS
+```
+
+Le titre affiché doit être nettoyé, les deux dates identiques et `deletedAt` égal
+à `null`. Un titre composé uniquement d'espaces provoque l'erreur
+« Le titre de la note est obligatoire. ».
 
 ## Architecture prévue
 
@@ -72,10 +121,22 @@ Voir [la démarche](docs/DEMARCHE.md), [le journal](docs/JOURNAL.md) et
 L'IA accompagne les propositions de code et la documentation ; l'utilisateur
 s'approprie les choix et vérifie les résultats pour pouvoir présenter le projet.
 
+Pour chaque étape, le code est expliqué avant modification et mis en place
+uniquement après le **go de l'utilisateur**. Les vérifications et leur résultat
+sont ensuite expliqués.
+
+Le dépôt Git est à la racine de `voicebot`. Chaque grosse fonctionnalité est
+développée sur une branche `feature/...` issue de `dev`, avec plusieurs étapes
+et éventuellement plusieurs commits. L'utilisateur réalise les commits, les push,
+les pull requests et les merges. Les fonctionnalités terminées et testées sont
+intégrées dans `dev`, puis une V1 acceptable dans `main` pour la présentation.
+La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
+
 ## Limites et suite
 
 La page actuelle est statique. Aucun microphone n'est sollicité et aucune note
-n'est enregistrée. La prochaine étape consiste à définir le modèle de note.
+n'est enregistrée. Le modèle n'est pas encore utilisé par l'interface. La prochaine
+étape concerne le stockage IndexedDB et l'export/import.
 La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans

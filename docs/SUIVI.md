@@ -3,7 +3,7 @@
 | Étape | État | Critère de réussite |
 | --- | --- | --- |
 | 1. Initialiser React + Vite et préparer le dossier API | Terminé | Installation et compilation réussies, page accessible localement (HTTP vérifié) |
-| 2. Définir le modèle de note | À faire | Champs, règles et exemples expliqués |
+| 2. Définir le modèle de note | Terminé | Champs, règles et exemples documentés ; création, valeurs initiales et refus des titres vides vérifiés avec Node |
 | 3. Stockage IndexedDB et export/import | À faire | Notes persistantes et sauvegarde récupérable |
 | 4. Store Context + useReducer | À faire | Actions centralisées et erreurs gérées |
 | 5. Interface minimale et simulation | À faire | Actions locales utilisables sans quota vocal |
