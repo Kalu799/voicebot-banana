@@ -5,6 +5,9 @@ Aucun SDK, microphone ou appel ElevenLabs n’est branché à l’application. L
 consignes sont enregistrées dans l’agent distant, mais aucune conversation réelle
 n’a validé son comportement. Les six définitions distantes sont configurées et
 associées à l’agent ; leur branchement au navigateur reste à réaliser.
+La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
+fournisseur simulé, désactivée par défaut. La limitation Vercel et l’intégration
+réelle restent à vérifier avant son activation.
 
 ## Configuration distante constatée le 8 novembre 2026
 
@@ -294,7 +297,7 @@ Le [guide des outils](OUTILS.md) détaille la validation et les résultats ; le
 - Activer **Wait for response** pour chaque outil : le résultat doit revenir dans
   le contexte de la conversation avant toute confirmation.
 - Activer l’authentification de l’agent. La connexion de l’application dépendra
-  d’une route serveur protégée et limitée, à réaliser dans une étape distincte.
+  de la route serveur et de la limitation Vercel à vérifier avant activation.
 
 Les noms d’outils et de paramètres sont sensibles à la casse. Leur enregistrement
 dans le futur SDK devra correspondre à la configuration distante. Cette étape

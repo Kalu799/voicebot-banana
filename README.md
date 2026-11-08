@@ -33,7 +33,9 @@ npm run dev
 
 Ouvrir l'adresse indiquée par Vite dans le terminal. Pour arrêter : `Ctrl+C`.
 Aucune clé API, aucun compte et aucune variable d'environnement ne sont nécessaires
-à cette étape. Ne jamais enregistrer de secrets dans Git.
+pour la gestion locale et le simulateur. La future connexion vocale utilisera la
+route serveur décrite dans [le guide API](api/README.md), désactivée par défaut.
+Ne jamais enregistrer de secrets dans Git.
 
 ## Vérifier et compiler
 
@@ -71,7 +73,9 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
-| `api/` | Emplacement documenté de la future fonction Vercel |
+| `api/conversation-token.js` | Entrée de la route Vercel de jetons, désactivée par défaut |
+| `server/routeJeton.js` | Contrôle de l’accès et demande serveur du jeton ElevenLabs |
+| `tests/routeJeton.test.js` | Tests de la route avec fournisseur simulé, sans appel réel |
 | `docs/` | Démarche, journal et suivi des tâches |
 
 Pour le moment : `index.html` → `main.jsx` → `NotesProvider` → `App` → affichage.
@@ -247,9 +251,11 @@ La confirmation de réussite devra attendre la sauvegarde effective.
 La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
 proposées, le contrat des six outils et les prérequis aux essais vocaux. La
 configuration distante initiale est enregistrée ; voix et LLM restent provisoires.
-Les six outils sont définis côté ElevenLabs ; leur branchement via le SDK et la
-route serveur restent à réaliser. Le
-déploiement sera documenté lors de son implémentation. Aucun service payant n'est activé.
+Les six outils sont définis côté ElevenLabs ; leur branchement via le SDK reste
+à réaliser. La [route serveur de jetons](api/README.md) est implémentée et testée
+avec un fournisseur simulé, désactivée par défaut. La limitation Vercel et le
+déploiement restent à configurer et vérifier avant activation. Aucun service
+payant n'est activé.
 
 ## Store des notes
 

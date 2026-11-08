@@ -9,14 +9,16 @@
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
 | 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
 | 7. Client tools | En cours | Six définitions distantes configurées et associées ; connexion au store via le SDK et parcours vocaux à faire |
-| 8. Route serveur protégée | À faire | Jetons obtenus sans exposer la clé, accès contrôlé et demandes limitées |
+| 8. Route serveur protégée | En cours | Route et contrôles d’accès testés avec fournisseur simulé ; verrou fermé, limitation Vercel et intégration réelle à vérifier |
 | 9. Parcours complets et mobile | À faire | Persistance, ambiguïtés, erreurs et interactions vérifiées |
 | 10. Déploiement Vercel | À faire | Adresse stable et démonstration reproductible |
 
 La [préparation de l’agent](AGENT-ELEVENLABS.md) décrit les réglages proposés et
 les scénarios à valider ainsi que la configuration distante initiale réalisée.
 Les six outils sont configurés et associés à l’agent côté ElevenLabs.
-Aucun SDK ni endpoint de jetons n’est implémenté.
+Aucun SDK n’est implémenté. La [route de jetons](../api/README.md) est ajoutée et
+testée avec un fournisseur simulé, désactivée par défaut. La règle de limitation
+Vercel n’est pas encore configurée et doit être vérifiée avant activation.
 Aucun essai vocal n’a été lancé.
 
 Les essais vocaux dépendront de la route serveur protégée, même si sa finalisation

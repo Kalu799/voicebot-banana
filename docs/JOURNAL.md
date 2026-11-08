@@ -484,3 +484,34 @@
   mais leur exécution depuis le navigateur reste à implémenter et vérifier.
 - Suite : présenter la préparation du branchement SDK et le chemin sécurisé
   d’obtention des jetons, avant installation ou code et après nouveau go.
+
+## 8 novembre 2026 — Route serveur de jetons, désactivée par défaut
+
+- Préparation : branche `feature/integration-elevenlabs` propre, route et code
+  expliqués avant le go. Transport cible WebRTC, code personnel vérifié côté
+  serveur, limitation Vercel proposée sans base distante ni compteur en mémoire.
+- Réalisation : `server/routeJeton.js`, entrée `api/conversation-token.js`,
+  `.env.example` sans secrets et onze scénarios dans `tests/routeJeton.test.js`.
+  Aucune dépendance ajoutée et aucun secret réel créé ou renseigné.
+- Accès : POST uniquement, verrou fermé sauf valeur explicite `true`, origine
+  exacte, code Bearer long comparé par empreinte SHA-256 en temps constant.
+  Agent fixé côté serveur, clé dans l’en-tête amont, seul jeton renvoyé au client.
+  Réponses sans cache, erreurs génériques, redirections et tentatives automatiques
+  refusées, attente amont limitée à dix secondes.
+- Limitation : règle Vercel proposée à deux demandes par minute et IP, à configurer
+  et vérifier avant activation. Le verrou est manuel et ne vérifie pas la règle.
+  Pas de plafond global de minutes garanti ; conditions du compte à vérifier.
+- Vérifications réussies : `npm test`, onze scénarios de route exécutés directement
+  avec Node et `npm run build`. Refus locaux sans appel fournisseur, isolation des
+  secrets, agent imposé, réponse valide, JSON invalide, erreurs HTTP et pannes testés.
+  Expiration simulée, sans attendre réellement dix secondes ; aucun appel réel.
+- Contrôles complémentaires : 48 liens locaux valides dans 13 documents,
+  `git diff --check` réussi, `.env.local` ignoré et `.env.example` versionnable.
+  Marqueurs de la clé serveur, de son en-tête et de l’empreinte du code absents
+  du JavaScript client compilé.
+- Documentation : guide API réécrit, README, guide agent et suivi actualisés.
+- Limites : route non déployée, pare-feu non configuré, runtime Vercel non vérifié,
+  SDK et saisie du code absents. Vite seul ne sert pas la fonction. Aucun essai
+  vocal ni activation payante effectué.
+- Suite : expliquer l’exécution locale de la route et la vérification de la
+  limitation sur Vercel avec un fournisseur simulé, avant tout accès ElevenLabs réel.
