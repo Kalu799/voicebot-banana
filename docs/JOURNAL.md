@@ -358,3 +358,33 @@
 - Prochaine action : présenter la configuration distante de l’agent français et
   de ses outils, puis attendre le go avant sa réalisation. Le choix de voix et
   de modèle dépendra des options et conditions effectivement accessibles au compte.
+
+## 8 novembre 2026 — Configuration distante initiale de l’agent
+
+- Préparation : commit documentaire `1332293` confirmé, branche
+  `feature/integration-elevenlabs` propre. Configuration générale expliquée et
+  autorisée ; connexion au compte réalisée par l’utilisateur.
+- Adaptation : aucun modèle vide visible dans la galerie, constat partagé par
+  l’utilisateur. Création depuis « Voice Reading Companion », sans intégration
+  affichée, puis remplacement complet des consignes de lecture dans l’éditeur.
+  L’aperçu avant création est en lecture seule.
+- Réalisation : agent BananaNavy créé, consignes et accueil français enregistrés,
+  français seul, authentification activée, bursting désactivé, pièces jointes
+  désactivées, durée maximale de 120 secondes et arrêt après 30 secondes de silence.
+  Remplacements de voix et de langue par le client désactivés. Publication des
+  réglages sur la branche distante ElevenLabs `Main`, distincte du Git du projet.
+- Vérifications UI : publications terminées, bouton Publier désactivé sans
+  changement en attente, authentification toujours active après navigation,
+  aucun outil personnalisé associé ni procédure. Deux outils système actifs :
+  fin de conversation et détection de langue.
+- Choix provisoires : voix Eric, famille Flash (`eleven_flash_v2_5` après choix
+  du français), Gemini 3.5 Flash avec secours par défaut hérités du modèle. Aucune
+  qualité vocale, coût réel ou aptitude aux six outils encore validé.
+- Compte : offre Free constatée ; solde en crédits non converti en minutes.
+  Aucun paiement ni dépassement global activé. Enregistrement audio déjà désactivé,
+  transcriptions conservées 30 jours ; conditions du compte à vérifier avant essai.
+- Documentation : guide agent, README et suivi actualisés. Aucun SDK, endpoint,
+  clé API ou code applicatif ajouté. Aucun essai vocal lancé.
+- Suite : expliquer puis configurer les six client tools après go ; contrôler
+  aussi les variables et le workflow hérités, puis finaliser voix, LLM et budget
+  avant les essais via une route serveur protégée.

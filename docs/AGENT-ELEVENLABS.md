@@ -1,9 +1,56 @@
 # Préparation de l’agent ElevenLabs français
 
-Préparation documentée le 8 novembre 2026. Aucun agent distant n’a été créé ou
-configuré pendant cette étape. Aucun SDK, microphone ou appel ElevenLabs n’est
-branché à l’application. Les réglages ci-dessous sont proposés, pas encore validés
-par une conversation réelle.
+Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
+Aucun SDK, microphone ou appel ElevenLabs n’est branché à l’application. Les
+consignes sont enregistrées dans l’agent distant, mais aucune conversation réelle
+n’a validé son comportement. Le contrat des six outils reste à configurer.
+
+## Configuration distante constatée le 8 novembre 2026
+
+L’interface du compte ne propose pas de modèle vide : la liste des agents ouvre
+une galerie de modèles. Le modèle « Voice Reading Companion », sans intégration
+affichée, a servi de point de départ. Son aperçu des consignes est en lecture
+seule avant création ; les consignes ont été entièrement remplacées ensuite dans
+l’éditeur. Les changements ont été publiés dans la branche distante `Main`
+d’ElevenLabs, sans rapport avec la branche Git `main` du projet.
+
+| Réglage | État enregistré |
+| --- | --- |
+| Nom | BananaNavy — Assistant de notes |
+| Identifiant | `agent_5801m6xtjqxbejasesnzrxx72jtj` |
+| Langue | Français uniquement ; quatre langues supplémentaires du modèle retirées |
+| Invite système | Consignes BananaNavy reproduites plus bas |
+| Premier message | Bonjour, je suis votre assistant de notes. Que souhaitez-vous faire ? |
+| Authentification | Activée |
+| Bursting | Désactivé ; aucune autorisation d’appels au-delà de la simultanéité au tarif majoré |
+| Durée maximale | 120 secondes au lieu des 1800 secondes héritées |
+| Arrêt après silence | 30 secondes au lieu d’une attente sans limite |
+| Pièces jointes | Désactivées |
+| Remplacement de langue ou de voix par le client | Désactivé ; remplacement du prompt, du LLM et de la durée maximale déjà désactivé |
+| Voix provisoire héritée | Eric - Smooth, Trustworthy |
+| Famille TTS | Flash ; passage à `eleven_flash_v2_5` lors du choix du français |
+| LLM provisoire hérité | Gemini 3.5 Flash ; secours par défaut conservé |
+
+Le compte affiche l’offre **Free**. Le solde visible en crédits n’a pas été
+converti en minutes de conversation. Aucun abonnement, moyen de paiement ou
+réglage de dépassement global du compte n’a été activé. Désactiver le bursting
+ne constitue pas à lui seul un plafond de dépense global : les conditions de
+facturation du compte et du LLM restent à vérifier avant les essais.
+
+La voix est disponible dans « Mes Voix », mais son accent et sa qualité en
+français n’ont pas été écoutés. Le modèle LLM n’est pas encore un choix validé
+pour le projet : coût, conditions d’accès et appels d’outils restent à examiner.
+
+Contrôles dans l’interface : authentification activée après navigation,
+publication sans modification en attente, aucun outil personnalisé associé et
+aucune procédure. Deux outils système hérités sont actifs : terminer la
+conversation et détecter la langue. Les autres paramètres de workflow et les
+variables résiduelles du modèle restent à examiner avant les essais.
+
+Confidentialité constatée : enregistrement audio désactivé, conservation des
+conversations réglée sur 30 jours, mode sans rétention désactivé. Ces réglages
+n’ont pas été modifiés. Aucun essai vocal ou génération audio volontaire n’a été
+lancé ; aucune clé API n’a été créée ni copiée.
 
 ## Objectif et responsabilités
 
@@ -18,7 +65,7 @@ La couche existante `src/services/notesTools.js` reste la référence des action
 Le [guide des outils](OUTILS.md) détaille la validation et les résultats ; le
 [simulateur](SIMULATION.md) permet de les exercer sans connexion vocale.
 
-## Réglages proposés
+## Réglages cibles et points à finaliser
 
 - Langue de conversation : français.
 - Voix : compatible français et accessible dans l’offre gratuite du compte ;
