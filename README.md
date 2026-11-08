@@ -3,9 +3,9 @@
 Application web personnelle pour gérer ses notes en parlant : création, recherche,
 lecture, modification, classement, corbeille et restauration.
 
-**État actuel :** base React + Vite, page d'accueil et modèle de note en mémoire.
-La gestion des notes dans l'interface, le stockage, la simulation et la conversation
-vocale restent à développer.
+**État actuel :** base React + Vite, page d'accueil, modèle de note et service
+IndexedDB pour enregistrer et récupérer les notes. La gestion des notes dans
+l'interface, l'export/import, la simulation et la conversation vocale restent à développer.
 
 ## Démarrer
 
@@ -43,6 +43,7 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `src/App.jsx` | Premier composant de l'interface |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
 | `src/utils/note.js` | Construit une note avec ses valeurs initiales |
+| `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
@@ -98,6 +99,64 @@ Le titre affiché doit être nettoyé, les deux dates identiques et `deletedAt` 
 à `null`. Un titre composé uniquement d'espaces provoque l'erreur
 « Le titre de la note est obligatoire. ».
 
+## Stockage local IndexedDB
+
+`src/services/notesStorage.js` utilise directement l'API du navigateur, sans
+bibliothèque supplémentaire. La base `voicebot`, version 1, contient un magasin
+`notes` dont la clé est le champ `id`.
+
+- `ouvrirBase()` crée la structure à la première ouverture et renvoie une connexion.
+  Si vous l'appelez directement, fermez cette connexion avec `base.close()`.
+- `enregistrerNote(note)` ajoute ou remplace une note complète selon son `id`.
+  La promesse est résolue uniquement après la fin réussie de la transaction.
+- `recupererNotes()` renvoie toutes les notes, y compris celles de la future
+  corbeille, sans tri de présentation. Une base vide renvoie `[]`.
+
+Les deux dernières fonctions ouvrent et ferment elles-mêmes leur connexion.
+Les erreurs sont propagées à l'appelant, qui pourra les afficher dans l'interface.
+Une ouverture bloquée signale de fermer les autres onglets ; une connexion ouverte
+est libérée lorsqu'un autre onglet demande un changement de version.
+
+Le service reçoit des notes complètes construites avec `creerNote`. Il ne valide
+pas encore les données externes et ne modifie pas `updatedAt` ou `deletedAt` : les
+règles métier seront gérées par le store, et l'import aura sa propre validation.
+
+### Vérification manuelle dans le navigateur
+
+Démarrer `npm run dev`, ouvrir l'application puis la console des outils de
+développement. Exécuter sur une ligne ou en un seul bloc :
+
+```js
+const { creerNote } = await import('/src/utils/note.js')
+const { enregistrerNote, recupererNotes } = await import('/src/services/notesStorage.js')
+const note = creerNote({ titre: 'Essai de persistance BananaNavy' })
+await enregistrerNote(note)
+await enregistrerNote({ ...note, contenu: 'Toujours présente après rechargement.' })
+console.table(await recupererNotes())
+```
+
+La note doit apparaître une seule fois, avec le contenu ajouté. Recharger la page,
+puis exécuter :
+
+```js
+const { recupererNotes } = await import('/src/services/notesStorage.js')
+console.table(await recupererNotes())
+```
+
+La même note doit être présente. Les imports de `/src/` ci-dessus sont destinés au
+serveur de développement Vite. On peut aussi consulter `voicebot` → `notes` dans
+le panneau de stockage IndexedDB des outils de développement.
+
+Garder exactement la même origine (protocole, hôte et port) pour les deux essais :
+`localhost` et `127.0.0.1`, ou deux ports différents, ont des stockages distincts.
+Ces essais créent de vraies notes locales. L'interface actuelle ne les affiche pas.
+
+Vérifications effectuées le 8 novembre 2026 dans un profil Chrome temporaire :
+création, remplacement sans doublon, conservation des notes de la corbeille,
+persistance après redémarrage du navigateur et rechargement, erreurs de lecture
+et d'écriture lors de transactions annulées, changement de version. Voir le
+[journal](docs/JOURNAL.md) pour le détail et les limites des essais.
+
 ## Architecture prévue
 
 - React + Vite : interface et outils de développement.
@@ -125,6 +184,10 @@ Pour chaque étape, le code est expliqué avant modification et mis en place
 uniquement après le **go de l'utilisateur**. Les vérifications et leur résultat
 sont ensuite expliqués.
 
+Lorsqu'un ensemble cohérent est prêt, proposer un message de commit au format
+**VERBE EN MAJUSCULES + description en français**, par exemple
+`ADD sauvegarde locale des notes avec IndexedDB`.
+
 Le dépôt Git est à la racine de `voicebot`. Chaque grosse fonctionnalité est
 développée sur une branche `feature/...` issue de `dev`, avec plusieurs étapes
 et éventuellement plusieurs commits. L'utilisateur réalise les commits, les push,
@@ -134,9 +197,10 @@ La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
 
 ## Limites et suite
 
-La page actuelle est statique. Aucun microphone n'est sollicité et aucune note
-n'est enregistrée. Le modèle n'est pas encore utilisé par l'interface. La prochaine
-étape concerne le stockage IndexedDB et l'export/import.
+La page actuelle est statique. Aucun microphone n'est sollicité. Le modèle et le
+service de stockage ne sont pas encore utilisés par l'interface : les notes sont
+manipulables via les modules, mais pas encore depuis la page. La prochaine étape
+concerne l'export/import.
 La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans

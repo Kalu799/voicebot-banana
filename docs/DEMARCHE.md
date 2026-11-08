@@ -43,6 +43,22 @@ effectue les vérifications et peut créer la branche convenue après accord.
 La première branche, `feature/gestion-notes`, regroupe le modèle de note,
 le stockage IndexedDB et le store Context/useReducer.
 
+Proposer un commit lorsqu'un ensemble cohérent de changements est prêt, avec
+un verbe en majuscules suivi d'une description en français (`ADD`, `EDIT`,
+`REMOVE`, etc.). L'utilisateur exécute lui-même le commit.
+
+## Stockage local — 8 novembre 2026
+
+Utiliser l'API IndexedDB native pour ouvrir la base `voicebot` et son magasin
+`notes`, enregistrer une note complète et récupérer l'ensemble des notes.
+Ce choix suit le cadrage et évite une dépendance supplémentaire. Aucune
+bibliothèque alternative n'a été essayée à cette étape.
+
+Transformer les événements IndexedDB en promesses permet aux futurs appelants
+d'utiliser `async/await`. Attendre la fin de la transaction pour confirmer la
+sauvegarde, puis fermer la connexion. Séparer le stockage des règles métier et
+de l'interface pour permettre les vérifications sans connexion vocale.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :
@@ -65,3 +81,7 @@ personnelles pour la démonstration.
 
 - [Guide officiel Vite](https://vite.dev/guide/), consulté le 8 novembre 2026 :
   structure de projet, commandes et prérequis Node.js.
+- [Spécification IndexedDB du W3C](https://www.w3.org/TR/IndexedDB/) et
+  [guide IndexedDB de Mozilla](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB),
+  consultés le 8 novembre 2026 : transactions, création de structure et gestion
+  des connexions bloquées ou concernées par un changement de version.

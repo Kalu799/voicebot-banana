@@ -47,3 +47,33 @@
 - Le code de `creerNote` reste identique ; seuls son emplacement et les chemins
   documentés changent. Le dossier vide `models` est retiré.
 - Les autres dossiers seront créés progressivement selon les besoins.
+
+## 8 novembre 2026 — Stockage IndexedDB
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre au début de l'étape.
+- Objectif : enregistrer une note et la retrouver après rechargement.
+- Réalisation : service `src/services/notesStorage.js`, base `voicebot` version 1,
+  magasin `notes` identifié par `id`. Trois fonctions : `ouvrirBase`,
+  `enregistrerNote` et `recupererNotes`.
+- Décisions : API native sans dépendance, promesses pour `async/await`, confirmation
+  après la transaction complète, connexions fermées après usage. Les notes de la
+  future corbeille restent incluses dans la lecture.
+- Vérifications réussies : compilation `npm run build` et erreur explicite en
+  environnement Node sans IndexedDB.
+- Essais ponctuels dans Chrome sans interface avec un profil temporaire isolé et
+  une copie des modules : base initialement vide, création, mise à jour sans
+  doublon, notes distinctes portant le même titre et inclusion de la corbeille.
+  Notes retrouvées après fermeture et réouverture de Chrome, puis rechargement.
+- Erreurs vérifiées dans Chrome : note sans identifiant, annulation forcée d'une
+  transaction d'écriture (sans modification conservée), annulation d'une lecture,
+  fermeture de connexion lors d'un changement de version et refus d'une version
+  incompatible avec conservation de la cause technique.
+- Difficulté de vérification : le premier outil de capture du DOM terminait avant
+  les opérations IndexedDB. La relance avec attente explicite du résultat via le
+  protocole de débogage Chrome a permis de terminer les contrôles.
+- Non vérifié : quota disque réellement épuisé et comportement des autres
+  navigateurs. La gestion d'une ouverture bloquée est prévue mais ce cas n'a pas
+  été reproduit lors des essais.
+- Limites : pas encore d'interface reliée au stockage ni d'export/import.
+- Prochaine action : présenter l'export/import et attendre le go avant de l'ajouter.
