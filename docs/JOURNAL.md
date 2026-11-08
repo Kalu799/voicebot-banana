@@ -420,3 +420,25 @@
   workflow ou outil modifié ; aucune conversation lancée.
 - Suite : présenter les champs du client tool `creer_note`, puis attendre le go
   avant sa configuration distante.
+
+## 8 novembre 2026 — Définition distante du client tool creer_note
+
+- Préparation : commit `20662df` confirmé, branche
+  `feature/integration-elevenlabs` propre. Nom, description, quatre paramètres
+  et attente du résultat présentés puis autorisés avant configuration.
+- Réalisation : outil de type Client `creer_note`, textes `titre` obligatoire,
+  `contenu`, `categorie`, `projet` facultatifs, extraits par le LLM. Attente de
+  réponse activée, sans mock ni affectation de variable dynamique.
+- Ajustement expliqué : délai par défaut d’une seconde porté à 10 secondes
+  pour laisser répondre une sauvegarde retardée. Ce délai ne garantit pas une
+  réussite et ne rend pas sûre une répétition automatique de création.
+- Enregistrement : outil créé, délai enregistré dans sa fiche, association à
+  l’agent publiée sur la branche distante ElevenLabs `Main`.
+- Vérifications : formulaire et JSON examinés, publication terminée, outil
+  associé et paramètres conservés après rechargement, dont le délai de
+  10 secondes et le seul titre obligatoire. Aucun appel de l’outil lancé.
+- Documentation : guide agent, suivi et journal actualisés. Aucun code applicatif
+  modifié. Le SDK et la route serveur restent absents ; la création vocale de
+  notes n’est donc pas encore disponible. Aucun essai vocal effectué.
+- Suite : présenter `chercher_notes` et `lire_note`, puis attendre le go avant
+  leur configuration distante.

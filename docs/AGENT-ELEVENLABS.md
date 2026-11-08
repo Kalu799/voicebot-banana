@@ -3,7 +3,8 @@
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
 Aucun SDK, microphone ou appel ElevenLabs n’est branché à l’application. Les
 consignes sont enregistrées dans l’agent distant, mais aucune conversation réelle
-n’a validé son comportement. Le contrat des six outils reste à configurer.
+n’a validé son comportement. La définition distante de `creer_note` est configurée ;
+les cinq autres outils et le branchement au navigateur restent à réaliser.
 
 ## Configuration distante constatée le 8 novembre 2026
 
@@ -92,6 +93,43 @@ Confidentialité constatée : enregistrement audio désactivé, conservation des
 conversations réglée sur 30 jours, mode sans rétention désactivé. Ces réglages
 n’ont pas été modifiés. Aucun essai vocal ou génération audio volontaire n’a été
 lancé ; aucune clé API n’a été créée ni copiée.
+
+## Premier client tool configuré : `creer_note`
+
+Définition créée et associée à l’agent le 8 novembre 2026, puis association publiée
+sur la branche distante `Main`. Identifiant de l’outil :
+`tool_8701m6y210ajee89cg95dxht6r05`.
+
+| Réglage | Valeur enregistrée |
+| --- | --- |
+| Type | Client |
+| Nom | `creer_note` |
+| Description | Créer une note lorsque l’utilisateur le demande. Demander le titre s’il manque. Fournir uniquement les informations demandées, sans inventer de contenu ni de classement. |
+| Attendre la réponse | Activé (`expects_response: true`) |
+| Délai d’attente | 10 secondes (`response_timeout_secs`), au lieu de la seconde proposée par défaut |
+
+| Paramètre | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `titre` | String | Oui | Titre non vide demandé par l’utilisateur. |
+| `contenu` | String | Non | Contenu à enregistrer dans la note. |
+| `categorie` | String | Non | Catégorie explicitement demandée. |
+| `projet` | String | Non | Projet explicitement demandé. |
+
+Les valeurs sont extraites par le LLM (`Invite LLM`), sans énumération ni valeur
+constante. Aucun mock de réponse ni affectation de variable dynamique ajouté.
+Le titre non vide est demandé par la description ; la validation effective reste
+assurée par notre couche locale, pas par cette seule consigne.
+
+L’attente de réponse laisse à l’outil le temps de terminer ; elle ne garantit
+pas que son résultat soit un succès. L’agent doit toujours vérifier `succes`.
+Un délai dépassé ne prouve pas qu’une sauvegarde a échoué et ne justifie pas
+une nouvelle création automatique : la déduplication reste à implémenter.
+
+Vérifications : formulaire et JSON contrôlés, association publiée sans changement
+en attente, puis outil rouvert après rechargement avec les quatre paramètres,
+le seul titre requis et le délai de 10 secondes conservés. Aucun appel d’outil
+ou test vocal effectué. Le SDK n’est pas branché : la définition distante seule
+ne permet pas encore de créer une note dans IndexedDB depuis une conversation.
 
 ## Objectif et responsabilités
 

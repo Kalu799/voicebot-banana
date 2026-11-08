@@ -8,15 +8,16 @@
 | 4. Store Context + useReducer | Terminé | Chargement, création, modification, corbeille et import avec actualisation vérifiés ; erreurs et besoin de rechargement gérés |
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
 | 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
-| 7. Client tools | À faire | Actions vocales reliées au store |
+| 7. Client tools | En cours | Définition distante de `creer_note` configurée ; cinq autres outils et connexion au store via le SDK à faire |
 | 8. Route serveur protégée | À faire | Jetons obtenus sans exposer la clé, accès contrôlé et demandes limitées |
 | 9. Parcours complets et mobile | À faire | Persistance, ambiguïtés, erreurs et interactions vérifiées |
 | 10. Déploiement Vercel | À faire | Adresse stable et démonstration reproductible |
 
 La [préparation de l’agent](AGENT-ELEVENLABS.md) décrit les réglages proposés et
 les scénarios à valider ainsi que la configuration distante initiale réalisée.
-Les six outils restent à configurer côté ElevenLabs ; aucun SDK ni endpoint de
-jetons n’est implémenté. Aucun essai vocal n’a été lancé.
+`creer_note` est configuré et associé à l’agent côté ElevenLabs ; les cinq autres
+définitions restent à créer. Aucun SDK ni endpoint de jetons n’est implémenté.
+Aucun essai vocal n’a été lancé.
 
 Les essais vocaux dépendront de la route serveur protégée, même si sa finalisation
 figure à l'étape 8 du cadrage.
