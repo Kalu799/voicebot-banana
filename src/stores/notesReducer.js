@@ -2,6 +2,7 @@ export const etatInitialNotes = {
   notes: [],
   chargement: true,
   erreur: null,
+  rechargementRequis: false,
 }
 
 /** Calcule le nouvel état sans modifier le précédent ni accéder au stockage. */
@@ -13,10 +14,16 @@ export function notesReducer(etat, action) {
         notes: action.notes,
         chargement: false,
         erreur: null,
+        rechargementRequis: false,
       }
 
     case 'CHARGEMENT_ECHOUE':
-      return { ...etat, chargement: false, erreur: action.message }
+      return {
+        ...etat,
+        chargement: false,
+        erreur: action.message,
+        rechargementRequis: true,
+      }
 
     case 'NOTE_AJOUTEE':
       return {

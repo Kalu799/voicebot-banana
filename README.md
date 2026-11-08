@@ -6,7 +6,8 @@ lecture, modification, classement, corbeille et restauration.
 **État actuel :** base React + Vite, page d'accueil, modèle de note et service
 IndexedDB pour enregistrer et récupérer les notes, export/import JSON validé.
 Le store Context + useReducer charge les notes au démarrage et permet de les créer,
-modifier, mettre en corbeille et restaurer après sauvegarde réussie. La gestion des notes dans l'interface, les boutons de
+modifier, mettre en corbeille et restaurer après sauvegarde réussie. L'import via
+le store actualise aussi la liste sans rechargement. La gestion des notes dans l'interface, les boutons de
 sauvegarde, la simulation et la conversation vocale restent à développer.
 
 ## Démarrer
@@ -211,6 +212,8 @@ composants enfants. Le hook `useNotes()` expose :
 - `notes` : toutes les notes chargées, corbeille comprise ;
 - `chargement` : vrai pendant la lecture initiale, faux après réussite ou échec ;
 - `erreur` : message de la dernière erreur gérée, ou `null` ;
+- `rechargementRequis` : vrai si une lecture a échoué et que les actions sont
+  bloquées jusqu'au rechargement de l'application ;
 - `ajouterNote(champs)` : construit une note, attend sa sauvegarde puis demande
   au reducer de l'ajouter en mémoire. Renvoie la note sauvegardée ou rejette
   la promesse en cas d'erreur.
@@ -218,11 +221,18 @@ composants enfants. Le hook `useNotes()` expose :
   `categorie` ou `projet` sur une note active.
 - `supprimerNote(id)` : place la note en corbeille sans la retirer du stockage.
 - `restaurerNote(id)` : remet une note de la corbeille à l'état actif.
+- `importerSauvegarde(fichier)` : importe le fichier puis relit IndexedDB et
+  actualise le store dans la même file d'actions. Renvoie `{ importees, ignorees }`.
 
 Les actions sont refusées avant un chargement réussi. Si la lecture initiale
 échoue, recharger la page après avoir résolu le problème. Une erreur d'action
 conserve les notes existantes et permet de réessayer. Les actions sont exécutées
 dans l'ordre pour préserver les changements de demandes rapprochées.
+
+Si l'import est enregistré mais que sa relecture échoue, l'erreur l'indique
+explicitement, conserve les compteurs dans `resultatImport` avec
+`importEnregistre: true`, et impose un rechargement avant toute autre action.
+Un fichier refusé ou une transaction d'import annulée ne bloque pas le store.
 
 Un identifiant introuvable, un titre vide ou un champ non autorisé provoque une
 erreur. Une note en corbeille doit être restaurée avant modification. Supprimer
@@ -263,8 +273,8 @@ La page actuelle est statique. Aucun microphone n'est sollicité. Le provider
 charge les notes, mais aucun composant ne les affiche ou ne déclenche encore
 d'action utilisateur. L'export produit un
 fichier en mémoire ; son téléchargement et la sélection d'un fichier d'import
-restent à relier à l'interface. Le store doit encore recevoir l'intégration de
-l'import pour refléter ses résultats sans rechargement de la page.
+restent à relier à l'interface. Le store prend maintenant en charge l'import ;
+la prochaine étape concerne l'interface de gestion des notes.
 La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans

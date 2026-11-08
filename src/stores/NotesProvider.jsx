@@ -6,6 +6,7 @@ import {
   preparerRestauration,
 } from '../utils/note.js'
 import { enregistrerNote, recupererNotes } from '../services/notesStorage.js'
+import { importerNotes } from '../services/notesBackup.js'
 import { NotesContext } from './NotesContext.js'
 import { etatInitialNotes, notesReducer } from './notesReducer.js'
 
@@ -47,7 +48,7 @@ export function NotesProvider({ children }) {
   function verifierDisponibilite() {
     if (!chargementReussi.current) {
       throw new Error(
-        'Les notes ne sont pas encore chargées. Si le chargement a échoué, rechargez la page.',
+        'Les notes ne sont pas disponibles. Rechargez la page pour les charger.',
       )
     }
   }
@@ -127,6 +128,40 @@ export function NotesProvider({ children }) {
     return changerNote(id, preparerRestauration)
   }
 
+  function importerSauvegarde(fichier) {
+    return executerAction(async () => {
+      const resultat = await importerNotes(fichier)
+
+      let notes
+      try {
+        notes = await recupererNotes()
+      } catch (cause) {
+        const erreur = new Error(
+          'L’import est enregistré, mais l’actualisation des notes a échoué. Rechargez la page avant de continuer.',
+          { cause },
+        )
+
+        // Permet à l'appelant de reconnaître un import déjà terminé.
+        erreur.importEnregistre = true
+        erreur.resultatImport = resultat
+
+        if (chargementReussi.current) {
+          chargementReussi.current = false
+          dispatch({ type: 'CHARGEMENT_ECHOUE', message: erreur.message })
+        }
+
+        throw erreur
+      }
+
+      if (chargementReussi.current) {
+        notesCourantes.current = notes
+        dispatch({ type: 'NOTES_CHARGEES', notes })
+      }
+
+      return resultat
+    })
+  }
+
   return (
     <NotesContext.Provider value={{
       ...etat,
@@ -134,6 +169,7 @@ export function NotesProvider({ children }) {
       modifierNote,
       supprimerNote,
       restaurerNote,
+      importerSauvegarde,
     }}>
       {children}
     </NotesContext.Provider>

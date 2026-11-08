@@ -7,6 +7,8 @@
   vérifie les identifiants locaux et ajoute les notes absentes dans une transaction.
 - L'interface permettra plus tard de télécharger le fichier et de choisir celui
   à importer. Le service peut déjà être utilisé depuis la console du navigateur.
+- L'action `importerSauvegarde` du store coordonne l'import puis la relecture
+  pour actualiser la liste sans rechargement. Elle sera utilisée par l'interface.
 
 La version du format de sauvegarde est indépendante de la version de la base.
 Le fichier inclut les notes actives et celles de la corbeille.
@@ -101,7 +103,14 @@ console.log(await importerNotes(fichierSauvegarde))
 Comme les notes existent déjà, le résultat doit indiquer zéro note importée et
 autant de notes ignorées que de notes exportées. L'export vide est aussi valide.
 Pour une restauration depuis le disque, le futur sélecteur de fichier fournira
-un objet `File` à cette même fonction `importerNotes`.
+un objet `File` à l'action `importerSauvegarde` de `useNotes`, qui appellera ce
+service et actualisera les notes du store. Un appel direct au service dans la
+console ne rafraîchit pas un provider déjà monté.
+
+Si l'import est enregistré mais que cette actualisation échoue, le store demande
+un rechargement et bloque les actions sur l'ancienne liste. L'erreur possède
+`importEnregistre: true` et les compteurs dans `resultatImport` ; les notes restent
+enregistrées en base. Voir [le guide du store](STORE.md).
 
 ## Vérifications du 8 novembre 2026
 

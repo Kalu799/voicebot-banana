@@ -99,6 +99,12 @@ dans l'ordre avec une file de promesses. Cela préserve les changements rapproch
 d'une même note, même avant un nouveau rendu. Une action échouée reste signalée
 à son appelant tout en laissant passer la suivante.
 
+Compléter le store avec `importerSauvegarde`, qui conserve l'import et sa relecture
+dans la même file d'actions. Réutiliser les transitions de chargement pour
+actualiser la liste. Distinguer un import refusé d'un import enregistré dont la
+relecture échoue : exposer les compteurs dans l'erreur et bloquer les actions sur
+l'état périmé via `rechargementRequis` jusqu'au rechargement.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :

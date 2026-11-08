@@ -142,3 +142,28 @@
   Versions modifiées et corbeille retrouvées après redémarrage et rechargement.
 - Documentation : README, guide du store, démarche et suivi mis à jour.
 - Prochaine action : présenter l'intégration de l'import au store et attendre le go.
+
+## 8 novembre 2026 — Import intégré au store
+
+- Préparation : commit précédent effectué par l'utilisateur, branche
+  `feature/gestion-notes` propre ; code présenté avant intégration.
+- Réalisation : action `importerSauvegarde` du provider, import puis relecture
+  IndexedDB dans la même file, actualisation de la référence et du reducer,
+  compteurs renvoyés à l'appelant. Indicateur `rechargementRequis` ajouté à l'état.
+- Décision : un fichier refusé ou un import annulé reste réessayable. Si l'import
+  est enregistré mais la relecture échoue, l'erreur l'indique et contient les
+  compteurs ainsi que la cause ; les actions sur l'état périmé sont bloquées
+  jusqu'au rechargement. Le même indicateur couvre l'échec du chargement initial.
+- Vérifications réussies : reducer avec Node, compilation et essais Chrome
+  isolés. Import actualisé sans rechargement, conflits, corbeille, réimport et
+  import vide contrôlés. Fichier invalide et transaction annulée sans blocage
+  durable. Modification immédiate d'une note importée et création suivie d'import
+  sans perte. Anciens parcours du store toujours vérifiés.
+- Cas après sauvegarde vérifié : import réellement présent en base malgré la
+  relecture annulée, liste mémoire conservée, erreur avec compteurs et cause,
+  actions en attente et suivantes bloquées. Remontage du provider réactivant les
+  actions, persistance après redémarrage de Chrome et rechargement.
+- Documentation : README, guides du store et des sauvegardes, démarche et suivi
+  mis à jour. Étape du store terminée ; interface encore statique.
+- Prochaine action : présenter l'interface minimale de gestion des notes et
+  attendre le go avant les modifications.

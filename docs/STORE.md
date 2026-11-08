@@ -29,6 +29,7 @@ Context et useReducer, sans bibliothèque supplémentaire.
   notes: [],
   chargement: true,
   erreur: null,
+  rechargementRequis: false,
 }
 ```
 
@@ -37,8 +38,8 @@ Le chargement passe à `false` après la lecture initiale, qu'elle réussisse ou
 
 | Action du reducer | Effet |
 | --- | --- |
-| `NOTES_CHARGEES` | Remplace la liste par les notes lues et termine le chargement |
-| `CHARGEMENT_ECHOUE` | Termine le chargement et conserve le message d'erreur |
+| `NOTES_CHARGEES` | Remplace la liste lue, termine le chargement et efface l'erreur et le besoin de rechargement |
+| `CHARGEMENT_ECHOUE` | Termine le chargement, conserve la liste et signale l'erreur avec rechargement requis |
 | `NOTE_AJOUTEE` | Produit une nouvelle liste avec la note sauvegardée |
 | `NOTE_MISE_A_JOUR` | Remplace uniquement la note portant l'identifiant concerné |
 | `ERREUR_ACTION` | Conserve la liste et expose une erreur |
@@ -62,7 +63,8 @@ une lecture initiale tardive ne peut donc pas écraser une note nouvellement cr�
 
 En cas d'échec initial, le store expose l'erreur et n'autorise pas les actions.
 Cette première version ne possède pas de bouton Réessayer : il faut recharger
-la page après résolution du problème.
+la page après résolution du problème. `rechargementRequis` vaut alors `true`,
+pour que l'interface distingue cet état d'une erreur d'action permettant de réessayer.
 
 ## Création d'une note
 
@@ -70,7 +72,7 @@ Le futur composant appellera le hook à son niveau principal, puis déclenchera
 l'action depuis un événement utilisateur, par exemple :
 
 ```jsx
-const { notes, chargement, erreur, ajouterNote } = useNotes()
+const { notes, chargement, erreur, rechargementRequis, ajouterNote } = useNotes()
 
 async function enregistrerFormulaire(champs) {
   try {
@@ -85,8 +87,8 @@ async function enregistrerFormulaire(champs) {
 ```
 
 Cet extrait illustre le futur usage ; il n'est pas encore installé dans `App`.
-Le formulaire devra rester désactivé pendant le chargement initial et après un
-échec de celui-ci. La garde de disponibilité rejette directement l'action ; les
+Le formulaire devra rester désactivé si `chargement || rechargementRequis`.
+La garde de disponibilité rejette directement l'action ; les
 erreurs de validation et de sauvegarde sont aussi inscrites dans `erreur`.
 
 Flux : `ajouterNote(champs)` → `creerNote(champs)` → `enregistrerNote(note)` →
@@ -146,6 +148,38 @@ La promesse retournée à l'appelant conserve son éventuelle erreur ; seule la
 promesse interne de file absorbe cet échec pour laisser passer l'action suivante.
 La file ne synchronise pas d'autres onglets ou d'autres instances de provider.
 
+## Import et actualisation
+
+L'action `importerSauvegarde(fichier)`, exposée par `useNotes`, réutilise le service
+`importerNotes`. Elle attend la fin de l'import, relit IndexedDB, remplace
+`notesCourantes` puis envoie `NOTES_CHARGEES` au reducer. Elle renvoie les compteurs
+`{ importees, ignorees }`. La corbeille et les conflits locaux suivent les règles
+du service de sauvegarde existant.
+
+L'import et la relecture forment une seule opération dans la file du provider.
+Une action appelée juste après l'import peut donc modifier une note importée,
+même via un accès au hook obtenu avant le nouveau rendu React.
+
+Trois résultats sont distingués :
+
+- Import et relecture réussis : notes actualisées sans rechargement et compteurs
+  renvoyés à l'appelant.
+- Fichier invalide ou transaction annulée : notes inchangées, erreur exposée et
+  promesse rejetée ; une nouvelle action reste possible.
+- Import réussi mais relecture échouée : données enregistrées en base, ancienne
+  liste conservée en mémoire. L'erreur indique que l'import est enregistré,
+  `rechargementRequis` devient vrai et les actions, même déjà en attente, sont
+  refusées jusqu'au rechargement. Le message reste visible.
+
+Dans ce dernier cas, l'erreur rejetée possède `importEnregistre: true`,
+`resultatImport: { importees, ignorees }` et une `cause` technique. Le futur
+composant pourra expliquer le résultat sans proposer de répéter l'import comme
+s'il avait échoué avant sauvegarde. Recharger la page retrouve les données en base
+et réactive les actions après une lecture réussie.
+
+L'action réutilise `CHARGEMENT_ECHOUE` pour signaler cette lecture impossible.
+Le provider invalidé ne tente pas d'appliquer des changements sur sa liste périmée.
+
 ## Vérifications du 8 novembre 2026
 
 - Assertions Node sur le reducer : transitions, conservation de l'état précédent,
@@ -172,6 +206,14 @@ La file ne synchronise pas d'autres onglets ou d'autres instances de provider.
 - Actions via un ancien accès au hook, modifications rapprochées d'une même note,
   suppression suivie de restauration et poursuite de la file après un échec.
 - Versions modifiées et corbeille persistantes après redémarrage et rechargement.
+- Import sans rechargement : compteurs, champs, corbeille, conflits locaux,
+  réimport sans doublon, import vide et modification immédiate d'une note importée.
+- Création puis import rapprochés sans perte, fichier invalide et import annulé
+  sans changement ni blocage durable des actions.
+- Import enregistré puis relecture annulée : note conservée en base, erreur avec
+  compteurs et cause, ancienne liste inchangée, actions en attente et suivantes
+  bloquées sans effacer le message. Remontage du provider réactivant les actions.
+- Notes importées retrouvées après redémarrage du navigateur et rechargement.
 
 Ces essais utilisent un profil temporaire et n'exposent aucun outil de test dans
 l'application. Les autres navigateurs et le quota disque réellement épuisé
@@ -179,7 +221,8 @@ restent à vérifier.
 
 ## Périmètre restant
 
-Relier l'import au store. Un import effectué directement via le service ne rafraîchit
-pas encore un provider déjà monté ; il faut recharger la page pour le relire.
+Utiliser `importerSauvegarde` depuis la future interface pour actualiser le store.
+Un appel direct au service `importerNotes` depuis la console ne rafraîchit pas
+le provider ; il faut alors recharger la page pour relire ses résultats.
 Aucune synchronisation automatique entre onglets n'est implémentée.
 Les composants de liste et de formulaire seront ajoutés à l'étape d'interface.
