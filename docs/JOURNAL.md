@@ -313,3 +313,21 @@
 - Limite conservée : aucune synchronisation entre onglets.
 - Prochaine action : présenter la correction des liens vers les documents situés
   hors du dépôt et attendre le go avant de l'appliquer.
+
+## 8 novembre 2026 — Documentation autonome dans le dépôt
+
+- Préparation : correction des conflits d'édition commitée par l'utilisateur ;
+  branche `fix/revue-gestion-notes` propre au début de cette étape.
+- Problème : README et démarche dépendaient de deux documents du dossier parent,
+  absents lors d'un clonage du seul dépôt `voicebot`.
+- Réalisation : copie du cadrage dans `docs/CADRAGE.md` et de l'étude dans
+  `docs/ELEVENLABS-COUTS.md`, liens du README et de la démarche corrigés, chemin
+  du suivi adapté dans le cadrage. Les versions incluses dans le dépôt deviennent
+  les références pour sa documentation.
+- Conservation : originaux de BananaNavy inchangés ; étude copiée à l'identique,
+  avec sa date du 5 novembre 2026. Aucun tarif réévalué lors de cette opération.
+- Vérification réussie : 37 liens locaux contrôlés dans 12 documents Markdown,
+  tous présents dans une copie isolée de 47 fichiers du projet, sans documents
+  du dossier parent. `git diff --check` réussi. Aucun code applicatif modifié.
+- Prochaine action : commit et pull request des corrections vers `dev` par
+  l'utilisateur, puis préparation de l'intégration vocale après explication et go.

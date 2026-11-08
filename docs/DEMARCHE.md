@@ -4,14 +4,14 @@
 
 Créer une application personnelle de notes pilotée à la voix, utilisable comme
 projet de présentation et de portfolio. Les décisions initiales sont conservées
-dans [PROJET.md](../../PROJET.md). Les autres idées et comparaisons ne sont pas
+dans [CADRAGE.md](CADRAGE.md). Les autres idées et comparaisons ne sont pas
 reconstituées sans traces disponibles.
 
 ## Décisions de départ
 
 La stack React, Vite, Context/useReducer, IndexedDB, ElevenLabs et Vercel est retenue
 dans le cadrage. L'étude vocale existante est accessible dans
-[ELEVENLABS-COUTS.md](../../ELEVENLABS-COUTS.md).
+[ELEVENLABS-COUTS.md](ELEVENLABS-COUTS.md).
 
 Le 8 novembre 2026, la base est initialisée en JavaScript avec JSX. Ce choix permet
 de commencer avec des composants simples et de limiter les notions à introduire.

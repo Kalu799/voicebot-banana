@@ -296,8 +296,8 @@ les responsabilités des fichiers, le flux et les vérifications.
 ## Démarche et présentation
 
 Voir [la démarche](docs/DEMARCHE.md), [le journal](docs/JOURNAL.md) et
-[le suivi](docs/SUIVI.md). Le [cadrage initial](../PROJET.md) et
-[l'étude ElevenLabs](../ELEVENLABS-COUTS.md) restent les références.
+[le suivi](docs/SUIVI.md). Le [cadrage initial](docs/CADRAGE.md) et
+[l'étude ElevenLabs](docs/ELEVENLABS-COUTS.md) sont inclus dans le dépôt.
 
 L'IA accompagne les propositions de code et la documentation ; l'utilisateur
 s'approprie les choix et vérifie les résultats pour pouvoir présenter le projet.
