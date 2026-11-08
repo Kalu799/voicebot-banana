@@ -462,3 +462,25 @@
   ou SDK ajouté ; les définitions distantes ne valident pas encore un parcours vocal.
 - Suite : présenter `modifier_note`, `supprimer_note` et `restaurer_note`, puis
   attendre le go avant leur configuration distante.
+
+## 8 novembre 2026 — Définitions distantes de modification et de corbeille
+
+- Préparation : commit `7f20956` confirmé, branche propre. Descriptions,
+  paramètres imbriqués de modification, identifiants de corbeille/restauration,
+  attente du résultat et délais expliqués puis autorisés.
+- Réalisation : trois client tools, attente de réponse et délai de 10 secondes.
+  `modifier_note` reçoit `id` et `changements` obligatoires ; les quatre propriétés
+  textuelles éditables de `changements` sont facultatives. `supprimer_note` et
+  `restaurer_note` reçoivent uniquement `id` textuel obligatoire.
+- Consignes : préserver les champs absents, lire avant de compléter un contenu,
+  préciser la cible en cas d’ambiguïté, suppression réversible, recherche dans la
+  corbeille avant restauration. Validations effectives conservées dans le code local.
+- Vérifications : formulaires contrôlés, diff ajoutant trois associations et
+  conservant les trois précédentes, publication et rechargement, fiches rouvertes
+  confirmant paramètres, champs requis, attentes et délais. Six outils associés,
+  aucune publication en attente. Aucun appel d’outil ni essai vocal lancé.
+- Documentation : guide agent, suivi, journal et état du README actualisés.
+  Aucun code applicatif ni SDK ajouté. Les définitions distantes sont terminées,
+  mais leur exécution depuis le navigateur reste à implémenter et vérifier.
+- Suite : présenter la préparation du branchement SDK et le chemin sécurisé
+  d’obtention des jetons, avant installation ou code et après nouveau go.

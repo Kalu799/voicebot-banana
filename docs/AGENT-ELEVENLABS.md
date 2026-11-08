@@ -3,9 +3,8 @@
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
 Aucun SDK, microphone ou appel ElevenLabs n’est branché à l’application. Les
 consignes sont enregistrées dans l’agent distant, mais aucune conversation réelle
-n’a validé son comportement. Les définitions distantes de `creer_note`,
-`chercher_notes` et `lire_note` sont configurées ; les trois autres outils et
-le branchement au navigateur restent à réaliser.
+n’a validé son comportement. Les six définitions distantes sont configurées et
+associées à l’agent ; leur branchement au navigateur reste à réaliser.
 
 ## Configuration distante constatée le 8 novembre 2026
 
@@ -195,6 +194,80 @@ Les fiches rouvertes confirment les cinq champs facultatifs de recherche avec
 leurs types, le seul `id` obligatoire de lecture, l’attente de réponse et les
 deux délais de 10 secondes. Aucun appel d’outil ou essai vocal n’a été lancé.
 Ces contrôles valident les définitions, pas encore leur exécution via le SDK.
+
+## Modification, corbeille et restauration configurées
+
+Les trois dernières définitions sont créées et leurs associations publiées sur
+la branche distante `Main` le 8 novembre 2026. Elles sont de type **Client**,
+avec attente de réponse et délai de **10 secondes**, sans mock ni affectation de
+variable dynamique. Les paramètres sont extraits par le LLM (`Invite LLM`).
+
+### modifier_note
+
+Identifiant : `tool_7901m6y2ydcte1yssg4fwe779qqh`.
+
+Description enregistrée :
+
+```text
+Modifier une note active à partir de son identifiant exact.
+Envoyer uniquement les champs que l’utilisateur souhaite changer.
+Pour compléter ou corriger une partie du contenu, lire d’abord
+la note complète et préserver le reste du texte.
+En cas d’ambiguïté sur la note ciblée, demander une précision.
+```
+
+Deux paramètres requis : `id` de type `string`, décrit comme exact et non vide,
+et `changements` de type `object`. Ce dernier contient quatre propriétés
+facultatives de type `string` :
+
+| Propriété | Description |
+| --- | --- |
+| `titre` | Nouveau titre demandé, non vide. |
+| `contenu` | Nouveau contenu complet demandé. Préserver le texte existant lors d’un ajout. Un texte vide efface le contenu. |
+| `categorie` | Nouvelle catégorie demandée. Un texte vide efface la catégorie. |
+| `projet` | Nouveau projet demandé. Un texte vide efface le projet. |
+
+Un champ absent conserve sa valeur ; un champ fourni la remplace. Le contrat
+local accepte `changements: {}` sans effet, mais refuse les champs inconnus ou
+protégés, les titres vides et la modification d’une note en corbeille. Les
+descriptions distantes ne remplacent pas ces validations.
+
+### supprimer_note
+
+Identifiant : `tool_0901m6y2zwpzfc9rd97dmn8ztsdr`.
+
+```text
+Mettre une note identifiée précisément en corbeille.
+Cette action est réversible et ne supprime pas définitivement la note.
+En cas d’ambiguïté, demander une précision avant d’agir.
+```
+
+Seul paramètre : `id`, de type `string`, obligatoire, décrit comme exact et non vide.
+
+### restaurer_note
+
+Identifiant : `tool_4901m6y31ke7eg2rcpkwk80eqssr`.
+
+```text
+Restaurer une note de la corbeille à partir de son identifiant exact.
+Pour retrouver la cible, utiliser chercher_notes avec corbeille à true.
+En cas d’ambiguïté, demander une précision avant d’agir.
+```
+
+Seul paramètre : `id`, de type `string`, obligatoire, décrit comme exact et non vide.
+
+### Vérifications et état des six outils
+
+Formulaires contrôlés avant création ; le diff de publication ajoute uniquement
+les trois associations, en conservant les trois précédentes. Après rechargement,
+les six outils sont présents. Les fiches rouvertes confirment les paramètres,
+leurs types et obligations, les attentes de réponse et délais de 10 secondes.
+Aucune publication n’est en attente. Aucun outil ni conversation n’a été exécuté.
+
+La configuration des six définitions distantes est terminée. L’étape des client
+tools reste en cours tant que le SDK n’appelle pas la couche locale et que les
+parcours ne sont pas vérifiés. Les réponses devront toujours être examinées via
+`succes` avant confirmation ; la sauvegarde effective reste gérée par le store.
 
 ## Objectif et responsabilités
 
