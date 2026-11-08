@@ -101,3 +101,56 @@ export async function recupererNotes() {
     base.close()
   }
 }
+
+/** Ajoute les notes validées par l'import, en conservant les identifiants locaux. */
+export async function fusionnerNotes(notes) {
+  const base = await ouvrirBase()
+
+  try {
+    return await new Promise((resolve, reject) => {
+      const transaction = base.transaction(MAGASIN_NOTES, 'readwrite')
+      const magasin = transaction.objectStore(MAGASIN_NOTES)
+      let importees = 0
+      let ignorees = 0
+      let erreurEcriture
+
+      transaction.oncomplete = () => resolve({ importees, ignorees })
+      transaction.onabort = () => {
+        reject(new Error(
+          'Import annulé : aucune nouvelle note n’a été enregistrée.',
+          { cause: erreurEcriture ?? transaction.error },
+        ))
+      }
+
+      // Une erreur synchrone doit aussi annuler les ajouts déjà effectués.
+      function annuler(cause) {
+        erreurEcriture = cause
+        transaction.abort()
+      }
+
+      try {
+        for (const note of notes) {
+          const recherche = magasin.get(note.id)
+
+          recherche.onsuccess = () => {
+            if (recherche.result !== undefined) {
+              ignorees += 1
+              return
+            }
+
+            try {
+              const ajout = magasin.add(note)
+              ajout.onsuccess = () => { importees += 1 }
+            } catch (cause) {
+              annuler(cause)
+            }
+          }
+        }
+      } catch (cause) {
+        annuler(cause)
+      }
+    })
+  } finally {
+    base.close()
+  }
+}

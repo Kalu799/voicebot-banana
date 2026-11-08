@@ -59,6 +59,22 @@ d'utiliser `async/await`. Attendre la fin de la transaction pour confirmer la
 sauvegarde, puis fermer la connexion. Séparer le stockage des règles métier et
 de l'interface pour permettre les vérifications sans connexion vocale.
 
+## Export/import — 8 novembre 2026
+
+Retenir un format JSON versionné, lisible et indépendant de la version IndexedDB.
+Exporter toutes les notes, corbeille comprise, dans un objet `File` en mémoire.
+Le déclenchement du téléchargement appartient à la future interface.
+
+Valider le fichier entier avant l'accès au stockage, préserver les identifiants et
+les dates, puis fusionner dans une seule transaction. Conserver les notes locales
+en cas de conflit d'identifiant pour éviter un écrasement implicite. Refuser les
+identifiants répétés dans le fichier, car ils rendent le contenu à retenir ambigu.
+
+Le service `notesBackup.js` gère le format et la validation ; la nouvelle fonction
+`fusionnerNotes` du service de stockage gère les écritures atomiques. L'import
+renvoie des compteurs pour que l'interface puisse expliquer le résultat.
+Voir [le guide des sauvegardes](SAUVEGARDES.md) pour les règles et les essais.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :

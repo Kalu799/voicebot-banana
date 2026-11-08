@@ -77,3 +77,26 @@
   été reproduit lors des essais.
 - Limites : pas encore d'interface reliée au stockage ni d'export/import.
 - Prochaine action : présenter l'export/import et attendre le go avant de l'ajouter.
+
+## 8 novembre 2026 — Export/import JSON
+
+- Préparation : commit du stockage effectué par l'utilisateur ; branche
+  `feature/gestion-notes` propre au début de l'étape. Code présenté avant intégration.
+- Réalisation : `notesBackup.js` produit un fichier JSON en mémoire et valide
+  intégralement les sauvegardes à importer. `fusionnerNotes` dans `notesStorage.js`
+  ajoute les notes absentes dans une transaction et renvoie les compteurs.
+- Décisions : format version 1, dates ISO UTC canoniques, identifiants et contenu
+  conservés, notes locales prioritaires, identifiants répétés dans un fichier
+  refusés, propriétés inconnues écartées. Aucune dépendance ajoutée.
+- Vérifications réussies : syntaxe des modules, compilation `npm run build` et
+  essais Chrome isolés. Aller-retour export/import sans perte, export/import vide,
+  corbeille, conflits locaux, erreurs de format et de lecture du fichier vérifiés.
+  Aucun accès à la base pendant la validation des fichiers refusés.
+- Intégrité vérifiée : erreurs synchrones et asynchrones, y compris après des
+  ajouts réussis dans la transaction, sans ajout partiel conservé. Deux imports
+  simultanés du même fichier sans doublon. Persistance après redémarrage du
+  navigateur et rechargement, puis export final cohérent.
+- Documentation : guide `SAUVEGARDES.md`, README, démarche et suivi mis à jour.
+- Limites : téléchargement et sélection de fichier à relier à l'interface ;
+  quota réellement épuisé et autres navigateurs non testés.
+- Prochaine action : présenter le store Context + useReducer, puis attendre le go.

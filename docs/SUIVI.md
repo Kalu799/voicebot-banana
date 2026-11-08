@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | 1. Initialiser React + Vite et préparer le dossier API | Terminé | Installation et compilation réussies, page accessible localement (HTTP vérifié) |
 | 2. Définir le modèle de note | Terminé | Champs, règles et exemples documentés ; création, valeurs initiales et refus des titres vides vérifiés avec Node |
-| 3. Stockage IndexedDB et export/import | En cours | Enregistrement, mise à jour et persistance vérifiés dans Chrome ; export/import à faire |
+| 3. Stockage IndexedDB et export/import | Terminé (services) | Persistance, aller-retour JSON, validation, conflits et annulation complète vérifiés dans Chrome ; boutons à intégrer à l'étape 5 |
 | 4. Store Context + useReducer | À faire | Actions centralisées et erreurs gérées |
 | 5. Interface minimale et simulation | À faire | Actions locales utilisables sans quota vocal |
 | 6. Agent ElevenLabs français | À faire | Consignes et voix configurées |

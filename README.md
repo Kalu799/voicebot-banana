@@ -4,8 +4,9 @@ Application web personnelle pour gérer ses notes en parlant : création, recher
 lecture, modification, classement, corbeille et restauration.
 
 **État actuel :** base React + Vite, page d'accueil, modèle de note et service
-IndexedDB pour enregistrer et récupérer les notes. La gestion des notes dans
-l'interface, l'export/import, la simulation et la conversation vocale restent à développer.
+IndexedDB pour enregistrer et récupérer les notes, export/import JSON validé.
+La gestion des notes dans l'interface, les boutons de sauvegarde, la simulation
+et la conversation vocale restent à développer.
 
 ## Démarrer
 
@@ -44,6 +45,7 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
 | `src/utils/note.js` | Construit une note avec ses valeurs initiales |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
+| `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
@@ -111,6 +113,9 @@ bibliothèque supplémentaire. La base `voicebot`, version 1, contient un magasi
   La promesse est résolue uniquement après la fin réussie de la transaction.
 - `recupererNotes()` renvoie toutes les notes, y compris celles de la future
   corbeille, sans tri de présentation. Une base vide renvoie `[]`.
+- `fusionnerNotes(notes)` ajoute un ensemble de notes préalablement validées dans
+  une seule transaction et conserve toutes les notes dont l'identifiant existe
+  déjà localement. Cette fonction est utilisée par le service d'import.
 
 Les deux dernières fonctions ouvrent et ferment elles-mêmes leur connexion.
 Les erreurs sont propagées à l'appelant, qui pourra les afficher dans l'interface.
@@ -157,6 +162,28 @@ persistance après redémarrage du navigateur et rechargement, erreurs de lectur
 et d'écriture lors de transactions annulées, changement de version. Voir le
 [journal](docs/JOURNAL.md) pour le détail et les limites des essais.
 
+## Export et import JSON
+
+`src/services/notesBackup.js` expose deux fonctions :
+
+- `exporterNotes()` renvoie un objet `File` JSON en mémoire, nommé
+  `voicebot-notes-AAAA-MM-JJ.json`. Il contient la version 1 du format, la date
+  d'export et toutes les notes, corbeille comprise. Il ne déclenche pas de
+  téléchargement automatique.
+- `importerNotes(fichier)` lit un `File` ou `Blob`, valide le JSON et toutes les
+  notes, puis ajoute uniquement les identifiants absents de la base. Le résultat
+  est `{ importees, ignorees }`. Les notes locales sont conservées intégralement,
+  même si le fichier porte une autre version de leur contenu.
+
+Un fichier invalide est refusé avant toute ouverture de la base. Les identifiants
+répétés dans le même fichier sont refusés. Une erreur pendant la transaction
+annule l'ensemble des ajouts. Identifiants, textes, dates et état de corbeille sont
+préservés ; seuls les champs connus sont retenus.
+
+Les boutons de téléchargement et de sélection de fichier ne sont pas encore
+implémentés. Voir [le guide des sauvegardes](docs/SAUVEGARDES.md) pour les règles,
+les exemples dans la console et les vérifications effectuées.
+
 ## Architecture prévue
 
 - React + Vite : interface et outils de développement.
@@ -199,10 +226,11 @@ La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
 
 La page actuelle est statique. Aucun microphone n'est sollicité. Le modèle et le
 service de stockage ne sont pas encore utilisés par l'interface : les notes sont
-manipulables via les modules, mais pas encore depuis la page. La prochaine étape
-concerne l'export/import.
+manipulables via les modules, mais pas encore depuis la page. L'export produit un
+fichier en mémoire ; son téléchargement et la sélection d'un fichier d'import
+restent à relier à l'interface. La prochaine étape concerne le store Context + useReducer.
 La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans
-synchronisation. L'export/import permettra de les sauvegarder. Les informations
+synchronisation. L'export/import permet une sauvegarde manuelle. Les informations
 transmises à l'agent vocal passeront par ElevenLabs.
