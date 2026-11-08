@@ -25,6 +25,15 @@ export function notesReducer(etat, action) {
         erreur: null,
       }
 
+    case 'NOTE_MISE_A_JOUR':
+      return {
+        ...etat,
+        notes: etat.notes.map(note =>
+          note.id === action.note.id ? action.note : note,
+        ),
+        erreur: null,
+      }
+
     case 'ERREUR_ACTION':
       return { ...etat, erreur: action.message }
 

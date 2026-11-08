@@ -5,8 +5,8 @@ lecture, modification, classement, corbeille et restauration.
 
 **État actuel :** base React + Vite, page d'accueil, modèle de note et service
 IndexedDB pour enregistrer et récupérer les notes, export/import JSON validé.
-Le store Context + useReducer charge les notes au démarrage et permet d'en créer
-après sauvegarde réussie. La gestion des notes dans l'interface, les boutons de
+Le store Context + useReducer charge les notes au démarrage et permet de les créer,
+modifier, mettre en corbeille et restaurer après sauvegarde réussie. La gestion des notes dans l'interface, les boutons de
 sauvegarde, la simulation et la conversation vocale restent à développer.
 
 ## Démarrer
@@ -44,10 +44,10 @@ l'encadré de progression apparaissent, puis recharger la page.
 | `src/main.jsx` | Monte l'application React dans `root` |
 | `src/App.jsx` | Premier composant de l'interface |
 | `src/styles.css` | Styles communs et adaptation à la largeur de l'écran |
-| `src/utils/note.js` | Construit une note avec ses valeurs initiales |
+| `src/utils/note.js` | Création, règles de modification et de corbeille |
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
 | `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
-| `src/stores/` | État partagé des notes, chargement initial et action de création |
+| `src/stores/` | État partagé, chargement et actions de gestion des notes |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
@@ -60,7 +60,7 @@ Le provider charge les notes depuis IndexedDB ; `App` ne les affiche pas encore.
 L'organisation reprend les habitudes des projets Vue de l'utilisateur :
 `components`, `data`, `services`, `stores`, `utils`, et selon les besoins de
 navigation `pages`, `views`, `router`. Les dossiers sont créés lorsqu'ils deviennent
-utiles. `utils/note.js` contient la fonction de création d'une note ; aucun dossier
+utiles. `utils/note.js` contient les fonctions métier des notes ; aucun dossier
 `models` n'est utilisé.
 
 ## Modèle de note
@@ -77,11 +77,12 @@ Elle est indépendante de React et ne réalise aucune sauvegarde.
 | `projet` | Texte facultatif, espaces de début et de fin retirés |
 | `createdAt` | Date de création au format ISO en UTC |
 | `updatedAt` | Même date que `createdAt` à la création |
-| `deletedAt` | `null` pour une note active ; accueillera la date de mise en corbeille |
+| `deletedAt` | `null` pour une note active ; date de mise en corbeille sinon |
 
 Les valeurs fournies sont des chaînes de caractères. Deux notes peuvent avoir
-le même titre ; leur identifiant les distingue. Les règles de modification et de
-mise en corbeille seront implémentées aux étapes suivantes.
+le même titre ; leur identifiant les distingue. Les fonctions de préparation de
+modification, suppression et restauration préservent `id` et `createdAt`, et
+actualisent `updatedAt` uniquement pour une opération qui change réellement la note.
 
 Exemple à exécuter depuis ce dossier, sans interface ni service externe :
 
@@ -127,7 +128,8 @@ est libérée lorsqu'un autre onglet demande un changement de version.
 
 Le service reçoit des notes complètes construites avec `creerNote`. Il ne valide
 pas encore les données externes et ne modifie pas `updatedAt` ou `deletedAt` : les
-règles métier seront gérées par le store, et l'import aura sa propre validation.
+règles métier sont gérées par les utilitaires appelés par le store, et l'import
+possède sa propre validation.
 
 ### Vérification manuelle dans le navigateur
 
@@ -212,10 +214,20 @@ composants enfants. Le hook `useNotes()` expose :
 - `ajouterNote(champs)` : construit une note, attend sa sauvegarde puis demande
   au reducer de l'ajouter en mémoire. Renvoie la note sauvegardée ou rejette
   la promesse en cas d'erreur.
+- `modifierNote(id, changements)` : modifie uniquement `titre`, `contenu`,
+  `categorie` ou `projet` sur une note active.
+- `supprimerNote(id)` : place la note en corbeille sans la retirer du stockage.
+- `restaurerNote(id)` : remet une note de la corbeille à l'état actif.
 
-La création est refusée avant un chargement réussi. Si la lecture initiale échoue,
-recharger la page après avoir résolu le problème. Une erreur de création conserve
-les notes existantes et permet de réessayer.
+Les actions sont refusées avant un chargement réussi. Si la lecture initiale
+échoue, recharger la page après avoir résolu le problème. Une erreur d'action
+conserve les notes existantes et permet de réessayer. Les actions sont exécutées
+dans l'ordre pour préserver les changements de demandes rapprochées.
+
+Un identifiant introuvable, un titre vide ou un champ non autorisé provoque une
+erreur. Une note en corbeille doit être restaurée avant modification. Supprimer
+une note déjà supprimée, restaurer une note active ou appliquer une modification
+équivalente ne provoque ni écriture ni changement de date.
 
 Le reducer est indépendant de React et du stockage : il calcule les nouveaux
 états sans modifier les précédents. Voir [le guide du store](docs/STORE.md) pour
@@ -251,8 +263,8 @@ La page actuelle est statique. Aucun microphone n'est sollicité. Le provider
 charge les notes, mais aucun composant ne les affiche ou ne déclenche encore
 d'action utilisateur. L'export produit un
 fichier en mémoire ; son téléchargement et la sélection d'un fichier d'import
-restent à relier à l'interface. Le store doit encore recevoir les actions de
-modification, suppression et restauration, ainsi que l'intégration de l'import.
+restent à relier à l'interface. Le store doit encore recevoir l'intégration de
+l'import pour refléter ses résultats sans rechargement de la page.
 La démonstration guidée, les captures et le lien public seront ajoutés plus tard.
 
 À terme, les notes resteront propres au navigateur et à l'appareil, sans

@@ -88,6 +88,17 @@ obsolètes lors du nettoyage d'un effet, notamment avec StrictMode. L'interface
 reste identique ; son raccordement aux actions sera une étape distincte.
 Voir [le guide du store](STORE.md) pour les flux, les limites et les vérifications.
 
+Compléter ensuite la modification et la corbeille avec des fonctions métier dans
+`utils/note.js`. Conserver l'identité, refuser les champs non éditables et les
+modifications en corbeille, rendre les opérations sans effet sans écriture ni
+changement de date. Les trois actions partagent une transition de remplacement
+dans le reducer.
+
+Conserver une référence à la dernière version sauvegardée et traiter les actions
+dans l'ordre avec une file de promesses. Cela préserve les changements rapprochés
+d'une même note, même avant un nouveau rendu. Une action échouée reste signalée
+à son appelant tout en laissant passer la suivante.
+
 ## Organisation des dossiers
 
 Reprendre les conventions déjà utilisées par l'utilisateur dans ses projets Vue :

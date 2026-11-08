@@ -120,3 +120,25 @@
 - Limites : pas encore d'actions de modification/corbeille, d'import intégré au
   store ou d'interface de notes. Une lecture initiale échouée nécessite de recharger.
 - Prochaine action : présenter la suite des actions du store et attendre le go.
+
+## 8 novembre 2026 — Modification et corbeille
+
+- Préparation : commit du store effectué par l'utilisateur ; branche
+  `feature/gestion-notes` propre. Code présenté avant intégration après le go.
+- Réalisation : règles métier dans `utils/note.js`, transition `NOTE_MISE_A_JOUR`
+  du reducer et actions `modifierNote`, `supprimerNote`, `restaurerNote` du provider.
+- Décisions : conserver l'identité et `createdAt`, actualiser les dates uniquement
+  pour une opération effective, refuser les champs protégés et la modification
+  en corbeille. Les opérations répétées sans effet ne déclenchent pas d'écriture.
+- Fiabilité : référence aux dernières notes sauvegardées et file de promesses
+  commune aux actions pour éviter les pertes lors de demandes rapprochées.
+  Une action échouée ne bloque pas les suivantes. Aucun changement d'interface.
+- Vérifications réussies : règles et reducer avec Node, compilation, anciens
+  parcours du store et nouveaux essais dans Chrome isolé avec StrictMode.
+  Modifications, identité, dates, corbeille, erreurs, opérations sans effet et
+  absence de changement après échec de sauvegarde contrôlées.
+- Concurrence contrôlée : ancien accès au hook, modifications rapprochées d'une
+  note, suppression puis restauration et poursuite de file après échec.
+  Versions modifiées et corbeille retrouvées après redémarrage et rechargement.
+- Documentation : README, guide du store, démarche et suivi mis à jour.
+- Prochaine action : présenter l'intégration de l'import au store et attendre le go.

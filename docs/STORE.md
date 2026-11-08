@@ -1,4 +1,4 @@
-# Store des notes — chargement et création
+# Store des notes — chargement et actions
 
 ## Comprendre le rôle du store
 
@@ -20,6 +20,7 @@ Context et useReducer, sans bibliothèque supplémentaire.
 | `src/stores/NotesProvider.jsx` | Chargement, sauvegarde et coordination des transitions |
 | `src/stores/useNotes.js` | Accès au contexte ; erreur explicite hors du provider |
 | `src/main.jsx` | Entoure `App` avec le provider dans `StrictMode` |
+| `src/utils/note.js` | Préparation des notes et règles métier indépendantes du stockage |
 
 ## État et transitions
 
@@ -31,7 +32,7 @@ Context et useReducer, sans bibliothèque supplémentaire.
 }
 ```
 
-Les notes incluent la future corbeille et ne sont pas triées pour la présentation.
+Les notes incluent la corbeille et ne sont pas triées pour la présentation.
 Le chargement passe à `false` après la lecture initiale, qu'elle réussisse ou échoue.
 
 | Action du reducer | Effet |
@@ -39,6 +40,7 @@ Le chargement passe à `false` après la lecture initiale, qu'elle réussisse ou
 | `NOTES_CHARGEES` | Remplace la liste par les notes lues et termine le chargement |
 | `CHARGEMENT_ECHOUE` | Termine le chargement et conserve le message d'erreur |
 | `NOTE_AJOUTEE` | Produit une nouvelle liste avec la note sauvegardée |
+| `NOTE_MISE_A_JOUR` | Remplace uniquement la note portant l'identifiant concerné |
 | `ERREUR_ACTION` | Conserve la liste et expose une erreur |
 | `ERREUR_EFFACEE` | Efface le message avant une nouvelle tentative |
 
@@ -55,10 +57,10 @@ notamment le cycle supplémentaire d'installation/nettoyage des effets de
 
 `chargementReussi`, conservé avec `useRef`, sert d'indicateur technique pour les
 actions, sans déclencher de rendu. Il devient vrai après la lecture réussie et
-redevient faux lors du nettoyage. Tant qu'il est faux, une création est rejetée :
+redevient faux lors du nettoyage. Tant qu'il est faux, une action est rejetée :
 une lecture initiale tardive ne peut donc pas écraser une note nouvellement créée.
 
-En cas d'échec initial, le store expose l'erreur et n'autorise pas la création.
+En cas d'échec initial, le store expose l'erreur et n'autorise pas les actions.
 Cette première version ne possède pas de bouton Réessayer : il faut recharger
 la page après résolution du problème.
 
@@ -96,6 +98,54 @@ La promesse est rejetée pour que l'appelant puisse conserver son formulaire
 ou éviter une confirmation vocale incorrecte. Une nouvelle tentative de création
 est possible après une erreur de validation ou de sauvegarde.
 
+## Modification et corbeille
+
+Les actions suivantes sont disponibles via `useNotes` :
+
+```js
+await modifierNote(id, { titre: 'Titre corrigé', contenu: 'Nouveau contenu' })
+await supprimerNote(id)
+await restaurerNote(id)
+```
+
+`modifierNote` ne reçoit que les champs à changer : les champs absents restent
+inchangés. Seuls `titre`, `contenu`, `categorie` et `projet` sont acceptés et doivent
+être des textes. Le titre, la catégorie et le projet sont nettoyés avec `trim` ;
+les espaces et retours à la ligne du contenu sont préservés. Un titre vide est
+refusé. Une note de la corbeille doit être restaurée avant modification.
+
+Les fonctions de préparation dans `utils/note.js` produisent un nouvel objet en
+conservant `id` et `createdAt`. Une modification effective actualise `updatedAt`.
+La suppression utilise la même date pour `deletedAt` et `updatedAt` ; la restauration
+remet `deletedAt` à `null` et actualise `updatedAt`. Aucune suppression définitive
+n'est implémentée.
+
+Une opération sans effet renvoie la note existante sans écriture ni changement
+de date : modification vide ou équivalente après nettoyage, suppression d'une
+note déjà en corbeille, restauration d'une note active. Un identifiant vide ou
+introuvable provoque une erreur pour les trois actions.
+
+`changerNote` partage le flux : recherche par identifiant → préparation → sauvegarde
+IndexedDB → mise à jour de la référence et `dispatch(NOTE_MISE_A_JOUR)`. Une erreur
+préserve la version précédente en mémoire et en base et rejette la promesse.
+
+## Ordre des actions et état récent
+
+`notesCourantes`, une référence interne, contient la dernière liste chargée ou
+sauvegardée, même avant le prochain rendu React. Les composants doivent consulter
+les données exposées par le contexte et appeler les actions, sans modifier eux-mêmes
+les objets notes.
+
+`fileActions` chaîne les promesses pour exécuter les actions dans leur ordre
+d'appel. Une modification prend ainsi la dernière version sauvegardée de sa note.
+Deux demandes rapprochées portant sur des champs distincts préservent les deux
+changements. Les actions déjà en attente vérifient aussi que le provider est prêt
+au moment de leur exécution.
+
+La promesse retournée à l'appelant conserve son éventuelle erreur ; seule la
+promesse interne de file absorbe cet échec pour laisser passer l'action suivante.
+La file ne synchronise pas d'autres onglets ou d'autres instances de provider.
+
 ## Vérifications du 8 novembre 2026
 
 - Assertions Node sur le reducer : transitions, conservation de l'état précédent,
@@ -112,6 +162,16 @@ est possible après une erreur de validation ou de sauvegarde.
 - Deux créations simultanées conservées ; lecture initiale échouée signalée et
   création refusée ; hook utilisé hors provider rejeté explicitement.
 - Store rechargé depuis IndexedDB après redémarrage de Chrome et rechargement.
+- Règles de modification, protection des champs, identité, dates, immutabilité,
+  corbeille et absence d'effet des opérations répétées vérifiées avec Node.
+- Essais Chrome complémentaires : modification de tous les champs éditables,
+  identifiants invalides, modification en corbeille refusée et opérations sans
+  effet sans aucune écriture IndexedDB.
+- Écriture annulée pour modification, suppression et restauration : aucune
+  différence en base ou en mémoire, erreur exposée et reprise possible.
+- Actions via un ancien accès au hook, modifications rapprochées d'une même note,
+  suppression suivie de restauration et poursuite de la file après un échec.
+- Versions modifiées et corbeille persistantes après redémarrage et rechargement.
 
 Ces essais utilisent un profil temporaire et n'exposent aucun outil de test dans
 l'application. Les autres navigateurs et le quota disque réellement épuisé
@@ -119,8 +179,7 @@ restent à vérifier.
 
 ## Périmètre restant
 
-Ajouter les actions de modification, suppression et restauration, puis relier
-l'import au store. Un import effectué directement via le service ne rafraîchit
+Relier l'import au store. Un import effectué directement via le service ne rafraîchit
 pas encore un provider déjà monté ; il faut recharger la page pour le relire.
 Aucune synchronisation automatique entre onglets n'est implémentée.
 Les composants de liste et de formulaire seront ajoutés à l'étape d'interface.
