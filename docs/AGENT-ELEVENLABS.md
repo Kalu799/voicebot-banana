@@ -1,14 +1,64 @@
 # Préparation de l’agent ElevenLabs français
 
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
-Le SDK React et le panneau vocal sont préparés depuis le 9 novembre 2026 ; aucun
-essai vocal réel ni demande de microphone effectué. Les consignes sont enregistrées dans l’agent distant,
-mais aucune conversation réelle n’a validé son comportement. Les six définitions
-distantes sont configurées et associées à l’agent ; seul `creer_note` est déclaré
-dans le SDK côté navigateur, sans exécution réelle vérifiée.
+Le SDK React et le panneau vocal sont intégrés depuis le 9 novembre 2026.
+Une première conversation réelle crée une note, visible puis retrouvée après
+rechargement. Les six définitions distantes sont configurées et associées à l’agent ;
+les six sont déclarés dans le code SDK. Seul `creer_note` est déjà déployé et
+validé vocalement ; les cinq nouveaux branchements attendent leur déploiement.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
-fournisseur simulé, désactivée par défaut. La limitation Vercel et l’intégration
-réelle restent à vérifier avant son activation.
+fournisseur simulé, désactivée par défaut. La limitation Vercel est publiée et
+vérifiée sur le domaine principal ; Production activée, jeton réel et premier
+parcours de création vocale persistante validés. Les cinq autres outils restent à
+déployer et valider vocalement.
+
+## Premier jalon vocal validé — 9 novembre 2026
+
+L’utilisateur démarre une conversation et demande une création. Après l’accueil,
+la transcription contient le titre « Test vocale Banana Navy » et le contenu
+« Présenter le projet ». L’agent annonce la création, puis propose un classement.
+La liste contient une note avec ce titre et ce contenu ; conversation arrêtée,
+durée affichée 17 secondes. La page est rechargée par l’assistant : même note
+présente, transcription et durée remises à zéro, conversation toujours arrêtée.
+
+Ce contrôle valide une création via le SDK et sa persistance IndexedDB sur cette
+origine et ce navigateur. La variation de transcription du titre est conservée
+telle qu’observée. Aucun autre outil vocal ni parcours mobile encore validé ;
+l’ordre sauvegarde/résultat reste garanti par le store et les contrôles locaux.
+
+## Protections du premier essai — 9 novembre 2026
+
+Compte contrôlé : offre Free, 6 299 crédits restants, recharge automatique désactivée.
+La FAQ de l’abonnement indique que les coûts LLM sont déduits des crédits.
+Aucun réglage de facturation modifié ni paiement activé. Ce solde n’a pas été
+converti en minutes disponibles ; réserver les crédits aux essais courts.
+
+Authentification active, bursting désactivé, durée maximale 120 secondes et arrêt
+après 30 secondes de silence confirmés. Français, Gemini 3.5 Flash et voix Eric
+conservés pour le premier essai, sans écoute ni validation vocale à ce stade.
+
+Après go, deux changements uniquement sont publiés sur la branche distante
+ElevenLabs `Main` : limite quotidienne de 100 000 à **5 appels**, simultanéité de
+la limite du forfait (`-1`) à **1**. Fiche rechargée : valeurs conservées et bouton
+Publier désactivé. La file d’attente héritée (180 secondes) est inchangée ; cette
+limite de simultanéité ne signifie donc pas que les appels excédentaires sont
+immédiatement rejetés. Les bornes quotidiennes ne constituent pas un budget global.
+
+La règle Vercel deux demandes/minute/IP est publiée ; contrôle HTTP `503`, `503`,
+`429`, puis `503` après expiration réussi. Aucun secret ni conversation réelle.
+
+La préparation suivante crée un fichier local privé ignoré par Git (code personnel
+et empreinte), puis l’utilisateur crée et renseigne la clé dédiée. Clé prévue avec
+ElevenAgents Lire uniquement, plafond 2 000 crédits et expiration un jour ; droit à
+valider sur le jeton réel. Les quatre variables serveur sont enregistrées en Secret
+sur Vercel, en Production uniquement. Aucun redéploiement ni activation vocale.
+
+La préparation est ensuite activée en Production après go et redéployée. Le premier
+démarrage échoue avant connexion : `convai_write` est requis pour le jeton. Après
+accord ciblé, le seul droit ElevenAgents passe de Lire à **Écrire** sur la même
+clé ; plafond et expiration conservés. Endpoint ElevenLabs et route Vercel répondent
+alors `200` avec un jeton, sans affichage du secret ni ouverture de session audio
+pendant les diagnostics. Le parcours vocal reste à vérifier avec l’utilisateur.
 
 ## Préparation du SDK — 9 novembre 2026
 
@@ -16,12 +66,17 @@ réelle restent à vérifier avant son activation.
 `@elevenlabs/client@1.35.0`. Dans `src/main.jsx`, `NotesProvider` englobe
 `ConversationNotesProvider`, qui installe le `ConversationProvider` du SDK.
 
-Le composant sans affichage `OutilCreationNote` déclare `creer_note` avec
-`useConversationClientTool`. Le gestionnaire réutilise `creerOutilsNotes(store)` :
+Le composant sans affichage `OutilsConversationNotes` déclare les six outils avec
+six appels explicites et inconditionnels à `useConversationClientTool`.
+Chaque gestionnaire réutilise `creerOutilsNotes(store)` :
 validation, action du store et transaction IndexedDB sont conservées. Il attend
 le résultat, puis le renvoie comme texte JSON contenant `succes` et le résumé de
-la note ou l’erreur. Le hook maintient le gestionnaire courant et le désenregistre
-au démontage. Les cinq autres outils ne sont pas encore déclarés dans le SDK.
+la note ou l’erreur. `resultatPourAgent` mutualise l’attente et la conversion JSON.
+Le hook maintient le gestionnaire courant et le désenregistre au démontage.
+Recherche, lecture, modification, corbeille et restauration sont maintenant
+déclarées comme la création. Tests existants (quatre fichiers), compilation et
+montage local réussis ; cinq nouveaux branchements non encore déployés ni testés
+vocalement. Aucune définition distante, dépendance ou règle métier modifiée.
 
 Le panneau décrit ci-dessous utilise désormais `startSession` après obtention du
 jeton ; l’enregistrement du gestionnaire seul ne le déclenche pas. Tests existants,

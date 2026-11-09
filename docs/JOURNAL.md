@@ -713,3 +713,110 @@
 - Documentation : README, guide API et suivi actualisés. Limitation `429`, compte
   gratuit et secrets à vérifier avant activation vocale. Alignement de Node à
   proposer séparément. Aucun commit, push ou merge réalisé par l’assistant.
+
+## 9 novembre 2026 — Limites du premier essai vocal
+
+- Préparation : PR documentaire n° 4 fusionnée par l’utilisateur, `dev` propre au
+  commit `244d95c`. Alignement Node reporté pour préserver les six heures restantes.
+  Inspection distante en lecture seule, réglages expliqués et go reçu. Branche
+  `feature/validation-vocale` créée avant toute modification documentaire.
+- Compte : Free, 6 299 crédits restants, recharge automatique désactivée ; coûts
+  LLM déduits des crédits selon la FAQ du compte. Aucun paiement ni réglage de
+  facturation modifié. Authentification, bursting désactivé, 120 secondes maximum
+  et 30 secondes de silence confirmés. Modèle et voix conservés pour le premier essai.
+- ElevenLabs : diff limité à deux valeurs, puis publication sur `Main` distante :
+  cinq appels/jour et une conversation simultanée. Rechargement : valeurs conservées,
+  aucune publication en attente. File d’attente héritée inchangée à 180 secondes.
+- Vercel : règle `Limiter les jetons BananaNavy` publiée, chemin exact de l’API,
+  fenêtre fixe 60 secondes, deux demandes par IP, refus `429`, sans filtre
+  d’authentification/méthode/domaine. Aucun abonnement ou service payant activé.
+- Vérifications HTTP autorisées, sans secrets : à 09:50:53–54 (Paris), trois POST
+  donnent `503`, `503`, `429` ; à 09:52:24, POST de nouveau `503`, interface `200`.
+  Région d’entrée `cdg1`, règle rouverte avec valeurs exactes et compteur Vercel
+  « Rate Limited 1 ». Lien « View Traffic » renvoyant `404`, sans investigation
+  supplémentaire puisque le compteur global et le contrôle HTTP confirment le refus.
+- Portée : domaine principal testé ; autres alias/régions non exercés. Aucune
+  session, demande ElevenLabs ou consommation vocale ; verrou toujours fermé.
+- Documentation : README, guide API, guide agent et suivi actualisés. Aucun code
+  applicatif modifié, tests locaux non relancés pour cette configuration distante.
+  Suite à expliquer avant nouveau go : préparation du code personnel, de son
+  empreinte et de la clé serveur, puis activation pour un premier essai court.
+
+## 9 novembre 2026 — Préparation privée des secrets serveur
+
+- Préparation : commit utilisateur `824f531` confirmé sur `feature/validation-vocale`,
+  arbre propre. Go reçu pour les secrets seulement, sans activation.
+- Local : `.env.local` absent créé avec exclusion Git, mode `600` et écriture
+  exclusive. Code aléatoire 32 octets en base64url et empreinte SHA-256 ; valeurs
+  jamais affichées dans les sorties d’outil. Origine HTTPS du domaine principal,
+  agent fixé et verrou `false`. L’utilisateur renseigne la clé directement ;
+  présence, permissions du fichier et cohérence de l’empreinte vérifiées.
+- ElevenLabs : formulaire de clé dédiée restreinte préparé, ElevenAgents Lire,
+  limite 2 000 crédits et expiration un jour. Création finale et copie privée par
+  l’utilisateur ; droit exact encore à valider lors de la demande réelle de jeton.
+- Vercel : agent et origine préremplis ; l’utilisateur saisit clé et empreinte puis
+  enregistre. Les quatre variables sont présentes en Secret, Production uniquement.
+  Aucune valeur secrète révélée. La lecture du verrou Config demande une vérification
+  par email : annulation de cette lecture sans envoi, valeur initiale non modifiée.
+- Limites : aucun redéploiement, appel fournisseur ou session. Variables à prendre
+  en compte au prochain déploiement ; clé d’essai à renouveler après expiration.
+- Documentation actualisée ; aucune modification du code applicatif. Suite à
+  expliquer avant go : activation en Production, redéploiement et premier essai
+  court, avec vérification de la sauvegarde après rechargement.
+
+## 9 novembre 2026 — Activation protégée et droit du jeton corrigé
+
+- Préparation : commit utilisateur `57a17c2`, branche `feature/validation-vocale`
+  propre. Go reçu pour activer Production et essayer une première note.
+- Activation : vérification email Vercel effectuée par l’utilisateur ; verrou
+  séparé en `true` pour Production et `false` hors Production. Redéploiement
+  `CfSaJTjgtszz5ZT4j1T9bY4bjU1A` Ready, code `71ba461`. POST sans code et avec
+  bonne origine : `401` sans cache. Limitation et secrets conservés.
+- Premier essai : refus avant connexion, durée affichée 0:00, aucune note créée.
+  Diagnostic direct autorisé : fournisseur `401`, `missing_permissions`,
+  `convai_write` absent. Le droit Lire proposé initialement est insuffisant.
+- Correction après go ciblé : ElevenAgents Lire → Écrire sur la même clé,
+  autres accès fermés, plafond 2 000 et expiration conservés. Aucun nouveau secret
+  ni redéploiement pour cette modification de permission.
+- Vérifications sans sortie sensible : endpoint fournisseur `200` avec jeton,
+  puis route Vercel avec origine et code valides `200`, jeton présent et sans
+  cache. Aucun jeton affiché, aucune session audio ouverte par ces diagnostics.
+- L’utilisateur est invité à reprendre le même essai court ; première note et
+  persistance non encore validées. Aucun changement du code applicatif.
+- Calendrier : objectif 16 h 30, limite absolue 17 h 30, jalon première note visé
+  avant 11 h 30. À 10 h 43, environ 5 h 47 restantes jusqu’à l’objectif ; blocage
+  d’authentification résolu, parcours audio restant à confirmer.
+
+## 9 novembre 2026 — Première note vocale persistante validée
+
+- Essai repris par l’utilisateur après correction de la permission. Dans le
+  navigateur, accueil de l’agent, transcription de la demande et confirmation de
+  création observés. Note « Test vocale Banana Navy », contenu « Présenter le
+  projet », créée à 10 h 48. Variation du titre due à la transcription conservée.
+- Vérification : conversation arrêtée, durée affichée 17 secondes ; une note
+  visible. Rechargement effectué par l’assistant : même titre et contenu toujours
+  présents, conversation arrêtée, durée 0:00 et transcription vidée. Aucune
+  création manuelle ou simulation exécutée pendant cette vérification.
+- Premier jalon atteint à 10 h 49. Cette preuve concerne l’origine principale et
+  le navigateur utilisé ; les cinq autres outils, le mobile et le scénario final
+  restent à valider. Aucun code applicatif changé pour atteindre ce jalon.
+- Documentation actualisée sur `feature/validation-vocale`. À 10 h 49, 5 h 41
+  jusqu’à l’objectif 16 h 30, une heure supplémentaire au maximum en secours.
+  Prochaine étape à présenter avant go : déclarer les cinq autres outils dans
+  le provider en réutilisant les validations et actions existantes.
+
+## 9 novembre 2026 — Six outils déclarés dans le SDK
+
+- Préparation : commit utilisateur `88b56fc` confirmé, branche
+  `feature/validation-vocale` propre. Code de remplacement présenté puis go reçu.
+- Réalisation : `OutilsConversationNotes` remplace `OutilCreationNote` dans le
+  provider. Les six hooks sont explicites et inconditionnels ; `resultatPourAgent`
+  attend chaque outil existant puis sérialise son résultat en JSON. Validations,
+  actions du store, sauvegarde et définitions distantes conservées.
+- Vérifications : `npm test` réussi (quatre fichiers), `npm run build` réussi,
+  interface locale montée dans le navigateur avec les six déclarations. Aucun
+  outil exécuté, microphone ou appel ElevenLabs pendant ce contrôle local.
+  Aucune dépendance ajoutée ; avertissement de poids du bundle conservé.
+- Portée : seule la création est encore validée sur le déploiement existant ;
+  cinq nouveaux branchements à publier après les opérations Git de l’utilisateur,
+  puis scénario vocal complet à effectuer. Documentation actualisée.

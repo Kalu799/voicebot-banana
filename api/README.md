@@ -51,10 +51,10 @@ de Git. En production, HTTPS est nécessaire pour le code et le jeton. Le contr�
 d’origine est complémentaire : un client extérieur au navigateur peut fabriquer
 cet en-tête. Il ne constitue pas une authentification.
 
-## Limitation à configurer avant activation
+## Limitation avant activation
 
-La limitation n’est **pas implémentée dans cette fonction** : elle sera appliquée
-par une règle Vercel devant la route, et devra être vérifiée séparément.
+La limitation n’est **pas implémentée dans cette fonction** : une règle Vercel
+est publiée devant la route depuis le 9 novembre 2026, vérifiée séparément.
 Le verrou `VOICEBOT_VOIX_ACTIVE` est manuel : il ne détecte pas automatiquement
 la présence ou la suppression de cette règle.
 
@@ -144,6 +144,77 @@ en `302` vers Vercel Authentication ; cette protection est conservée.
 testé pendant ce déploiement. La vérification `429` reste à faire avant activation
 de la voix, ainsi que les contrôles du compte gratuit et des secrets côté serveur.
 Le succès de ce déploiement verrouillé ne valide pas une conversation réelle.
+
+### Limitation publiée et vérifiée — 9 novembre 2026
+
+Règle `Limiter les jetons BananaNavy`, identifiant
+`rule_limiter_les_jetons_banana_navy_3FGISp`, publiée sur le projet Hobby :
+Request Path Equals `/api/conversation-token`, fenêtre fixe de 60 secondes,
+deux demandes par adresse IP, action Too Many Requests (`429`). Aucune condition
+de méthode, de domaine ou d’authentification ajoutée. La fiche rouverte confirme
+les valeurs et le tableau de bord affiche une règle active, un événement limité.
+Aucun abonnement, option payante ou paiement activé pendant cette configuration.
+
+Contrôles sur `https://project-bxwwf.vercel.app`, sans code personnel ni clé :
+trois POST rapprochés donnent `503`, `503`, puis `429` (région d’entrée `cdg1`).
+Un POST plus d’une minute après donne à nouveau `503` et le message de verrou
+fermé ; GET `/` reste en `200`. Les demandes refusées ne créent pas de conversation.
+Ce résultat vérifie le domaine et la région exercés, sans prouver un plafond
+global ni la couverture effective de tous les alias de prévisualisation protégés.
+Le lien détaillé « View Traffic » de la fiche a renvoyé `404` ; le compteur de
+l’aperçu et les réponses HTTP ont permis de vérifier le blocage sans poursuivre
+le diagnostic de ce lien d’interface.
+
+Compte ElevenLabs contrôlé en lecture seule : Free, 6 299 crédits restants,
+recharge automatique désactivée ; la FAQ indique que le coût LLM est déduit des
+crédits. Les limites de l’agent sont publiées à cinq appels par jour et un appel
+simultané. La voix reste fermée, sans secrets réels ni appel fournisseur.
+
+### Secrets préparés, activation en attente — 9 novembre 2026
+
+Après go, `.env.local` absent est créé sans écrasement, en mode `600`, et son
+exclusion Git est vérifiée. Code personnel de 32 octets aléatoires encodés en
+base64url, conservé en commentaire privé, et empreinte SHA-256 cohérente contrôlés
+sans afficher les valeurs. Le verrou local reste `false`, l’origine vise le domaine
+principal HTTPS. L’utilisateur renseigne lui-même la clé dédiée dans ce fichier.
+
+Formulaire ElevenLabs préparé : clé restreinte, ElevenAgents **Lire** uniquement,
+plafond 2 000 crédits par renouvellement et expiration après un jour ; autres
+accès désactivés. Création finale réalisée par l’utilisateur. La compatibilité de
+ce droit avec l’endpoint de jeton n’est pas encore validée par un appel réel.
+
+L’utilisateur enregistre sur Vercel `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`,
+`VOICEBOT_CODE_ACCES_SHA256` et `VOICEBOT_ORIGINE`, toutes quatre en mode **Secret**
+et **Production uniquement**. Leur présence est vérifiée, sans révéler les valeurs.
+Aucun redéploiement ni activation pendant cette préparation. Un nouveau déploiement
+sera nécessaire pour les prendre en compte. Ne jamais versionner `.env.local` ;
+la clé d’essai expire et devra être renouvelée pour une démonstration ultérieure.
+
+### Activation et correction de permission — 9 novembre 2026
+
+Après go et vérification email Vercel réalisée par l’utilisateur, le verrou est
+séparé : `true` pour Production, `false` pour Preview et Development. Le fichier
+local conserve `false`. Redéploiement `CfSaJTjgtszz5ZT4j1T9bY4bjU1A`, code applicatif
+`71ba461`, Production Ready ; POST avec origine correcte mais sans code : `401`,
+réponse sans cache. Aucun contrôle d’accès ou pare-feu désactivé.
+
+Le premier démarrage depuis l’interface échoue avant connexion, avec le `502`
+générique. Diagnostic serveur direct, sans afficher clé ou jeton : ElevenLabs
+répond `401`, `missing_permissions`, permission manquante `convai_write`. Malgré
+GET, l’endpoint de jeton nécessite **ElevenAgents Écrire** ; Lire est insuffisant.
+Après accord ciblé, ce seul droit est changé et enregistré sur la même clé.
+Plafond de 2 000 crédits, expiration et autres permissions conservés ; aucune
+rotation de clé ni nouveau déploiement nécessaire pour cette correction de droit.
+
+Deux contrôles réussissent ensuite : endpoint fournisseur `200` avec jeton non
+vide, puis route Vercel avec origine et code valides `200`, jeton non vide et
+`Cache-Control: no-store`. Les jetons restent en mémoire et ne sont pas affichés.
+Ces contrôles n’ouvrent pas de session audio et ne valident pas encore `creer_note`.
+
+Le premier essai audio repris après correction crée ensuite une note réelle en
+environ 17 secondes. Conversation arrêtée et persistance après rechargement
+vérifiées dans l’interface le 9 novembre 2026 ; voir le guide agent. Le jeton est
+donc validé aussi dans le parcours SDK WebRTC, au-delà des seuls contrôles HTTP.
 
 ## Réponses et erreurs
 

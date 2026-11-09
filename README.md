@@ -11,13 +11,17 @@ le store actualise aussi la liste sans rechargement. L'interface permet de crée
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
 restaurer, ainsi que de télécharger et importer une sauvegarde JSON. Le panneau
 de simulation permet d'exécuter les six outils locaux sans microphone ni appel
-ElevenLabs. Le panneau vocal et le SDK sont préparés (seul `creer_note` est
-déclaré), avec démarrage/arrêt et transcription temporaire. Aucun parcours vocal
-réel validé ; la route reste désactivée jusqu’aux vérifications distantes.
+ElevenLabs. Le panneau vocal et le SDK déclarent les six outils, avec démarrage/arrêt
+et transcription temporaire. Première création vocale
+réelle validée le 9 novembre 2026 : note visible, conversation arrêtée et note
+retrouvée après rechargement. L’accès vocal est activé en Production uniquement,
+avec code personnel et limitation Vercel. Les cinq nouveaux branchements sont
+préparés sur cette branche, en attente de déploiement et de validation vocale.
 
-[Version déployée avec la voix désactivée](https://project-bxwwf.vercel.app)
-— source `dev`, commit `71ba461`, vérifiée le 9 novembre 2026. Interface accessible,
-route GET refusée en `405` et POST en `503` ; aucun essai vocal réel. Cette adresse
+[Version de test avec accès vocal protégé](https://project-bxwwf.vercel.app)
+— code applicatif `71ba461`, redéployé le 9 novembre 2026 avec les variables serveur.
+POST sans code refusé en `401`, jeton réel reçu en `200` avec le code valide,
+première note vocale persistante vérifiée. Cette adresse
 possède ses propres notes locales, distinctes de celles de localhost.
 
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
@@ -277,8 +281,9 @@ La confirmation de réussite devra attendre la sauvegarde effective.
 La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
 proposées, le contrat des six outils et les prérequis aux essais vocaux. La
 configuration distante initiale est enregistrée ; voix et LLM restent provisoires.
-Les six outils sont définis côté ElevenLabs ; `creer_note` est déclaré dans le SDK,
-les cinq autres branchements restent à réaliser. Le panneau vocal demande le jeton
+Les six outils sont définis côté ElevenLabs et déclarés dans le SDK. Seul
+`creer_note` est déjà déployé et validé vocalement ; les cinq nouveaux branchements
+restent à déployer et tester. Le panneau vocal demande le jeton
 avant de solliciter le microphone. `npm run dev:api` permet de servir cette route,
 avec le verrou fermé ; Vite seul ne la sert pas. Le code personnel est effacé du
 champ au démarrage ou à l’arrêt. Sessions limitées localement à deux minutes,
@@ -286,7 +291,10 @@ avec arrêt après trente secondes sans message/audio reçu, au masquage de la p
 ou au démontage. Ces contrôles ne constituent pas un plafond global de dépenses.
 La [route serveur de jetons](api/README.md) est implémentée et testée
 avec un fournisseur simulé, désactivée par défaut. Un déploiement verrouillé est
-vérifié ; la limitation Vercel reste à configurer et vérifier avant activation. Aucun service
+vérifié ; la limitation Vercel est publiée et son refus `429` vérifié sur le domaine
+principal. Secrets enregistrés et activation limitée à Production ; création vocale
+persistante validée, scénario complet restant à vérifier. La clé nécessite
+ElevenAgents Écrire (`convai_write`). Aucun service
 payant n'est activé.
 
 ## Store des notes

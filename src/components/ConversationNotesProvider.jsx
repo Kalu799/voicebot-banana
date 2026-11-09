@@ -5,19 +5,39 @@ import {
 import { creerOutilsNotes } from '../services/notesTools.js'
 import { useNotes } from '../stores/useNotes.js'
 
-// Ce composant enregistre un outil ; il n’affiche rien à l’écran.
-function OutilCreationNote() {
+// Tous les outils renvoient à l’agent le même format JSON.
+// Les mutations attendent la sauvegarde réelle avant de répondre.
+function resultatPourAgent(outil) {
+  return async parametres => {
+    const resultat = await outil(parametres)
+    return JSON.stringify(resultat)
+  }
+}
+
+function OutilsConversationNotes() {
   const store = useNotes()
   const outils = creerOutilsNotes(store)
 
-  useConversationClientTool('creer_note', async parametres => {
-    // Réutiliser les validations et la sauvegarde du simulateur.
-    // La promesse ne réussit qu’après la transaction IndexedDB.
-    const resultat = await outils.creer_note(parametres)
-
-    // Transmettre à l’agent un résultat JSON contenant notamment succes.
-    return JSON.stringify(resultat)
-  })
+  // Les noms correspondent exactement aux définitions ElevenLabs.
+  // Chaque hook reste appelé à chaque rendu, sans boucle ni condition.
+  useConversationClientTool(
+    'creer_note', resultatPourAgent(outils.creer_note),
+  )
+  useConversationClientTool(
+    'chercher_notes', resultatPourAgent(outils.chercher_notes),
+  )
+  useConversationClientTool(
+    'lire_note', resultatPourAgent(outils.lire_note),
+  )
+  useConversationClientTool(
+    'modifier_note', resultatPourAgent(outils.modifier_note),
+  )
+  useConversationClientTool(
+    'supprimer_note', resultatPourAgent(outils.supprimer_note),
+  )
+  useConversationClientTool(
+    'restaurer_note', resultatPourAgent(outils.restaurer_note),
+  )
 
   return null
 }
@@ -25,7 +45,7 @@ function OutilCreationNote() {
 export default function ConversationNotesProvider({ children }) {
   return (
     <ConversationProvider>
-      <OutilCreationNote />
+      <OutilsConversationNotes />
       {children}
     </ConversationProvider>
   )
