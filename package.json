@@ -7,16 +7,28 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "test": "node --test",
     "dev": "vite",
+    "dev:api": "VOICEBOT_VOIX_ACTIVE=false vercel dev --local --listen 127.0.0.1:3000",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@elevenlabs/react": "1.21.1",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
+  "overrides": {
+    "vercel": {
+      "tar": "7.5.22",
+      "ajv": "8.18.0",
+      "js-yaml": "4.3.2",
+      "smol-toml": "1.9.0"
+    }
+  },
   "devDependencies": {
     "@vitejs/plugin-react": "6.2.1",
+    "vercel": "65.12.1",
     "vite": "8.3.6"
   }
 }
