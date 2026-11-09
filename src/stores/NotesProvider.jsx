@@ -5,7 +5,7 @@ import {
   preparerSuppression,
   preparerRestauration,
 } from '../utils/note.js'
-import { enregistrerNote, recupererNotes } from '../services/notesStorage.js'
+import { enregistrerNote, recupererNotes, effacerNotesEnCorbeille } from '../services/notesStorage.js'
 import { importerNotes } from '../services/notesBackup.js'
 import { NotesContext } from './NotesContext.js'
 import { etatInitialNotes, notesReducer } from './notesReducer.js'
@@ -184,6 +184,27 @@ export function NotesProvider({ children }) {
   }
 
   /**
+   * Actions réservées à l’interface. Les ids viennent de la confirmation et sont
+   * revérifiés après les actions en file, pour préserver les notes restaurées.
+   */
+  function supprimerDefinitivementNotes(ids) {
+    const cibles = [...ids]
+    return executerAction(async () => {
+      for (const id of cibles) {
+        const note = notesCourantes.current.find(note => note.id === id)
+        if (note && note.deletedAt === null) {
+          throw new Error('Seules les notes en corbeille peuvent être supprimées définitivement.')
+        }
+      }
+      await effacerNotesEnCorbeille(cibles)
+      if (chargementReussi.current) {
+        notesCourantes.current = notesCourantes.current.filter(note => !cibles.includes(note.id))
+        dispatch({ type: 'NOTES_EFFACEES', ids: cibles })
+      }
+    })
+  }
+
+  /**
    * Importe puis relit la base dans une seule opération de la file.
    * Si l’écriture réussit mais pas la relecture, expose les compteurs sur l’erreur
    * et bloque le store : l’utilisateur doit recharger pour retrouver un état fiable.
@@ -230,6 +251,7 @@ export function NotesProvider({ children }) {
       modifierNote,
       supprimerNote,
       restaurerNote,
+      supprimerDefinitivementNotes,
       importerSauvegarde,
     }}>
       {children}

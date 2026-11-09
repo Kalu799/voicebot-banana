@@ -123,3 +123,11 @@ automatisés et les contrôles de largeur ne couvrent pas tous ces cas.
 Les commits, push, PR et fusions restent réalisés par le porteur du projet.
 Les modifications se préparent sur une branche dédiée, puis sont intégrées
 selon le circuit du projet : branche de travail → `dev` → `main`.
+
+### Suppression définitive
+
+Dans la corbeille, l’utilisateur peut supprimer une note définitivement ou vider
+la corbeille entière. Chaque action demande confirmation et efface les notes du
+stockage local ; elle est irréversible. Les notes actives restent conservées.
+Ces commandes sont réservées à l’interface : le voicebot peut uniquement mettre
+en corbeille et restaurer. Une sauvegarde JSON déjà exportée reste inchangée.

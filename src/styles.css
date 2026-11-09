@@ -510,3 +510,18 @@ fieldset:disabled .bouton-secondaire {
     min-height: 0;
   }
 }
+
+.bouton-danger {
+  background: transparent;
+  border: 1px solid currentColor;
+  color: #a12622;
+}
+
+.bouton-danger:hover:not(:disabled) {
+  background: #fff0ee;
+}
+
+.bouton-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
