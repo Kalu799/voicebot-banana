@@ -1,8 +1,8 @@
 # Préparation de l’agent ElevenLabs français
 
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
-Le SDK React est préparé depuis le 9 novembre 2026, sans démarrage de conversation
-ni demande de microphone. Les consignes sont enregistrées dans l’agent distant,
+Le SDK React et le panneau vocal sont préparés depuis le 9 novembre 2026 ; aucun
+essai vocal réel ni demande de microphone effectué. Les consignes sont enregistrées dans l’agent distant,
 mais aucune conversation réelle n’a validé son comportement. Les six définitions
 distantes sont configurées et associées à l’agent ; seul `creer_note` est déclaré
 dans le SDK côté navigateur, sans exécution réelle vérifiée.
@@ -23,16 +23,16 @@ le résultat, puis le renvoie comme texte JSON contenant `succes` et le résumé
 la note ou l’erreur. Le hook maintient le gestionnaire courant et le désenregistre
 au démontage. Les cinq autres outils ne sont pas encore déclarés dans le SDK.
 
-Aucun `startSession`, appel de la route de jetons, champ de code d’accès ou bouton
-vocal n’est ajouté à ce stade. L’enregistrement du gestionnaire ne le déclenche
-pas. Tests existants, compilation et affichage de l’interface locale vérifiés ;
-cela ne valide pas encore un appel d’outil depuis ElevenLabs. Vite signale le
-bundle principal de 846,62 kB (233,40 kB gzip) ; optimisation du chargement reportée.
+Le panneau décrit ci-dessous utilise désormais `startSession` après obtention du
+jeton ; l’enregistrement du gestionnaire seul ne le déclenche pas. Tests existants,
+compilation et affichage local vérifiés ; cela ne valide pas encore un appel
+d’outil depuis ElevenLabs. Avertissement Vite de poids du bundle : optimisation
+du chargement reportée pour privilégier le parcours principal.
 
 ### Service client de jeton — 9 novembre 2026
 
-`src/services/conversationAccess.js` prépare la demande au serveur, sans être
-encore appelé par l’interface. `obtenirJetonConversation(codeAcces, signal)`
+`src/services/conversationAccess.js` effectue la demande au serveur depuis le
+panneau vocal. `obtenirJetonConversation(codeAcces, signal)`
 valide le format du code, puis envoie un POST sur `/api/conversation-token`
 avec le code personnel dans l’en-tête Bearer. Aucune clé ElevenLabs, persistance
 du jeton ou relance automatique n’est ajoutée. Cache et redirections sont refusés.
@@ -47,7 +47,37 @@ Sept scénarios dans `tests/conversationAccess.test.js` remplacent le transport
 réseau : validation locale, requête autorisée, refus HTTP, JSON/jeton invalide,
 pannes/expiration simulée, annulation et délai configuré. Ils ne valident ni un
 échange HTTP réel ni une session SDK, et n’attendent pas réellement quinze secondes.
-Tests et compilation réussis ; champ de code et commandes vocales restent à ajouter.
+Tests et compilation réussis ; le service est raccordé au panneau décrit ci-dessous.
+
+### Panneau de conversation — 9 novembre 2026
+
+`ConversationPanel.jsx`, placé avant les sauvegardes dans `App.jsx`, propose le
+code personnel, Démarrer/Arrêter, l’état, la durée et les quarante derniers messages
+reçus. Le code reste en mémoire et est effacé du champ au démarrage ou à l’arrêt ;
+les messages ne sont pas sauvegardés. Une nouvelle tentative vide la transcription.
+
+Le jeton est demandé avant la connexion WebRTC et le microphone. Les événements
+`onConnect`, `onDisconnect` et `onError` déterminent les transitions : dans le SDK
+installé, `startSession` ne renvoie pas une promesse confirmant la connexion.
+Arrêter annule la demande et appelle `endSession` ; un jeton tardif est ignoré.
+Un verrou par référence empêche les doubles démarrages.
+
+Contrôles locaux : demande de jeton limitée à quinze secondes, préparation de la
+connexion limitée à trente secondes, conversation limitée à deux minutes, arrêt
+après trente secondes sans message ou audio reçu. Cette dernière règle mesure
+les événements reçus, pas exactement le silence du microphone. Masquage de page,
+`pagehide` et démontage demandent aussi l’arrêt. Les minuteries navigateur sont
+approximatives et peuvent être retardées ; les limites distantes restent nécessaires.
+
+Vérifications sur un banc temporaire hors dépôt, avec SDK et jeton simulés :
+refus du code et du verrou, attente de `onConnect`, message affiché, délais de
+connexion/inactivité/durée maximale, annulation avec jeton tardif ignoré, erreur
+SDK sans détail brut affiché, sortie de page et démontage. Les délais sont accélérés
+par une horloge simulée. Dans l’application avec le SDK installé, affichage et
+refus local d’un code invalide vérifiés. Aucun microphone ni échange ElevenLabs.
+Masquage réel sur mobile, libération du microphone, interruptions et fermeture
+distante effective restent à valider en conversation réelle. Les contrôles de ce
+banc temporaire ne font pas partie des tests Node enregistrés dans le dépôt.
 
 ## Configuration distante constatée le 8 novembre 2026
 

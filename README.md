@@ -11,7 +11,9 @@ le store actualise aussi la liste sans rechargement. L'interface permet de crée
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
 restaurer, ainsi que de télécharger et importer une sauvegarde JSON. Le panneau
 de simulation permet d'exécuter les six outils locaux sans microphone ni appel
-ElevenLabs. La conversation vocale reste à développer.
+ElevenLabs. Le panneau vocal et le SDK sont préparés (seul `creer_note` est
+déclaré), avec démarrage/arrêt et transcription temporaire. Aucun parcours vocal
+réel validé ; la route reste désactivée jusqu’aux vérifications distantes.
 
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
 
@@ -82,6 +84,9 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
 | `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
 | `src/services/notesTools.js` | Six outils locaux avec validation et résultats structurés |
+| `src/components/ConversationPanel.jsx` | Code personnel en mémoire, démarrage/arrêt, durée et messages temporaires |
+| `src/components/ConversationNotesProvider.jsx` | Provider SDK et déclaration de `creer_note` |
+| `src/services/conversationAccess.js` | Demande du jeton au serveur, erreurs et annulation |
 | `src/utils/rechercheNotes.js` | Recherche normalisée, extraits et lecture par identifiant |
 | `tests/notesTools.test.js` | Tests automatisés de la recherche et des six outils |
 | `src/stores/` | État partagé, chargement et actions de gestion des notes |
@@ -93,7 +98,8 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `tests/routeJeton.test.js` | Tests de la route avec fournisseur simulé, sans appel réel |
 | `docs/` | Démarche, journal et suivi des tâches |
 
-Pour le moment : `index.html` → `main.jsx` → `NotesProvider` → `App` → affichage.
+Pour le moment : `index.html` → `main.jsx` → `NotesProvider` →
+`ConversationNotesProvider` → `App` → affichage.
 Le provider charge les notes depuis IndexedDB ; `App` sélectionne les notes
 actives et les affiche des plus récentes aux plus anciennes.
 
@@ -266,8 +272,14 @@ La confirmation de réussite devra attendre la sauvegarde effective.
 La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
 proposées, le contrat des six outils et les prérequis aux essais vocaux. La
 configuration distante initiale est enregistrée ; voix et LLM restent provisoires.
-Les six outils sont définis côté ElevenLabs ; leur branchement via le SDK reste
-à réaliser. La [route serveur de jetons](api/README.md) est implémentée et testée
+Les six outils sont définis côté ElevenLabs ; `creer_note` est déclaré dans le SDK,
+les cinq autres branchements restent à réaliser. Le panneau vocal demande le jeton
+avant de solliciter le microphone. `npm run dev:api` permet de servir cette route,
+avec le verrou fermé ; Vite seul ne la sert pas. Le code personnel est effacé du
+champ au démarrage ou à l’arrêt. Sessions limitées localement à deux minutes,
+avec arrêt après trente secondes sans message/audio reçu, au masquage de la page
+ou au démontage. Ces contrôles ne constituent pas un plafond global de dépenses.
+La [route serveur de jetons](api/README.md) est implémentée et testée
 avec un fournisseur simulé, désactivée par défaut. La limitation Vercel et le
 déploiement restent à configurer et vérifier avant activation. Aucun service
 payant n'est activé.

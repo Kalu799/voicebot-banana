@@ -8,7 +8,7 @@
 | 4. Store Context + useReducer | Terminé | Chargement, création, modification, corbeille et import avec actualisation vérifiés ; erreurs et besoin de rechargement gérés |
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
 | 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
-| 7. Client tools | En cours | Six définitions distantes configurées ; SDK installé et `creer_note` déclaré ; démarrage de session, cinq autres branchements et parcours vocaux à faire |
+| 7. Client tools | En cours | SDK et panneau de conversation préparés, `creer_note` déclaré ; cinq autres branchements et parcours vocaux réels à faire |
 | 8. Route serveur protégée | En cours | Contrôles d’accès testés avec fournisseur simulé et route désactivée vérifiée sous Vercel local ; limitation distante et intégration réelle à vérifier |
 | 9. Parcours complets et mobile | À faire | Persistance, ambiguïtés, erreurs et interactions vérifiées |
 | 10. Déploiement Vercel | À faire | Adresse stable et démonstration reproductible |
@@ -18,8 +18,10 @@ les scénarios à valider ainsi que la configuration distante initiale réalisé
 Les six outils sont configurés et associés à l’agent côté ElevenLabs.
 Le SDK `@elevenlabs/react@1.21.1` est installé depuis le 9 novembre 2026 et
 `creer_note` est déclaré via un provider, sans démarrage de session ni essai vocal.
-Le service client de demande du jeton est ajouté et vérifié avec transport simulé ;
-il n’est pas encore appelé par l’interface. Saisie du code et commandes vocales à faire.
+Le service client de jeton est raccordé au panneau : code en mémoire, démarrage/arrêt,
+durée, messages temporaires et fermetures automatiques. Les parcours de commande
+sont vérifiés avec SDK/jeton simulés ; seul le refus local d’un code invalide et
+l’affichage sont vérifiés avec le SDK installé. Aucun essai vocal réel.
 Tests existants, compilation et affichage local vérifiés. Avertissement Vite sur
 le poids du bundle consigné dans le guide agent, optimisation reportée.
 La [route de jetons](../api/README.md) est ajoutée et

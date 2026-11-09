@@ -15,9 +15,11 @@ ElevenLabs. Aucun secret réel n’a été créé ou renseigné pendant cette é
 
 Flux cible : navigateur → pare-feu Vercel → `POST /api/conversation-token` →
 contrôle du code d’accès → ElevenLabs → jeton WebRTC → navigateur.
-Le SDK et le champ de saisie du code d’accès ne sont pas encore implémentés.
+Le SDK et le panneau de saisie du code sont préparés depuis le 9 novembre 2026,
+sans conversation réelle validée. Le panneau utilise `src/services/conversationAccess.js`
+pour demander le jeton ; il n’ouvre la connexion WebRTC qu’après une réponse valide.
 
-Le navigateur devra envoyer `Authorization: Bearer <code-personnel>` et utiliser
+Le navigateur envoie `Authorization: Bearer <code-personnel>` et doit utiliser
 la même origine que l’application. La route ne lit aucun corps de requête et
 n’utilise pas les paramètres de l’URL entrante : l’identifiant de l’agent vient
 exclusivement de l’environnement serveur. Elle appelle en GET l’endpoint

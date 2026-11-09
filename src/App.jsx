@@ -3,6 +3,7 @@ import NoteForm from './components/NoteForm.jsx'
 import NotesList from './components/NotesList.jsx'
 import NotesBackup from './components/NotesBackup.jsx'
 import ToolsSimulator from './components/ToolsSimulator.jsx'
+import ConversationPanel from './components/ConversationPanel.jsx'
 import { useNotes } from './stores/useNotes.js'
 
 export default function App() {
@@ -36,6 +37,7 @@ export default function App() {
         </div>
       )}
 
+      <ConversationPanel />
       <NotesBackup />
 
       <div className="espace-notes">

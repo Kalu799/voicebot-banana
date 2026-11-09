@@ -658,3 +658,29 @@
 - Documentation : guide agent et suivi actualisés. Suite à présenter avant nouveau
   go : panneau vocal avec code en mémoire, demande annulable, démarrage/arrêt,
   durée et fermeture automatique. Route verrouillée jusqu’à validation distante.
+
+## 9 novembre 2026 — Panneau de conversation préparé
+
+- Préparation : commit utilisateur `e2a9048` confirmé sur
+  `feature/integration-elevenlabs`, arbre propre. Code expliqué puis go explicite reçu.
+- Réalisation : `ConversationPanel.jsx` ajouté avant les sauvegardes dans `App.jsx`.
+  Code personnel en mémoire et champ effacé, jeton avant WebRTC/microphone,
+  confirmation via événements SDK, démarrage/arrêt et refus des retours obsolètes.
+  Durée et quarante derniers messages temporaires affichés.
+- Fermeture : annulation de la demande, préparation limitée à trente secondes,
+  conversation à deux minutes, arrêt après trente secondes sans message/audio reçu,
+  au masquage, à la sortie de page et au démontage. Minuteries locales approximatives,
+  complémentaires aux protections distantes et non assimilables à un plafond de coût.
+- Vérifications : compilation et `npm test` réussis (quatre fichiers). Banc React
+  temporaire hors dépôt, sous StrictMode, avec SDK et jeton simulés : refus, attente
+  de connexion, message reçu, délais accélérés, arrêt et jeton tardif ignoré,
+  erreur SDK générique, sortie et démontage vérifiés. Aucune dépendance ajoutée.
+  Le banc n’est pas intégré à la suite Node. Application réelle observée localement :
+  panneau affiché et code invalide refusé sans microphone ni réseau ElevenLabs.
+- Limites : aucun essai vocal réel, aucun accès distant activé. Masquage réel sur
+  mobile, libération du microphone et fermeture effective à vérifier ultérieurement.
+  Bundle de 852,19 kB (235,48 kB gzip) : avertissement Vite inchangé dans sa nature,
+  optimisation reportée.
+- Documentation : README, guide API, guide agent et suivi actualisés. Commit à
+  proposer à l’utilisateur ; prochaine étape : préparer sa PR vers `dev` et le
+  contrôle Vercel verrouillé avant le premier essai de création vocale persistante.
