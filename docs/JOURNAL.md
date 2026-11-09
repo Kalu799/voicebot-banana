@@ -851,3 +851,16 @@
 - Limites : téléphone physique et microphone mobile, ambiguïtés entre plusieurs
   notes, classement vocal, contenu hostile et panne réelle restent à vérifier.
   Clé d’essai expirante à renouveler pour une démonstration après son échéance.
+
+## 9 novembre 2026 — Guide de démonstration et report du téléphone
+
+- PR n° 6 fusionnée par l’utilisateur, `dev` propre au commit `882e6e5`.
+  Après go, branche `feature/recette-v1` créée avant les changements.
+- Ajout de `DEMONSTRATION.md` : préparation privée de l’accès, phrases à prononcer,
+  résultats attendus, preuves réelles distinctes des essais prévus, dépannage et
+  secours par formulaire ou simulateur. Liens ajoutés dans le README et le suivi.
+- L’utilisateur dispose d’un téléphone mais demande de reporter le test audio
+  pour préserver les crédits ElevenLabs. Report consigné explicitement ; aucune
+  validation du microphone mobile annoncée et aucun nouvel appel vocal lancé.
+- Guide du simulateur actualisé : les six outils sont déjà intégrés à l’agent,
+  leur déduplication reste une limite. Aucun code applicatif ou réglage modifié.

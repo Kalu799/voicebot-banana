@@ -3,7 +3,7 @@
 ## But et fonctionnement
 
 Le panneau « Simulation des outils » permet d'exécuter manuellement les six outils
-qui seront ensuite proposés à l'agent ElevenLabs. Il ne simule pas une conversation
+également utilisés par l'agent ElevenLabs. Il ne simule pas une conversation
 en langage naturel : il simule l'appel d'un outil avec ses paramètres JSON.
 
 Les effets sur les notes sont réels et sauvegardés dans IndexedDB. Aucune connexion
@@ -123,5 +123,5 @@ interprétation par un modèle, transcription ou audio simulé.
 
 Le verrou porte sur les appels simultanés, pas sur les demandes répétées après
 réussite : chaque nouvelle invocation de `creer_note` crée une nouvelle note.
-La déduplication des appels vocaux reste à prévoir avec l'intégration de l'agent.
+La déduplication des appels vocaux reste à prévoir malgré l'intégration de l'agent.
 Les autres navigateurs et lecteurs d'écran restent à vérifier.

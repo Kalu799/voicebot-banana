@@ -32,6 +32,8 @@ Voir aussi [le contrôle à une largeur mobile de 390 px](docs/images/validation
 Il vérifie la disposition, sans valider le microphone sur un téléphone physique.
 Le [guide du simulateur](docs/SIMULATION.md) propose un scénario reproductible
 avec les six outils et des notes de démonstration.
+Le [guide de démonstration](docs/DEMONSTRATION.md) rassemble les consignes vocales,
+les résultats attendus, les preuves obtenues et le parcours de secours sans voix.
 
 ## Démarrer
 
