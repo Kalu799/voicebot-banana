@@ -2,7 +2,12 @@ const NOM_BASE = 'voicebot'
 const VERSION_BASE = 1
 const MAGASIN_NOTES = 'notes'
 
-/** Ouvre la base ; un appel direct doit être suivi de base.close(). */
+/**
+ * Ouvre la base locale voicebot version 1 et crée le magasin notes si nécessaire.
+ * Convertit les événements IndexedDB en promesse de connexion ; refuse si l’API
+ * est absente, si l’ouverture échoue ou si un autre onglet bloque la migration.
+ * L’appelant doit fermer la connexion reçue ; les autres fonctions le font déjà.
+ */
 export function ouvrirBase() {
   return new Promise((resolve, reject) => {
     if (typeof indexedDB === 'undefined') {
@@ -56,7 +61,12 @@ export function ouvrirBase() {
   })
 }
 
-/** Enregistre une note complète et attend la fin effective de la transaction. */
+/**
+ * Ajoute ou remplace une note complète par son id avec put dans une transaction.
+ * Attend oncomplete : le succès d’une requête seule ne prouve pas que la
+ * transaction est validée. Résout sans valeur, rejette si elle est annulée.
+ * Ferme sa connexion dans tous les cas ; la validation métier revient au store.
+ */
 export async function enregistrerNote(note) {
   const base = await ouvrirBase()
 
@@ -80,7 +90,11 @@ export async function enregistrerNote(note) {
   }
 }
 
-/** Récupère toutes les notes, y compris celles de la future corbeille, sans tri. */
+/**
+ * Lit toutes les notes, corbeille comprise, sans tri de présentation.
+ * Renvoie une promesse de tableau (vide si aucune note), après fin de transaction.
+ * Ferme sa connexion même après erreur ; ne filtre ni ne valide les objets lus.
+ */
 export async function recupererNotes() {
   const base = await ouvrirBase()
 
@@ -102,7 +116,13 @@ export async function recupererNotes() {
   }
 }
 
-/** Ajoute les notes validées par l'import, en conservant les identifiants locaux. */
+/**
+ * Fusionne une liste déjà validée dans une seule transaction d’écriture.
+ * Un id local existant est ignoré, même si son contenu diffère ; les autres notes
+ * sont ajoutées. Renvoie { importees, ignorees } après validation de la transaction.
+ * Une annulation retire tous les ajouts de cet import, sans toucher aux notes
+ * préexistantes. Cette couche ne valide pas le format du fichier JSON.
+ */
 export async function fusionnerNotes(notes) {
   const base = await ouvrirBase()
 
@@ -123,6 +143,11 @@ export async function fusionnerNotes(notes) {
       }
 
       // Une erreur synchrone doit aussi annuler les ajouts déjà effectués.
+
+      /**
+       * Conserve la cause d’une erreur synchrone et annule toute la transaction,
+       * pour ne pas conserver les ajouts précédents d’un import finalement refusé.
+       */
       function annuler(cause) {
         erreurEcriture = cause
         transaction.abort()

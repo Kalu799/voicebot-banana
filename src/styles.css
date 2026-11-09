@@ -1,3 +1,4 @@
+/* Base visuelle commune : police système, couleurs et lisibilité du texte. */
 :root {
   font-family: system-ui, sans-serif;
   color: #172638;
@@ -48,6 +49,8 @@ h2 {
   font-size: 1.25rem;
 }
 
+/* Deux colonnes sur grand écran. minmax(0, ...) autorise leur rétrécissement
+   même si une note contient un texte ou un identifiant très long. */
 .espace-travail {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
@@ -63,6 +66,7 @@ h2 {
   min-height: 560px;
 }
 
+/* Deux commandes par ligne par défaut ; quatre à partir de 1200 px. */
 .navigation-notes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -118,6 +122,8 @@ h2 {
   margin: 0 0 24px;
 }
 
+/* Le fieldset regroupe les champs et permet de tous les désactiver pendant
+   une opération, sans ajouter un état disabled indépendant sur chaque champ. */
 fieldset {
   min-width: 0;
   margin: 0;
@@ -182,6 +188,7 @@ button:hover:not(:disabled) {
   background: #344626;
 }
 
+/* Indicateur clavier partagé, y compris sur les zones de texte défilantes. */
 :is(input, textarea, select, button, summary, .transcription, .resultat-simulation pre):focus-visible {
   outline: 3px solid #315f94;
   outline-offset: 3px;
@@ -263,6 +270,7 @@ fieldset:disabled .bouton-secondaire {
   color: #526174;
 }
 
+/* Conserve les sauts de ligne de la note tout en laissant le texte revenir à la ligne. */
 .note-contenu {
   white-space: pre-wrap;
 }
@@ -314,6 +322,8 @@ fieldset:disabled .bouton-secondaire {
   margin-top: 24px;
 }
 
+/* Le panneau Sauvegarde est déjà contenu dans le panneau des notes : éviter
+   une seconde bordure et une seconde couche de padding. */
 .sauvegardes {
   padding: 0;
   border: 0;
@@ -387,6 +397,8 @@ fieldset:disabled .bouton-secondaire {
   border-radius: 10px;
 }
 
+/* Limiter la hauteur de l’historique pour garder les commandes accessibles.
+   Le composant rend cette zone focalisable lorsqu’elle contient des messages. */
 .transcription {
   max-height: 360px;
   overflow: auto;
@@ -458,6 +470,7 @@ fieldset:disabled .bouton-secondaire {
   margin-top: 0;
 }
 
+/* Texte présent pour les lecteurs d’écran, retiré visuellement sans display:none. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -470,12 +483,15 @@ fieldset:disabled .bouton-secondaire {
   border: 0;
 }
 
+/* Grand écran : toute la navigation tient sur une seule rangée. */
 @media (min-width: 1200px) {
   .navigation-notes {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
+/* Écran étroit : conversation puis notes sur une colonne, hauteur minimale
+   du panneau retirée pour éviter un grand espace vide. */
 @media (max-width: 900px) {
   .espace-travail {
     grid-template-columns: minmax(0, 1fr);

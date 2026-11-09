@@ -2,6 +2,11 @@ import { useRef, useState } from 'react'
 import { useNotes } from '../stores/useNotes.js'
 import NoteForm from './NoteForm.jsx'
 
+/**
+ * Affiche une note et ses commandes selon deletedAt : édition/suppression si
+ * active, restauration si en corbeille. Gère l’ouverture du formulaire localement
+ * et remonte les confirmations à App pour qu’elles survivent au déplacement de carte.
+ */
 export default function NoteCard({ note, onConfirmer = () => {} }) {
   const { supprimerNote, restaurerNote, chargement, rechargementRequis } = useNotes()
   const [edition, setEdition] = useState(false)
@@ -10,6 +15,11 @@ export default function NoteCard({ note, onConfirmer = () => {} }) {
   const enCorbeille = note.deletedAt !== null
   const indisponible = chargement || rechargementRequis || Boolean(actionEnCours)
 
+  /**
+   * Choisit suppression ou restauration selon l’état de la carte.
+   * Attend la sauvegarde avant confirmation et empêche deux clics rapprochés.
+   * Si l’écriture échoue, le store ne déplace pas la note et App affiche l’erreur.
+   */
   async function changerCorbeille() {
     if (indisponible || actionVerrouillee.current) return
 
