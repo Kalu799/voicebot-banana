@@ -170,6 +170,26 @@ recharge automatique désactivée ; la FAQ indique que le coût LLM est déduit 
 crédits. Les limites de l’agent sont publiées à cinq appels par jour et un appel
 simultané. La voix reste fermée, sans secrets réels ni appel fournisseur.
 
+### Secrets préparés, activation en attente — 9 novembre 2026
+
+Après go, `.env.local` absent est créé sans écrasement, en mode `600`, et son
+exclusion Git est vérifiée. Code personnel de 32 octets aléatoires encodés en
+base64url, conservé en commentaire privé, et empreinte SHA-256 cohérente contrôlés
+sans afficher les valeurs. Le verrou local reste `false`, l’origine vise le domaine
+principal HTTPS. L’utilisateur renseigne lui-même la clé dédiée dans ce fichier.
+
+Formulaire ElevenLabs préparé : clé restreinte, ElevenAgents **Lire** uniquement,
+plafond 2 000 crédits par renouvellement et expiration après un jour ; autres
+accès désactivés. Création finale réalisée par l’utilisateur. La compatibilité de
+ce droit avec l’endpoint de jeton n’est pas encore validée par un appel réel.
+
+L’utilisateur enregistre sur Vercel `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`,
+`VOICEBOT_CODE_ACCES_SHA256` et `VOICEBOT_ORIGINE`, toutes quatre en mode **Secret**
+et **Production uniquement**. Leur présence est vérifiée, sans révéler les valeurs.
+Aucun redéploiement ni activation pendant cette préparation. Un nouveau déploiement
+sera nécessaire pour les prendre en compte. Ne jamais versionner `.env.local` ;
+la clé d’essai expire et devra être renouvelée pour une démonstration ultérieure.
+
 ## Réponses et erreurs
 
 | Statut | Signification |

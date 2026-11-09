@@ -287,7 +287,7 @@ ou au démontage. Ces contrôles ne constituent pas un plafond global de dépens
 La [route serveur de jetons](api/README.md) est implémentée et testée
 avec un fournisseur simulé, désactivée par défaut. Un déploiement verrouillé est
 vérifié ; la limitation Vercel est publiée et son refus `429` vérifié sur le domaine
-principal. Préparation des secrets et premier essai vocal restent à faire. Aucun service
+principal. Secrets préparés côté serveur ; activation et premier essai vocal restent à faire. Aucun service
 payant n'est activé.
 
 ## Store des notes

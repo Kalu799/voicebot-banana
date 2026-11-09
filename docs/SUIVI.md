@@ -9,7 +9,7 @@
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
 | 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
 | 7. Client tools | En cours | SDK et panneau de conversation préparés, `creer_note` déclaré ; cinq autres branchements et parcours vocaux réels à faire |
-| 8. Route serveur protégée | En cours | Route verrouillée et limitation Vercel `429` vérifiées ; secrets et intégration réelle à préparer |
+| 8. Route serveur protégée | En cours | Route verrouillée et limitation `429` vérifiées ; secrets préparés, activation et intégration réelle à valider |
 | 9. Parcours complets et mobile | À faire | Persistance, ambiguïtés, erreurs et interactions vérifiées |
 | 10. Déploiement Vercel | En cours | Version verrouillée de `dev` (`71ba461`) publiée et vérifiée ; démonstration vocale à valider |
 
@@ -33,7 +33,8 @@ Déploiement verrouillé vérifié le 9 novembre 2026 sur
 route GET `405`, POST `503`, refus vocal affiché avec code fictif. Dépôt connecté,
 preset Vite, voix désactivée pour tous les environnements. Aucun secret ElevenLabs
 ajouté. Agent limité à cinq appels/jour et un simultané ; compte Free et recharge
-automatique désactivée confirmés. Secrets et essais réels restent à faire.
+automatique désactivée confirmés. Secrets enregistrés par l’utilisateur en Production
+sur Vercel et fichier local privé préparé ; pas encore redéployés, aucun essai réel.
 Vercel utilise Node 26.x malgré
 le réglage 24.x, à cause de la plage ouverte du manifeste ; écart consigné au guide API.
 La commande `npm run dev:api` sert l’interface et la route avec le verrou fermé,

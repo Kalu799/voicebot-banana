@@ -8,7 +8,7 @@ distantes sont configurées et associées à l’agent ; seul `creer_note` est d
 dans le SDK côté navigateur, sans exécution réelle vérifiée.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
 fournisseur simulé, désactivée par défaut. La limitation Vercel est publiée et
-vérifiée sur le domaine principal ; secrets et intégration réelle restent à préparer.
+vérifiée sur le domaine principal ; secrets préparés, intégration réelle à valider.
 
 ## Protections du premier essai — 9 novembre 2026
 
@@ -30,6 +30,12 @@ immédiatement rejetés. Les bornes quotidiennes ne constituent pas un budget gl
 
 La règle Vercel deux demandes/minute/IP est publiée ; contrôle HTTP `503`, `503`,
 `429`, puis `503` après expiration réussi. Aucun secret ni conversation réelle.
+
+La préparation suivante crée un fichier local privé ignoré par Git (code personnel
+et empreinte), puis l’utilisateur crée et renseigne la clé dédiée. Clé prévue avec
+ElevenAgents Lire uniquement, plafond 2 000 crédits et expiration un jour ; droit à
+valider sur le jeton réel. Les quatre variables serveur sont enregistrées en Secret
+sur Vercel, en Production uniquement. Aucun redéploiement ni activation vocale.
 
 ## Préparation du SDK — 9 novembre 2026
 

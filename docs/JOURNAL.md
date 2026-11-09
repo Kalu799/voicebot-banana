@@ -741,3 +741,25 @@
   applicatif modifié, tests locaux non relancés pour cette configuration distante.
   Suite à expliquer avant nouveau go : préparation du code personnel, de son
   empreinte et de la clé serveur, puis activation pour un premier essai court.
+
+## 9 novembre 2026 — Préparation privée des secrets serveur
+
+- Préparation : commit utilisateur `824f531` confirmé sur `feature/validation-vocale`,
+  arbre propre. Go reçu pour les secrets seulement, sans activation.
+- Local : `.env.local` absent créé avec exclusion Git, mode `600` et écriture
+  exclusive. Code aléatoire 32 octets en base64url et empreinte SHA-256 ; valeurs
+  jamais affichées dans les sorties d’outil. Origine HTTPS du domaine principal,
+  agent fixé et verrou `false`. L’utilisateur renseigne la clé directement ;
+  présence, permissions du fichier et cohérence de l’empreinte vérifiées.
+- ElevenLabs : formulaire de clé dédiée restreinte préparé, ElevenAgents Lire,
+  limite 2 000 crédits et expiration un jour. Création finale et copie privée par
+  l’utilisateur ; droit exact encore à valider lors de la demande réelle de jeton.
+- Vercel : agent et origine préremplis ; l’utilisateur saisit clé et empreinte puis
+  enregistre. Les quatre variables sont présentes en Secret, Production uniquement.
+  Aucune valeur secrète révélée. La lecture du verrou Config demande une vérification
+  par email : annulation de cette lecture sans envoi, valeur initiale non modifiée.
+- Limites : aucun redéploiement, appel fournisseur ou session. Variables à prendre
+  en compte au prochain déploiement ; clé d’essai à renouveler après expiration.
+- Documentation actualisée ; aucune modification du code applicatif. Suite à
+  expliquer avant go : activation en Production, redéploiement et premier essai
+  court, avec vérification de la sauvegarde après rechargement.
