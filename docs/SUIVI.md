@@ -77,3 +77,13 @@ figure à l'étape 8 du cadrage.
 Premier jalon fonctionnel : créer une note par conversation et la retrouver après
 rechargement. **Jalon atteint le 9 novembre 2026 à 10 h 49**, avant le point de
 contrôle de 11 h 30. Objectif de livraison 16 h 30, limite absolue 17 h 30.
+
+## Nouvelle disposition — validation locale
+
+Branche `feature/interface-deux-colonnes` : conversation et transcription à gauche,
+notes et navigation à droite (Mes notes, Corbeille, Ajouter une note, Sauvegarde).
+Simulateur replié sous la conversation. Brouillons, retour aux notes après création,
+corbeille, export/import et persistance vérifiés ; cinq largeurs de 320 à 1440 px
+contrôlées sans débordement. Tests et build réussis, aucune nouvelle conversation
+ElevenLabs. Cette disposition n’est pas encore déployée ; le code vocal et le
+stockage restent identiques à la version déjà exercée. Voir [le guide](INTERFACE.md).

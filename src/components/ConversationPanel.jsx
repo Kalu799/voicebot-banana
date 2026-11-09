@@ -166,7 +166,7 @@ export default function ConversationPanel() {
         : 'Conversation arrêtée.'
 
   return (
-    <section className="panneau" aria-labelledby="titre-conversation">
+    <section className="panneau conversation" aria-labelledby="titre-conversation">
       <h2 id="titre-conversation">Conversation vocale</h2>
       <p className="aide">
         Le microphone sert à parler à l’assistant.
@@ -174,7 +174,7 @@ export default function ConversationPanel() {
         La session s’arrête aussi lorsque vous masquez cette page.
       </p>
 
-      <form onSubmit={demarrer}>
+      <form className="commandes-conversation" onSubmit={demarrer}>
         <label htmlFor="code-conversation">Code d’accès personnel</label>
         <input
           id="code-conversation"
@@ -197,7 +197,15 @@ export default function ConversationPanel() {
       <p role="status">{libelle} {information}</p>
       <p>Durée : {duree}</p>
 
-      <ol aria-label="Messages de la conversation">
+      <div className="transcription-entete">
+        <h3 id="titre-transcription">Transcription</h3>
+        <span>Temporaire</span>
+      </div>
+      {messages.length === 0 && (
+        <p className="transcription-vide">Vos échanges avec l’assistant apparaîtront ici.</p>
+      )}
+      <ol className="transcription" aria-label="Messages de la conversation"
+        tabIndex={messages.length > 0 ? 0 : undefined}>
         {messages.map((message, index) => (
           <li key={index}>
             <strong>{message.auteur} :</strong> {message.texte}

@@ -88,6 +88,8 @@ recréer une note pour reproduire le titre du scénario ci-dessus :
 
 Si l’accès vocal échoue, arrêter l’essai et présenter la gestion locale ou le
 [simulateur](SIMULATION.md#scénario-de-démonstration-reproductible).
+Dans la nouvelle disposition, le déplier avec « Ouvrir le simulateur » sous la
+conversation ; cette disposition reste à déployer après sa validation locale.
 Il utilise les mêmes outils, validations, store et transactions IndexedDB.
 Annoncer clairement qu’il s’agit d’appels simulés, sans conversation ni microphone.
 Les modifications des notes sont réelles ; utiliser des notes de démonstration.

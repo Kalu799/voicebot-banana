@@ -37,7 +37,8 @@ du texte JSON, jamais comme du HTML, avec une annonce de succès ou d'échec.
 
 ## Scénario de démonstration reproductible
 
-Lancer `npm run dev`, ouvrir l'application et descendre au panneau de simulation.
+Lancer `npm run dev`, ouvrir l’application puis déplier « Ouvrir le simulateur »
+sous la conversation, dans l’espace de gauche.
 Utiliser uniquement des notes de démonstration.
 
 ### Créer et rechercher

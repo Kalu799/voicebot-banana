@@ -49,6 +49,7 @@ export default function NoteForm({ note = null, onAnnuler, onEnregistre }) {
         await ajouterNote(champs)
         setChamps(champsVides)
         setConfirmation('Note enregistrée.')
+        onEnregistre?.()
       }
     } catch {
       // App affiche l'erreur du store ; le formulaire conserve la saisie.
