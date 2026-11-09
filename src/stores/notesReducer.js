@@ -49,6 +49,13 @@ export function notesReducer(etat, action) {
         erreur: null,
       }
 
+    case 'NOTES_EFFACEES':
+      return {
+        ...etat,
+        notes: etat.notes.filter(note => !action.ids.includes(note.id)),
+        erreur: null,
+      }
+
     case 'ERREUR_ACTION':
       return { ...etat, erreur: action.message }
 

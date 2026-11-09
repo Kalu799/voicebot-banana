@@ -8,7 +8,7 @@ import NoteForm from './NoteForm.jsx'
  * et remonte les confirmations à App pour qu’elles survivent au déplacement de carte.
  */
 export default function NoteCard({ note, onConfirmer = () => {} }) {
-  const { supprimerNote, restaurerNote, chargement, rechargementRequis } = useNotes()
+  const { supprimerNote, restaurerNote, supprimerDefinitivementNotes, chargement, rechargementRequis } = useNotes()
   const [edition, setEdition] = useState(false)
   const [actionEnCours, setActionEnCours] = useState('')
   const actionVerrouillee = useRef(false)
@@ -37,6 +37,23 @@ export default function NoteCard({ note, onConfirmer = () => {} }) {
       }
     } catch {
       // App affiche l'erreur ; la carte reste à sa place si la sauvegarde échoue.
+    } finally {
+      actionVerrouillee.current = false
+      setActionEnCours('')
+    }
+  }
+
+  async function supprimerDefinitivement() {
+    if (indisponible || actionVerrouillee.current) return
+    if (!window.confirm(`Supprimer définitivement la note « ${note.titre} » ? Cette action est irréversible.`)) return
+    actionVerrouillee.current = true
+    setActionEnCours('effacement')
+    onConfirmer('')
+    try {
+      await supprimerDefinitivementNotes([note.id])
+      onConfirmer('Note supprimée définitivement.')
+    } catch {
+      // Le store affiche l’erreur et conserve la note si l’écriture échoue.
     } finally {
       actionVerrouillee.current = false
       setActionEnCours('')
@@ -104,10 +121,16 @@ export default function NoteCard({ note, onConfirmer = () => {} }) {
         )}
         <button type="button" className="bouton-secondaire" disabled={indisponible}
           onClick={changerCorbeille}>
-          {actionEnCours
+          {actionEnCours && actionEnCours !== 'effacement'
             ? enCorbeille ? 'Restauration…' : 'Mise en corbeille…'
             : enCorbeille ? 'Restaurer' : 'Mettre en corbeille'}
         </button>
+        {enCorbeille && (
+          <button type="button" className="bouton-danger" disabled={indisponible}
+            onClick={supprimerDefinitivement}>
+            {actionEnCours === 'effacement' ? 'Suppression…' : 'Supprimer définitivement'}
+          </button>
+        )}
       </div>
     </article>
   )

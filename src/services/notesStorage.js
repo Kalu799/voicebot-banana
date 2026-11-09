@@ -179,3 +179,44 @@ export async function fusionnerNotes(notes) {
     base.close()
   }
 }
+
+/**
+ * Efface les ids confirmés dans une seule transaction. Relit chaque note dans
+ * cette transaction pour refuser aussi une restauration faite dans un autre onglet.
+ * Une erreur annule toute la suppression, y compris les suppressions déjà lancées.
+ */
+export async function effacerNotesEnCorbeille(ids) {
+  if (!Array.isArray(ids) || ids.some(id => typeof id !== 'string' || !id.trim())) {
+    throw new Error('Les identifiants des notes sont obligatoires.')
+  }
+  if (ids.length === 0) return
+  const base = await ouvrirBase()
+
+  try {
+    await new Promise((resolve, reject) => {
+      const transaction = base.transaction(MAGASIN_NOTES, 'readwrite')
+      const magasin = transaction.objectStore(MAGASIN_NOTES)
+      let erreur
+      transaction.oncomplete = () => resolve()
+      transaction.onabort = () => reject(erreur ?? new Error(
+        'La suppression définitive a échoué.', { cause: transaction.error },
+      ))
+
+      for (const id of new Set(ids)) {
+        const requete = magasin.get(id)
+        requete.onsuccess = () => {
+          const note = requete.result
+          if (note && note.deletedAt == null) {
+            erreur = new Error('Une note a été restaurée. Rechargez la page avant de réessayer.')
+            transaction.abort()
+            return
+          }
+          // Un id déjà effacé ne nécessite aucune écriture.
+          if (note) magasin.delete(id)
+        }
+      }
+    })
+  } finally {
+    base.close()
+  }
+}
