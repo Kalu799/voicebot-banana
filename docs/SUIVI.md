@@ -55,6 +55,11 @@ panne réelle pendant une conversation, microphone et interruptions sur téléph
 physique, guide de démonstration final et livraison stable sur `main` par l’utilisateur.
 Prévoir le renouvellement de la clé d’essai pour conserver la voix après expiration.
 
+Le [guide de démonstration](DEMONSTRATION.md) propose les consignes, critères de
+réussite, preuves et secours sans voix. Le 9 novembre, le test audio sur téléphone
+physique est reporté à la demande de l’utilisateur pour préserver les crédits.
+Seule la disposition mobile est vérifiée ; aucun nouvel appel vocal pour ce guide.
+
 Reprise du 8 novembre 2026 : inspection du dépôt propre sur
 `feature/integration-elevenlabs`, commit `efc86f7` ; tests et compilation réussis.
 Projet Vercel `voicebot-banana` créé vide dans l’espace `Ouais` (Hobby constaté),
