@@ -11,11 +11,12 @@ le store actualise aussi la liste sans rechargement. L'interface permet de crée
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
 restaurer, ainsi que de télécharger et importer une sauvegarde JSON. Le panneau
 de simulation permet d'exécuter les six outils locaux sans microphone ni appel
-ElevenLabs. Le panneau vocal et le SDK sont préparés (seul `creer_note` est
-déclaré), avec démarrage/arrêt et transcription temporaire. Première création vocale
+ElevenLabs. Le panneau vocal et le SDK déclarent les six outils, avec démarrage/arrêt
+et transcription temporaire. Première création vocale
 réelle validée le 9 novembre 2026 : note visible, conversation arrêtée et note
 retrouvée après rechargement. L’accès vocal est activé en Production uniquement,
-avec code personnel et limitation Vercel. Les cinq autres outils restent à raccorder au SDK.
+avec code personnel et limitation Vercel. Les cinq nouveaux branchements sont
+préparés sur cette branche, en attente de déploiement et de validation vocale.
 
 [Version de test avec accès vocal protégé](https://project-bxwwf.vercel.app)
 — code applicatif `71ba461`, redéployé le 9 novembre 2026 avec les variables serveur.
@@ -280,8 +281,9 @@ La confirmation de réussite devra attendre la sauvegarde effective.
 La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
 proposées, le contrat des six outils et les prérequis aux essais vocaux. La
 configuration distante initiale est enregistrée ; voix et LLM restent provisoires.
-Les six outils sont définis côté ElevenLabs ; `creer_note` est déclaré dans le SDK,
-les cinq autres branchements restent à réaliser. Le panneau vocal demande le jeton
+Les six outils sont définis côté ElevenLabs et déclarés dans le SDK. Seul
+`creer_note` est déjà déployé et validé vocalement ; les cinq nouveaux branchements
+restent à déployer et tester. Le panneau vocal demande le jeton
 avant de solliciter le microphone. `npm run dev:api` permet de servir cette route,
 avec le verrou fermé ; Vite seul ne la sert pas. Le code personnel est effacé du
 champ au démarrage ou à l’arrêt. Sessions limitées localement à deux minutes,

@@ -4,11 +4,13 @@ Préparation puis configuration distante initiale réalisées le 8 novembre 2026
 Le SDK React et le panneau vocal sont intégrés depuis le 9 novembre 2026.
 Une première conversation réelle crée une note, visible puis retrouvée après
 rechargement. Les six définitions distantes sont configurées et associées à l’agent ;
-seul `creer_note` est déclaré dans le SDK côté navigateur et validé vocalement.
+les six sont déclarés dans le code SDK. Seul `creer_note` est déjà déployé et
+validé vocalement ; les cinq nouveaux branchements attendent leur déploiement.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
 fournisseur simulé, désactivée par défaut. La limitation Vercel est publiée et
 vérifiée sur le domaine principal ; Production activée, jeton réel et premier
-parcours de création vocale persistante validés. Les cinq autres outils restent à raccorder.
+parcours de création vocale persistante validés. Les cinq autres outils restent à
+déployer et valider vocalement.
 
 ## Premier jalon vocal validé — 9 novembre 2026
 
@@ -64,12 +66,17 @@ pendant les diagnostics. Le parcours vocal reste à vérifier avec l’utilisate
 `@elevenlabs/client@1.35.0`. Dans `src/main.jsx`, `NotesProvider` englobe
 `ConversationNotesProvider`, qui installe le `ConversationProvider` du SDK.
 
-Le composant sans affichage `OutilCreationNote` déclare `creer_note` avec
-`useConversationClientTool`. Le gestionnaire réutilise `creerOutilsNotes(store)` :
+Le composant sans affichage `OutilsConversationNotes` déclare les six outils avec
+six appels explicites et inconditionnels à `useConversationClientTool`.
+Chaque gestionnaire réutilise `creerOutilsNotes(store)` :
 validation, action du store et transaction IndexedDB sont conservées. Il attend
 le résultat, puis le renvoie comme texte JSON contenant `succes` et le résumé de
-la note ou l’erreur. Le hook maintient le gestionnaire courant et le désenregistre
-au démontage. Les cinq autres outils ne sont pas encore déclarés dans le SDK.
+la note ou l’erreur. `resultatPourAgent` mutualise l’attente et la conversion JSON.
+Le hook maintient le gestionnaire courant et le désenregistre au démontage.
+Recherche, lecture, modification, corbeille et restauration sont maintenant
+déclarées comme la création. Tests existants (quatre fichiers), compilation et
+montage local réussis ; cinq nouveaux branchements non encore déployés ni testés
+vocalement. Aucune définition distante, dépendance ou règle métier modifiée.
 
 Le panneau décrit ci-dessous utilise désormais `startSession` après obtention du
 jeton ; l’enregistrement du gestionnaire seul ne le déclenche pas. Tests existants,

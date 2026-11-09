@@ -8,7 +8,7 @@
 | 4. Store Context + useReducer | Terminé | Chargement, création, modification, corbeille et import avec actualisation vérifiés ; erreurs et besoin de rechargement gérés |
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
 | 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
-| 7. Client tools | En cours | `creer_note` validé vocalement avec persistance après rechargement ; cinq autres outils à raccorder au SDK |
+| 7. Client tools | En cours | Six outils déclarés dans le SDK ; création vocale persistante validée, cinq nouveaux branchements à déployer et valider vocalement |
 | 8. Route serveur protégée | Terminé sur le domaine principal | Refus `401`, limitation `429`, jeton `200` et connexion audio réels vérifiés ; clé côté serveur |
 | 9. Parcours complets et mobile | En cours | Première création vocale, arrêt et persistance vérifiés ; scénario complet, ambiguïtés et mobile à faire |
 | 10. Déploiement Vercel | En cours | Code `71ba461` redéployé avec accès vocal protégé en Production ; démonstration vocale à valider |
@@ -17,7 +17,9 @@ La [préparation de l’agent](AGENT-ELEVENLABS.md) décrit les réglages propos
 les scénarios à valider ainsi que la configuration distante initiale réalisée.
 Les six outils sont configurés et associés à l’agent côté ElevenLabs.
 Le SDK `@elevenlabs/react@1.21.1` est installé depuis le 9 novembre 2026 et
-`creer_note` est déclaré via un provider et validé en conversation réelle.
+les six outils sont déclarés via le provider ; `creer_note` est validé en
+conversation réelle. Les cinq nouveaux branchements sont vérifiés localement
+(tests, compilation, montage de l’interface), sans déploiement à ce stade.
 Le service client de jeton est raccordé au panneau : code en mémoire, démarrage/arrêt,
 durée, messages temporaires et fermetures automatiques. Les parcours de commande
 sont vérifiés avec SDK/jeton simulés ; seul le refus local d’un code invalide et
@@ -48,7 +50,8 @@ documentés dans le [guide API](../api/README.md). Une correction ciblée impose
 `tar@7.5.22`, `ajv@8.18.0`, `js-yaml@4.3.2` et `smol-toml@1.9.0` sous Vercel ;
 il reste 29 signalements de développement, sans critique, et zéro pour les
 dépendances de production selon l’audit du 8 novembre 2026.
-Un premier parcours vocal est validé ; cinq autres outils et scénario complet à faire.
+Un premier parcours vocal est validé ; cinq autres outils à déployer et scénario
+complet à vérifier.
 
 Reprise du 8 novembre 2026 : inspection du dépôt propre sur
 `feature/integration-elevenlabs`, commit `efc86f7` ; tests et compilation réussis.

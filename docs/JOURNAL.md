@@ -804,3 +804,19 @@
   jusqu’à l’objectif 16 h 30, une heure supplémentaire au maximum en secours.
   Prochaine étape à présenter avant go : déclarer les cinq autres outils dans
   le provider en réutilisant les validations et actions existantes.
+
+## 9 novembre 2026 — Six outils déclarés dans le SDK
+
+- Préparation : commit utilisateur `88b56fc` confirmé, branche
+  `feature/validation-vocale` propre. Code de remplacement présenté puis go reçu.
+- Réalisation : `OutilsConversationNotes` remplace `OutilCreationNote` dans le
+  provider. Les six hooks sont explicites et inconditionnels ; `resultatPourAgent`
+  attend chaque outil existant puis sérialise son résultat en JSON. Validations,
+  actions du store, sauvegarde et définitions distantes conservées.
+- Vérifications : `npm test` réussi (quatre fichiers), `npm run build` réussi,
+  interface locale montée dans le navigateur avec les six déclarations. Aucun
+  outil exécuté, microphone ou appel ElevenLabs pendant ce contrôle local.
+  Aucune dépendance ajoutée ; avertissement de poids du bundle conservé.
+- Portée : seule la création est encore validée sur le déploiement existant ;
+  cinq nouveaux branchements à publier après les opérations Git de l’utilisateur,
+  puis scénario vocal complet à effectuer. Documentation actualisée.
