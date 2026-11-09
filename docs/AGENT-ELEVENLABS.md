@@ -52,6 +52,16 @@ ni les ambiguïtés entre notes, ni les pannes réelles pendant une conversation
 Captures : [ordinateur](images/validation-vocale-ordinateur.jpg),
 [largeur mobile](images/validation-vocale-mobile.jpg).
 
+## Interface publiée après les essais vocaux
+
+La nouvelle disposition est publiée le 9 novembre à 11 h 50 : commit `1667550`,
+déploiement Production `2KQfJsLR3D7FDwZPUtQS292qH6zE`. Conversation et transcription
+à gauche, notes et navigation à droite. Les quatre vues sont contrôlées et la note
+vocale précédente est retrouvée avec le même contenu après rechargement.
+La refonte change la présentation et la navigation, sans changer les outils,
+le stockage ni le cycle de connexion. Aucun nouvel appel vocal pour ce contrôle.
+Les durées et preuves vocales ci-dessus concernent les essais antérieurs.
+
 ## Protections du premier essai — 9 novembre 2026
 
 Compte contrôlé : offre Free, 6 299 crédits restants, recharge automatique désactivée.

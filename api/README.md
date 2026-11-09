@@ -231,6 +231,19 @@ version ; contenu préservé après rechargement. La création avait déjà ét�
 Un code fictif au format valide est ensuite refusé depuis l’interface, sans session.
 Voir les preuves et limites dans le [guide agent](../docs/AGENT-ELEVENLABS.md).
 
+### Nouvelle interface publiée — 9 novembre 2026
+
+Après fusion de la PR n° 8 vers `dev`, reconstruction du commit
+`16675506598ef6cbd8fa1709c3bf5fa90944e0ba` en **Production** avec les variables et
+protections existantes, sans modification de configuration. Vérification email
+réalisée par l’utilisateur. Déploiement `2KQfJsLR3D7FDwZPUtQS292qH6zE`, Ready
+à 11 h 50, domaine principal `https://project-bxwwf.vercel.app` conservé.
+
+Sur le site public : quatre vues de navigation affichées, note existante retrouvée
+avec son contenu après rechargement. Aucun POST de jeton ni session vocale lancés
+pour cette vérification. Git `main` est encore inchangé ; sa livraison et le
+contrôle du futur déploiement automatique restent à effectuer.
+
 ## Réponses et erreurs
 
 | Statut | Signification |

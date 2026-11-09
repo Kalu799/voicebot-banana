@@ -13,9 +13,10 @@ Après création réussie, `onEnregistre` ramène aux notes et le focus revient 
 leur bouton de navigation. En cas d’échec, le formulaire reste visible avec la saisie.
 La transcription défile au-delà de 360 px ; sa zone peut recevoir le focus clavier.
 
-Cette disposition est vérifiée localement et reste à déployer. Les preuves vocales
-de la version publiée demeurent distinctes : aucun nouvel appel ElevenLabs n’a
-été lancé pour ce changement.
+Cette disposition est vérifiée localement puis publiée le 9 novembre à 11 h 50,
+commit `1667550`. Les quatre vues et la note persistante sont contrôlées sur le
+domaine public. Les preuves vocales antérieures restent distinctes : aucun nouvel
+appel ElevenLabs n’a été lancé pour ce changement.
 
 ![Nouvelle disposition sur ordinateur](images/interface-deux-colonnes-ordinateur.jpg)
 

@@ -20,8 +20,9 @@ Les résultats constatés le 9 novembre 2026 sont séparés des essais à réali
    Le masquage de la page demande aussi l’arrêt. Attendre la réponse après chaque
    consigne et cliquer Arrêter en fin d’essai.
 
-Le commit applicatif `798641d` est déployé en Production depuis le 9 novembre
-à 11 h 04. La livraison stable sur la branche Git `main` reste une étape distincte.
+Le commit applicatif `1667550`, avec la disposition à deux colonnes, est déployé
+en Production depuis le 9 novembre à 11 h 50. Les essais des six outils vocaux
+ont précédé cette réorganisation visuelle ; aucune nouvelle conversation ensuite. La livraison stable sur la branche Git `main` reste une étape distincte.
 La voix est ouverte uniquement en Production, protégée par un code personnel.
 
 ## Expliquer le projet en trente secondes
@@ -89,7 +90,7 @@ recréer une note pour reproduire le titre du scénario ci-dessus :
 Si l’accès vocal échoue, arrêter l’essai et présenter la gestion locale ou le
 [simulateur](SIMULATION.md#scénario-de-démonstration-reproductible).
 Dans la nouvelle disposition, le déplier avec « Ouvrir le simulateur » sous la
-conversation ; cette disposition reste à déployer après sa validation locale.
+conversation. La disposition est publiée depuis le 9 novembre à 11 h 50.
 Il utilise les mêmes outils, validations, store et transactions IndexedDB.
 Annoncer clairement qu’il s’agit d’appels simulés, sans conversation ni microphone.
 Les modifications des notes sont réelles ; utiliser des notes de démonstration.

@@ -885,3 +885,23 @@
 - Tests existants et build réussis, avertissement connu sur le bundle conservé.
   Aucun changement des outils, du store, de la route, des secrets ou des dépendances.
   Aucun crédit vocal consommé. Documentation actualisée, publication en attente.
+
+## 9 novembre 2026 — Interface publiée et préparation de la livraison stable
+
+- Commit utilisateur `5eb11b9`, PR n° 8 fusionnée sur `dev`, commit `1667550`.
+  Build Preview Ready constaté, puis go pour reconstruire en Production.
+- Environnement Production et domaine habituel sélectionnés ; vérification email
+  effectuée par l’utilisateur. Déploiement `2KQfJsLR3D7FDwZPUtQS292qH6zE` Ready
+  à 11 h 50, même commit et variables existantes, aucune protection modifiée.
+- Sur le domaine public : Mes notes, Corbeille, Ajouter une note et Sauvegarde
+  s’affichent correctement. Retour aux notes et rechargement : « Test vocale
+  Banana Navy » toujours présente, contenu « Présenter le projet » et « Durée
+  prévue une minute. ». Aucun appel vocal, création ou modification pour ce contrôle.
+- Après go de finalisation, branche `docs/livraison-v1` créée depuis `dev` propre.
+  README, suivi, guides interface/démonstration/agent/API actualisés avec le commit
+  publié et la distinction entre les essais vocaux antérieurs et le contrôle visuel.
+  Capture du site public ajoutée ; limites et livraison Git `main` encore à venir
+  conservées explicitement. Aucun code applicatif ni réglage distant modifié.
+- Reprise à 13 h 10 Paris : environ 3 h 20 jusqu’à l’objectif 16 h 30, limite
+  absolue 17 h 30. Étapes suivantes réservées à l’utilisateur : commit, PR vers
+  `dev`, puis PR `dev` vers `main` ; contrôler ensuite le déploiement automatique.
