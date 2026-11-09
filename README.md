@@ -15,6 +15,11 @@ ElevenLabs. Le panneau vocal et le SDK sont préparés (seul `creer_note` est
 déclaré), avec démarrage/arrêt et transcription temporaire. Aucun parcours vocal
 réel validé ; la route reste désactivée jusqu’aux vérifications distantes.
 
+[Version déployée avec la voix désactivée](https://project-bxwwf.vercel.app)
+— source `dev`, commit `71ba461`, vérifiée le 9 novembre 2026. Interface accessible,
+route GET refusée en `405` et POST en `503` ; aucun essai vocal réel. Cette adresse
+possède ses propres notes locales, distinctes de celles de localhost.
+
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
 
 Voir aussi [l'interface mobile](docs/images/interface-sauvegardes-mobile.png).
@@ -280,8 +285,8 @@ champ au démarrage ou à l’arrêt. Sessions limitées localement à deux minu
 avec arrêt après trente secondes sans message/audio reçu, au masquage de la page
 ou au démontage. Ces contrôles ne constituent pas un plafond global de dépenses.
 La [route serveur de jetons](api/README.md) est implémentée et testée
-avec un fournisseur simulé, désactivée par défaut. La limitation Vercel et le
-déploiement restent à configurer et vérifier avant activation. Aucun service
+avec un fournisseur simulé, désactivée par défaut. Un déploiement verrouillé est
+vérifié ; la limitation Vercel reste à configurer et vérifier avant activation. Aucun service
 payant n'est activé.
 
 ## Store des notes
