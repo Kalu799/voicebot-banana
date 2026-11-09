@@ -11,7 +11,9 @@ le store actualise aussi la liste sans rechargement. L'interface permet de crée
 des notes, de les consulter et modifier, de les mettre en corbeille et de les
 restaurer, ainsi que de télécharger et importer une sauvegarde JSON. Le panneau
 de simulation permet d'exécuter les six outils locaux sans microphone ni appel
-ElevenLabs. La conversation vocale reste à développer.
+ElevenLabs. Le panneau vocal et le SDK sont préparés (seul `creer_note` est
+déclaré), avec démarrage/arrêt et transcription temporaire. Aucun parcours vocal
+réel validé ; la route reste désactivée jusqu’aux vérifications distantes.
 
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
 
@@ -33,7 +35,24 @@ npm run dev
 
 Ouvrir l'adresse indiquée par Vite dans le terminal. Pour arrêter : `Ctrl+C`.
 Aucune clé API, aucun compte et aucune variable d'environnement ne sont nécessaires
-à cette étape. Ne jamais enregistrer de secrets dans Git.
+pour la gestion locale et le simulateur. La future connexion vocale utilisera la
+route serveur décrite dans [le guide API](api/README.md), désactivée par défaut.
+Ne jamais enregistrer de secrets dans Git.
+
+Pour démarrer aussi la route serveur dans l’environnement Vercel local :
+
+```bash
+npm run dev:api
+```
+
+Ouvrir `http://127.0.0.1:3000`. Cette commande Linux utilise la CLI Vercel
+65.12.1 installée dans le projet, sans connexion au compte ni liaison distante,
+et force `VOICEBOT_VOIX_ACTIVE=false`. L’interface fonctionne, mais un POST vers
+la route de jetons renvoie volontairement `503` : aucun accès vocal n’est ouvert.
+Voir [le guide API](api/README.md) pour les contrôles et les limites de l’outillage.
+`npm run dev` reste disponible pour Vite seul. Arrêter le serveur précédent avant
+de réutiliser son port. Les notes de `127.0.0.1:3000` sont distinctes de celles
+d’une autre origine, par exemple `localhost:5173`.
 
 ## Vérifier et compiler
 
@@ -65,16 +84,22 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `src/services/notesStorage.js` | Ouvre IndexedDB, enregistre et récupère les notes |
 | `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
 | `src/services/notesTools.js` | Six outils locaux avec validation et résultats structurés |
+| `src/components/ConversationPanel.jsx` | Code personnel en mémoire, démarrage/arrêt, durée et messages temporaires |
+| `src/components/ConversationNotesProvider.jsx` | Provider SDK et déclaration de `creer_note` |
+| `src/services/conversationAccess.js` | Demande du jeton au serveur, erreurs et annulation |
 | `src/utils/rechercheNotes.js` | Recherche normalisée, extraits et lecture par identifiant |
 | `tests/notesTools.test.js` | Tests automatisés de la recherche et des six outils |
 | `src/stores/` | État partagé, chargement et actions de gestion des notes |
 | `vite.config.js` | Active le plugin React de Vite |
 | `package.json` | Commandes et dépendances |
 | `package-lock.json` | Versions résolues pour une installation reproductible |
-| `api/` | Emplacement documenté de la future fonction Vercel |
+| `api/conversation-token.js` | Entrée de la route Vercel de jetons, désactivée par défaut |
+| `server/routeJeton.js` | Contrôle de l’accès et demande serveur du jeton ElevenLabs |
+| `tests/routeJeton.test.js` | Tests de la route avec fournisseur simulé, sans appel réel |
 | `docs/` | Démarche, journal et suivi des tâches |
 
-Pour le moment : `index.html` → `main.jsx` → `NotesProvider` → `App` → affichage.
+Pour le moment : `index.html` → `main.jsx` → `NotesProvider` →
+`ConversationNotesProvider` → `App` → affichage.
 Le provider charge les notes depuis IndexedDB ; `App` sélectionne les notes
 actives et les affiche des plus récentes aux plus anciennes.
 
@@ -244,8 +269,20 @@ effectué par cette couche.
 Flux cible : parole → agent → client tool → store → IndexedDB → confirmation à l'agent.
 La confirmation de réussite devra attendre la sauvegarde effective.
 
-La configuration ElevenLabs et le déploiement seront documentés lorsqu'ils seront
-implémentés. Aucun service payant n'est activé.
+La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
+proposées, le contrat des six outils et les prérequis aux essais vocaux. La
+configuration distante initiale est enregistrée ; voix et LLM restent provisoires.
+Les six outils sont définis côté ElevenLabs ; `creer_note` est déclaré dans le SDK,
+les cinq autres branchements restent à réaliser. Le panneau vocal demande le jeton
+avant de solliciter le microphone. `npm run dev:api` permet de servir cette route,
+avec le verrou fermé ; Vite seul ne la sert pas. Le code personnel est effacé du
+champ au démarrage ou à l’arrêt. Sessions limitées localement à deux minutes,
+avec arrêt après trente secondes sans message/audio reçu, au masquage de la page
+ou au démontage. Ces contrôles ne constituent pas un plafond global de dépenses.
+La [route serveur de jetons](api/README.md) est implémentée et testée
+avec un fournisseur simulé, désactivée par défaut. La limitation Vercel et le
+déploiement restent à configurer et vérifier avant activation. Aucun service
+payant n'est activé.
 
 ## Store des notes
 

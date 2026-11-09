@@ -331,3 +331,356 @@
   du dossier parent. `git diff --check` réussi. Aucun code applicatif modifié.
 - Prochaine action : commit et pull request des corrections vers `dev` par
   l'utilisateur, puis préparation de l'intégration vocale après explication et go.
+
+## 8 novembre 2026 — Préparation de l’agent français
+
+- Reprise : fusion des deux corrections confirmée dans l’historique local de
+  `dev`, merge `4adac56` de la PR nº 2. Arbre de travail propre ; aucun contact
+  avec le dépôt distant pour cette vérification.
+- Préparation : branche `feature/integration-elevenlabs` créée depuis `dev`
+  après accord. Consignes, contrat et fichiers présentés avant le go documentaire.
+- Réalisation : guide `AGENT-ELEVENLABS.md`, lien du README et suivi actualisés.
+  Aucun agent distant créé ou configuré, aucune dépendance ajoutée et aucun
+  changement du code applicatif.
+- Décisions : français, six client tools avec attente de réponse, identifiants
+  exacts, clarification des ambiguïtés, lecture complète avant ajout au contenu,
+  confirmation après succès et textes des notes traités comme données.
+- Sources : documentation officielle ElevenLabs des client tools, SDK React,
+  authentification et tarifs consultée. Offre publique affichant 15 minutes
+  gratuites et coût LLM séparé ; conditions du compte à vérifier avant les essais.
+  Étude historique du 5 novembre conservée sans modification.
+- Limites : pas de connexion vocale validée, de déduplication des créations ni
+  de protection atomique entre lecture et modification ultérieure. Route serveur
+  protégée et limitée indispensable avant les essais ; aucun paiement autorisé.
+- Vérifications : 42 liens locaux valides dans les 12 documents Markdown du
+  README et de `docs/`, sept exemples JSON valides et `git diff --check` réussi.
+  Tests applicatifs et compilation non relancés pour cette étape documentaire.
+- Prochaine action : présenter la configuration distante de l’agent français et
+  de ses outils, puis attendre le go avant sa réalisation. Le choix de voix et
+  de modèle dépendra des options et conditions effectivement accessibles au compte.
+
+## 8 novembre 2026 — Configuration distante initiale de l’agent
+
+- Préparation : commit documentaire `1332293` confirmé, branche
+  `feature/integration-elevenlabs` propre. Configuration générale expliquée et
+  autorisée ; connexion au compte réalisée par l’utilisateur.
+- Adaptation : aucun modèle vide visible dans la galerie, constat partagé par
+  l’utilisateur. Création depuis « Voice Reading Companion », sans intégration
+  affichée, puis remplacement complet des consignes de lecture dans l’éditeur.
+  L’aperçu avant création est en lecture seule.
+- Réalisation : agent BananaNavy créé, consignes et accueil français enregistrés,
+  français seul, authentification activée, bursting désactivé, pièces jointes
+  désactivées, durée maximale de 120 secondes et arrêt après 30 secondes de silence.
+  Remplacements de voix et de langue par le client désactivés. Publication des
+  réglages sur la branche distante ElevenLabs `Main`, distincte du Git du projet.
+- Vérifications UI : publications terminées, bouton Publier désactivé sans
+  changement en attente, authentification toujours active après navigation,
+  aucun outil personnalisé associé ni procédure. Deux outils système actifs :
+  fin de conversation et détection de langue.
+- Choix provisoires : voix Eric, famille Flash (`eleven_flash_v2_5` après choix
+  du français), Gemini 3.5 Flash avec secours par défaut hérités du modèle. Aucune
+  qualité vocale, coût réel ou aptitude aux six outils encore validé.
+- Compte : offre Free constatée ; solde en crédits non converti en minutes.
+  Aucun paiement ni dépassement global activé. Enregistrement audio déjà désactivé,
+  transcriptions conservées 30 jours ; conditions du compte à vérifier avant essai.
+- Documentation : guide agent, README et suivi actualisés. Aucun SDK, endpoint,
+  clé API ou code applicatif ajouté. Aucun essai vocal lancé.
+- Suite : expliquer puis configurer les six client tools après go ; contrôler
+  aussi les variables et le workflow hérités, puis finaliser voix, LLM et budget
+  avant les essais via une route serveur protégée.
+
+## 8 novembre 2026 — Contrôle des variables et du workflow
+
+- Préparation : commit `cf892b0` confirmé sur la branche
+  `feature/integration-elevenlabs`, contrôle en lecture seule autorisé.
+- Variables : huit valeurs de remplacement héritées du modèle de lecture restent
+  visibles, dont le titre et un extrait de *Dracula*. Les consignes BananaNavy et
+  le message d’accueil français ne les référencent plus.
+- Workflow : seul nœud « Démarrer », sans connexion. L’interface indique qu’un
+  nœud d’entrée doit être connecté pour activer le workflow ; aucun parcours de
+  lecture actif constaté. Aucune modification distante ni publication effectuée.
+- Documentation : constat ajouté au guide de l’agent et au journal. Aucun code
+  applicatif modifié et aucune conversation lancée.
+- Suite : proposer le nettoyage des valeurs de test inutilisées, puis présenter
+  la configuration de `creer_note` avant application après go.
+
+## 8 novembre 2026 — Nettoyage des variables de démonstration
+
+- Préparation : commit `619489c` confirmé, branche propre. Nettoyage des huit
+  valeurs de test expliqué et autorisé avant modification.
+- Réalisation : absence de bouton de suppression dans le panneau Variables.
+  Copie JSON via le menu de l’agent, objet `dynamic_variable_placeholders` vidé,
+  comparaison en mémoire limitée au retrait des huit entrées, puis import dans
+  le brouillon et publication sur la branche distante ElevenLabs `Main`.
+- Vérification : aperçu synthétique affichant « Aucun changement », mais diff
+  JSON brut montrant uniquement le retrait du bloc des variables devenu vide.
+  Après rechargement, panneau Variables vide, consignes et véritable message
+  d’accueil français conservés, aucune publication en attente.
+- Documentation : guide de l’agent et journal actualisés. Aucun code applicatif,
+  workflow ou outil modifié ; aucune conversation lancée.
+- Suite : présenter les champs du client tool `creer_note`, puis attendre le go
+  avant sa configuration distante.
+
+## 8 novembre 2026 — Définition distante du client tool creer_note
+
+- Préparation : commit `20662df` confirmé, branche
+  `feature/integration-elevenlabs` propre. Nom, description, quatre paramètres
+  et attente du résultat présentés puis autorisés avant configuration.
+- Réalisation : outil de type Client `creer_note`, textes `titre` obligatoire,
+  `contenu`, `categorie`, `projet` facultatifs, extraits par le LLM. Attente de
+  réponse activée, sans mock ni affectation de variable dynamique.
+- Ajustement expliqué : délai par défaut d’une seconde porté à 10 secondes
+  pour laisser répondre une sauvegarde retardée. Ce délai ne garantit pas une
+  réussite et ne rend pas sûre une répétition automatique de création.
+- Enregistrement : outil créé, délai enregistré dans sa fiche, association à
+  l’agent publiée sur la branche distante ElevenLabs `Main`.
+- Vérifications : formulaire et JSON examinés, publication terminée, outil
+  associé et paramètres conservés après rechargement, dont le délai de
+  10 secondes et le seul titre obligatoire. Aucun appel de l’outil lancé.
+- Documentation : guide agent, suivi et journal actualisés. Aucun code applicatif
+  modifié. Le SDK et la route serveur restent absents ; la création vocale de
+  notes n’est donc pas encore disponible. Aucun essai vocal effectué.
+- Suite : présenter `chercher_notes` et `lire_note`, puis attendre le go avant
+  leur configuration distante.
+
+## 8 novembre 2026 — Définitions distantes de recherche et de lecture
+
+- Préparation : commit `6d3a70a` confirmé sur une branche propre. Descriptions,
+  paramètres, attente du résultat et délais de 10 secondes expliqués puis autorisés.
+- Réalisation : client tool `chercher_notes`, cinq paramètres facultatifs :
+  trois textes, `corbeille` booléen et `limite` entier. Client tool `lire_note`,
+  seul `id` textuel obligatoire. Attente de réponse activée et délai de 10 secondes
+  pour chacun, sans mock ni affectation de variable dynamique.
+- Décision : type `integer` disponible dans ElevenLabs. Bornes de 1 à 20 et
+  valeurs par défaut décrites ; leur validation effective reste dans le code local.
+  Recherche avec extraits distincte de la lecture du contenu complet.
+- Vérifications : formulaires contrôlés, associations publiées, rechargement et
+  synchronisation de la vue avec la version publiée, fiches rouvertes confirmant
+  types, champs requis, attente et délais. Trois outils associés à l’agent,
+  aucune publication en attente. Aucun appel d’outil ni essai vocal lancé.
+- Documentation : guide agent, suivi et journal actualisés. Aucun code applicatif
+  ou SDK ajouté ; les définitions distantes ne valident pas encore un parcours vocal.
+- Suite : présenter `modifier_note`, `supprimer_note` et `restaurer_note`, puis
+  attendre le go avant leur configuration distante.
+
+## 8 novembre 2026 — Définitions distantes de modification et de corbeille
+
+- Préparation : commit `7f20956` confirmé, branche propre. Descriptions,
+  paramètres imbriqués de modification, identifiants de corbeille/restauration,
+  attente du résultat et délais expliqués puis autorisés.
+- Réalisation : trois client tools, attente de réponse et délai de 10 secondes.
+  `modifier_note` reçoit `id` et `changements` obligatoires ; les quatre propriétés
+  textuelles éditables de `changements` sont facultatives. `supprimer_note` et
+  `restaurer_note` reçoivent uniquement `id` textuel obligatoire.
+- Consignes : préserver les champs absents, lire avant de compléter un contenu,
+  préciser la cible en cas d’ambiguïté, suppression réversible, recherche dans la
+  corbeille avant restauration. Validations effectives conservées dans le code local.
+- Vérifications : formulaires contrôlés, diff ajoutant trois associations et
+  conservant les trois précédentes, publication et rechargement, fiches rouvertes
+  confirmant paramètres, champs requis, attentes et délais. Six outils associés,
+  aucune publication en attente. Aucun appel d’outil ni essai vocal lancé.
+- Documentation : guide agent, suivi, journal et état du README actualisés.
+  Aucun code applicatif ni SDK ajouté. Les définitions distantes sont terminées,
+  mais leur exécution depuis le navigateur reste à implémenter et vérifier.
+- Suite : présenter la préparation du branchement SDK et le chemin sécurisé
+  d’obtention des jetons, avant installation ou code et après nouveau go.
+
+## 8 novembre 2026 — Route serveur de jetons, désactivée par défaut
+
+- Préparation : branche `feature/integration-elevenlabs` propre, route et code
+  expliqués avant le go. Transport cible WebRTC, code personnel vérifié côté
+  serveur, limitation Vercel proposée sans base distante ni compteur en mémoire.
+- Réalisation : `server/routeJeton.js`, entrée `api/conversation-token.js`,
+  `.env.example` sans secrets et onze scénarios dans `tests/routeJeton.test.js`.
+  Aucune dépendance ajoutée et aucun secret réel créé ou renseigné.
+- Accès : POST uniquement, verrou fermé sauf valeur explicite `true`, origine
+  exacte, code Bearer long comparé par empreinte SHA-256 en temps constant.
+  Agent fixé côté serveur, clé dans l’en-tête amont, seul jeton renvoyé au client.
+  Réponses sans cache, erreurs génériques, redirections et tentatives automatiques
+  refusées, attente amont limitée à dix secondes.
+- Limitation : règle Vercel proposée à deux demandes par minute et IP, à configurer
+  et vérifier avant activation. Le verrou est manuel et ne vérifie pas la règle.
+  Pas de plafond global de minutes garanti ; conditions du compte à vérifier.
+- Vérifications réussies : `npm test`, onze scénarios de route exécutés directement
+  avec Node et `npm run build`. Refus locaux sans appel fournisseur, isolation des
+  secrets, agent imposé, réponse valide, JSON invalide, erreurs HTTP et pannes testés.
+  Expiration simulée, sans attendre réellement dix secondes ; aucun appel réel.
+- Contrôles complémentaires : 48 liens locaux valides dans 13 documents,
+  `git diff --check` réussi, `.env.local` ignoré et `.env.example` versionnable.
+  Marqueurs de la clé serveur, de son en-tête et de l’empreinte du code absents
+  du JavaScript client compilé.
+- Documentation : guide API réécrit, README, guide agent et suivi actualisés.
+- Limites : route non déployée, pare-feu non configuré, runtime Vercel non vérifié,
+  SDK et saisie du code absents. Vite seul ne sert pas la fonction. Aucun essai
+  vocal ni activation payante effectué.
+- Suite : expliquer l’exécution locale de la route et la vérification de la
+  limitation sur Vercel avec un fournisseur simulé, avant tout accès ElevenLabs réel.
+
+## 8 novembre 2026 — Exécution de la route avec Vercel local
+
+- Préparation : commit `8d67d3b` confirmé, branche propre. Installation de la CLI,
+  commande locale avec verrou fermé et contrôles HTTP expliqués puis autorisés.
+- Réalisation : CLI Vercel 65.12.1 en dépendance de développement exacte,
+  `dev:api` lançant `vercel dev --local --listen 127.0.0.1:3000` avec
+  `VOICEBOT_VOIX_ACTIVE=false`. Écoute limitée à la boucle locale, sans liaison
+  de projet ni connexion au compte Vercel et sans déploiement.
+- Environnement : téléchargement npm et première création du dossier utilisateur
+  de la CLI autorisés après blocage du bac à sable. Écoute et contrôles HTTP
+  locaux également autorisés après refus de permission du bac à sable.
+- Vérifications HTTP : interface `200`, GET de la route `405` avec `Allow: POST`,
+  POST `503` avec message de verrou fermé. `Cache-Control: no-store` sur les deux
+  réponses de route. Interface React observée dans le navigateur, sans mutation
+  des notes ni appel du simulateur.
+- Non-régression : `npm test`, `npm run build` et `npm ls --depth=0` réussis.
+  Versions directes React et Vite conservées ; aucune clé ni conversation réelle.
+- Audit npm : 38 avis dans l’arbre de développement de la CLI (16 modérés,
+  21 élevés, un critique), zéro dans les dépendances de production selon
+  `npm audit --omit=dev`. Pas de correction automatique ni rétrogradation vers
+  la version 65.2.0 suggérée par npm ; résolution de ces avis encore ouverte.
+- Documentation : README, guide API, suivi et journal actualisés. Le lancement
+  local ne valide ni le pare-feu ni le déploiement distant, ni un plafond de coût.
+- Suite : expliquer la préparation du projet Vercel et le contrôle de la règle
+  de limitation avec fournisseur simulé, puis attendre le go ; traiter également
+  les avis de dépendances de la CLI avant d’élargir son usage.
+
+## 8 novembre 2026 — Correction ciblée de tar dans la CLI Vercel
+
+- Préparation : commit `66f4b2b` confirmé et arbre propre. Audit en lecture seule,
+  chaîne des dépendances et correction ciblée expliqués avant accord.
+- Réalisation : override `vercel` → `tar: 7.5.22` dans `package.json`, puis
+  `npm install` pour actualiser le lockfile. Aucune correction automatique globale
+  ni rétrogradation de Vercel ; code applicatif et versions directes conservés.
+- Résolution : tar 7.5.22 pour `@vercel/container`, `@mapbox/node-pre-gyp` et
+  `@vercel/fun`, sans copie 7.5.11 restante. Copie imbriquée redondante retirée.
+  Cette substitution devra être réexaminée lors des mises à jour de la CLI.
+- Audit : de 38 à 37 signalements, 16 modérés et 21 élevés, zéro critique ;
+  aucune entrée tar dans le rapport. `npm audit --omit=dev` reste à zéro.
+- Vérifications : `npm test`, `npm run build`, `npm ls tar --all` et
+  `npm ls --depth=0` réussis. Ancien serveur local arrêté puis redémarré avec
+  les dépendances corrigées ; interface `200`, route GET `405` et POST `503`,
+  en-têtes de méthode et absence de cache contrôlés. Verrou vocal fermé.
+- Documentation : guide API, suivi et journal actualisés. Aucun déploiement ni
+  appel ElevenLabs réel. Les 37 autres signalements restent ouverts ; les
+  vérifications ne couvrent pas toutes les fonctions de la CLI.
+- Suite : examiner les autres dépendances concernées et distinguer les correctifs
+  compatibles des changements de version majeure, avant de proposer une nouvelle
+  modification après explication et go.
+
+## 8 novembre 2026 — Correction ciblée d’Ajv, js-yaml et smol-toml
+
+- Préparation : commit `27d6d7c` confirmé, branche propre. Rôle, versions corrigées,
+  substitutions limitées à Vercel et vérifications présentés avant le go.
+- Réalisation : overrides `ajv: 8.18.0`, `js-yaml: 4.3.2`, `smol-toml: 1.9.0`
+  ajoutés sous Vercel, puis installation et actualisation du lockfile.
+  Override tar conservé, CLI 65.12.1, versions directes et code applicatif inchangés.
+- Audit : de 37 à 29 signalements, 10 modérés, 19 élevés, zéro critique.
+  Les trois bibliothèques ne figurent plus dans le rapport. Les dépendances de
+  production restent à zéro ; les autres signalements ne sont pas résolus.
+- Vérifications : tests, compilation, arbre npm et versions résolues réussis.
+  Ancien serveur arrêté puis redémarré avec les nouvelles dépendances ; interface
+  `200`, route GET `405`, POST `503`, méthode autorisée et absence de cache contrôlées.
+- Contrôles ponctuels : validation Ajv, lecture YAML et valeurs d’un aller-retour
+  TOML vérifiées. La première assertion TOML supposait à tort un prototype ordinaire ;
+  le contrôle a été corrigé pour vérifier explicitement le prototype nul et les
+  valeurs produites. Aucun changement du code de l’application nécessaire.
+- Documentation : guide API, suivi et journal actualisés. Verrou vocal fermé,
+  aucun déploiement ni appel ElevenLabs réel. Les contrôles ne valident pas tous
+  les usages de ces bibliothèques dans la CLI ; overrides à réexaminer à sa mise à jour.
+- Suite : examiner les avis restants, notamment les deux familles de versions de
+  `path-to-regexp`, avant de proposer une correction distincte après explication et go.
+
+## 8 novembre 2026 — Reprise V1 et préparation Vercel
+
+- Inspection en lecture seule : cadrage, suivi, journal, guides API et agent,
+  code et Git vérifiés. Branche `feature/integration-elevenlabs`, commit `efc86f7`,
+  arbre propre. SDK absent ; sauvegarde attendue avant résultat des outils.
+- Vérifications : `npm test` réussi (trois fichiers), `git diff --check` réussi,
+  puis `npm run build` réussi après accord pour l’étape Vercel. Aucun nouvel audit.
+- Périmètre retenu : environ 8 à 9 heures disponibles pour une V1 démontrable,
+  sans garantie ; première note vocale persistante prioritaire et point de contrôle
+  après environ trois heures. Interface conservée, vérifications centrées sur le
+  parcours principal. Corrections exhaustives de la CLI suspendues ; dette
+  historique de 29 signalements de développement, zéro en production au dernier
+  relevé, à réexaminer si notre usage est affecté ou bloqué.
+- Après go, connexion Vercel réalisée par l’utilisateur ; espace `Ouais` sur
+  Hobby constaté. Import direct de la branche refusé (« Could not access the
+  repository »). Projet vide créé puis renommé `voicebot-banana`, sans connexion
+  Git, déploiement, règle de limitation ni secret ajouté. Aucun paiement activé.
+- Ajustement demandé : reporter configuration et essais distants au moment de la
+  PR vers `dev`. Procédure théorique consignée dans le guide API : voix fermée,
+  deux demandes par minute et IP, contrôle `503`, puis `429`, puis retour à `503`.
+  Aucun mode simulé à ajouter au serveur déployé pour vérifier le pare-feu.
+- Suite : présenter le branchement SDK, d’abord `creer_note`, avec code commenté
+  avant nouveau go. Préparer localement sans connexion réelle ; activation vocale
+  conditionnée à la protection distante vérifiée et au contrôle du compte gratuit.
+
+## 9 novembre 2026 — SDK React et déclaration de creer_note
+
+- Préparation : branche `feature/integration-elevenlabs` vérifiée ; les trois
+  documents modifiés lors de l’étape précédente sont conservés. Code présenté
+  puis go explicite reçu pour cette seule étape.
+- Réalisation : installation exacte de `@elevenlabs/react@1.21.1`, lockfile
+  actualisé, `ConversationNotesProvider.jsx` ajouté et intégré dans `main.jsx`
+  sous `NotesProvider`. `creer_note` utilise la couche d’outils existante et renvoie
+  son résultat JSON après sauvegarde. Aucun autre outil ni démarrage ajouté.
+- Environnement : installation initialement bloquée par la résolution réseau du
+  bac à sable, puis réussie après autorisation. Serveur Vite local autorisé sur
+  `127.0.0.1:4175` après refus d’écoute dans le bac à sable.
+- Vérifications : exports réels du SDK contrôlés ; `npm ls --depth=0`, `npm test`
+  (trois fichiers) et `npm run build` réussis. Interface observée dans le navigateur,
+  sans mutation des notes, session ni demande de microphone. Le parcours vocal
+  et l’exécution du gestionnaire par le SDK restent à valider.
+- Limites : bundle principal de 846,62 kB (233,40 kB gzip), avertissement Vite
+  au-delà de 500 kB ; optimisation reportée. Installation : 29 signalements npm
+  (10 modérés, 19 élevés), sans correction automatique ; pas de nouvel audit
+  séparé des dépendances de production pendant cette étape.
+- Documentation : suivi et guide agent actualisés. Prochaine étape à expliquer
+  avant nouveau go : demande du jeton depuis le navigateur pour préparer les
+  commandes de démarrage et d’arrêt. La route reste verrouillée ; vérification
+  distante et contrôle du compte gratuit requis avant tout essai vocal réel.
+
+## 9 novembre 2026 — Service client de demande du jeton
+
+- Préparation : go explicite reçu pour le code présenté ; branche
+  `feature/integration-elevenlabs` et modifications existantes vérifiées et conservées.
+- Réalisation : `src/services/conversationAccess.js` ajouté. Format du code validé
+  avant envoi, POST relatif avec Bearer, cache et redirections refusés, délai de
+  quinze secondes par défaut ou signal d’annulation fourni. Messages adaptés aux
+  refus importants ; corps brut et détails de panne non exposés. Aucune relance,
+  sauvegarde de code/jeton ou clé ElevenLabs côté client.
+- Vérifications : sept scénarios ajoutés dans `tests/conversationAccess.test.js`,
+  sans réseau, avec valeurs fictives. Validation sans requête, jeton valide, refus
+  HTTP, JSON/jeton invalide, panne/expiration simulée, annulation et délai configuré
+  vérifiés. `npm test` réussi (quatre fichiers), `npm run build` réussi.
+- Limites : délai vérifié sans attente réelle ; aucun HTTP réel, démarrage SDK,
+  microphone ou appel ElevenLabs. Service non appelé par l’interface à ce stade.
+  Avertissement de poids du bundle inchangé ; aucune dépendance supplémentaire.
+- Documentation : guide agent et suivi actualisés. Suite à présenter avant nouveau
+  go : panneau vocal avec code en mémoire, demande annulable, démarrage/arrêt,
+  durée et fermeture automatique. Route verrouillée jusqu’à validation distante.
+
+## 9 novembre 2026 — Panneau de conversation préparé
+
+- Préparation : commit utilisateur `e2a9048` confirmé sur
+  `feature/integration-elevenlabs`, arbre propre. Code expliqué puis go explicite reçu.
+- Réalisation : `ConversationPanel.jsx` ajouté avant les sauvegardes dans `App.jsx`.
+  Code personnel en mémoire et champ effacé, jeton avant WebRTC/microphone,
+  confirmation via événements SDK, démarrage/arrêt et refus des retours obsolètes.
+  Durée et quarante derniers messages temporaires affichés.
+- Fermeture : annulation de la demande, préparation limitée à trente secondes,
+  conversation à deux minutes, arrêt après trente secondes sans message/audio reçu,
+  au masquage, à la sortie de page et au démontage. Minuteries locales approximatives,
+  complémentaires aux protections distantes et non assimilables à un plafond de coût.
+- Vérifications : compilation et `npm test` réussis (quatre fichiers). Banc React
+  temporaire hors dépôt, sous StrictMode, avec SDK et jeton simulés : refus, attente
+  de connexion, message reçu, délais accélérés, arrêt et jeton tardif ignoré,
+  erreur SDK générique, sortie et démontage vérifiés. Aucune dépendance ajoutée.
+  Le banc n’est pas intégré à la suite Node. Application réelle observée localement :
+  panneau affiché et code invalide refusé sans microphone ni réseau ElevenLabs.
+- Limites : aucun essai vocal réel, aucun accès distant activé. Masquage réel sur
+  mobile, libération du microphone et fermeture effective à vérifier ultérieurement.
+  Bundle de 852,19 kB (235,48 kB gzip) : avertissement Vite inchangé dans sa nature,
+  optimisation reportée.
+- Documentation : README, guide API, guide agent et suivi actualisés. Commit à
+  proposer à l’utilisateur ; prochaine étape : préparer sa PR vers `dev` et le
+  contrôle Vercel verrouillé avant le premier essai de création vocale persistante.
