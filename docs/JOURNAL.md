@@ -763,3 +763,44 @@
 - Documentation actualisée ; aucune modification du code applicatif. Suite à
   expliquer avant go : activation en Production, redéploiement et premier essai
   court, avec vérification de la sauvegarde après rechargement.
+
+## 9 novembre 2026 — Activation protégée et droit du jeton corrigé
+
+- Préparation : commit utilisateur `57a17c2`, branche `feature/validation-vocale`
+  propre. Go reçu pour activer Production et essayer une première note.
+- Activation : vérification email Vercel effectuée par l’utilisateur ; verrou
+  séparé en `true` pour Production et `false` hors Production. Redéploiement
+  `CfSaJTjgtszz5ZT4j1T9bY4bjU1A` Ready, code `71ba461`. POST sans code et avec
+  bonne origine : `401` sans cache. Limitation et secrets conservés.
+- Premier essai : refus avant connexion, durée affichée 0:00, aucune note créée.
+  Diagnostic direct autorisé : fournisseur `401`, `missing_permissions`,
+  `convai_write` absent. Le droit Lire proposé initialement est insuffisant.
+- Correction après go ciblé : ElevenAgents Lire → Écrire sur la même clé,
+  autres accès fermés, plafond 2 000 et expiration conservés. Aucun nouveau secret
+  ni redéploiement pour cette modification de permission.
+- Vérifications sans sortie sensible : endpoint fournisseur `200` avec jeton,
+  puis route Vercel avec origine et code valides `200`, jeton présent et sans
+  cache. Aucun jeton affiché, aucune session audio ouverte par ces diagnostics.
+- L’utilisateur est invité à reprendre le même essai court ; première note et
+  persistance non encore validées. Aucun changement du code applicatif.
+- Calendrier : objectif 16 h 30, limite absolue 17 h 30, jalon première note visé
+  avant 11 h 30. À 10 h 43, environ 5 h 47 restantes jusqu’à l’objectif ; blocage
+  d’authentification résolu, parcours audio restant à confirmer.
+
+## 9 novembre 2026 — Première note vocale persistante validée
+
+- Essai repris par l’utilisateur après correction de la permission. Dans le
+  navigateur, accueil de l’agent, transcription de la demande et confirmation de
+  création observés. Note « Test vocale Banana Navy », contenu « Présenter le
+  projet », créée à 10 h 48. Variation du titre due à la transcription conservée.
+- Vérification : conversation arrêtée, durée affichée 17 secondes ; une note
+  visible. Rechargement effectué par l’assistant : même titre et contenu toujours
+  présents, conversation arrêtée, durée 0:00 et transcription vidée. Aucune
+  création manuelle ou simulation exécutée pendant cette vérification.
+- Premier jalon atteint à 10 h 49. Cette preuve concerne l’origine principale et
+  le navigateur utilisé ; les cinq autres outils, le mobile et le scénario final
+  restent à valider. Aucun code applicatif changé pour atteindre ce jalon.
+- Documentation actualisée sur `feature/validation-vocale`. À 10 h 49, 5 h 41
+  jusqu’à l’objectif 16 h 30, une heure supplémentaire au maximum en secours.
+  Prochaine étape à présenter avant go : déclarer les cinq autres outils dans
+  le provider en réutilisant les validations et actions existantes.

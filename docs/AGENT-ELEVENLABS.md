@@ -1,14 +1,28 @@
 # Préparation de l’agent ElevenLabs français
 
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
-Le SDK React et le panneau vocal sont préparés depuis le 9 novembre 2026 ; aucun
-essai vocal réel ni demande de microphone effectué. Les consignes sont enregistrées dans l’agent distant,
-mais aucune conversation réelle n’a validé son comportement. Les six définitions
-distantes sont configurées et associées à l’agent ; seul `creer_note` est déclaré
-dans le SDK côté navigateur, sans exécution réelle vérifiée.
+Le SDK React et le panneau vocal sont intégrés depuis le 9 novembre 2026.
+Une première conversation réelle crée une note, visible puis retrouvée après
+rechargement. Les six définitions distantes sont configurées et associées à l’agent ;
+seul `creer_note` est déclaré dans le SDK côté navigateur et validé vocalement.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
 fournisseur simulé, désactivée par défaut. La limitation Vercel est publiée et
-vérifiée sur le domaine principal ; secrets préparés, intégration réelle à valider.
+vérifiée sur le domaine principal ; Production activée, jeton réel et premier
+parcours de création vocale persistante validés. Les cinq autres outils restent à raccorder.
+
+## Premier jalon vocal validé — 9 novembre 2026
+
+L’utilisateur démarre une conversation et demande une création. Après l’accueil,
+la transcription contient le titre « Test vocale Banana Navy » et le contenu
+« Présenter le projet ». L’agent annonce la création, puis propose un classement.
+La liste contient une note avec ce titre et ce contenu ; conversation arrêtée,
+durée affichée 17 secondes. La page est rechargée par l’assistant : même note
+présente, transcription et durée remises à zéro, conversation toujours arrêtée.
+
+Ce contrôle valide une création via le SDK et sa persistance IndexedDB sur cette
+origine et ce navigateur. La variation de transcription du titre est conservée
+telle qu’observée. Aucun autre outil vocal ni parcours mobile encore validé ;
+l’ordre sauvegarde/résultat reste garanti par le store et les contrôles locaux.
 
 ## Protections du premier essai — 9 novembre 2026
 
@@ -36,6 +50,13 @@ et empreinte), puis l’utilisateur crée et renseigne la clé dédiée. Clé pr
 ElevenAgents Lire uniquement, plafond 2 000 crédits et expiration un jour ; droit à
 valider sur le jeton réel. Les quatre variables serveur sont enregistrées en Secret
 sur Vercel, en Production uniquement. Aucun redéploiement ni activation vocale.
+
+La préparation est ensuite activée en Production après go et redéployée. Le premier
+démarrage échoue avant connexion : `convai_write` est requis pour le jeton. Après
+accord ciblé, le seul droit ElevenAgents passe de Lire à **Écrire** sur la même
+clé ; plafond et expiration conservés. Endpoint ElevenLabs et route Vercel répondent
+alors `200` avec un jeton, sans affichage du secret ni ouverture de session audio
+pendant les diagnostics. Le parcours vocal reste à vérifier avec l’utilisateur.
 
 ## Préparation du SDK — 9 novembre 2026
 

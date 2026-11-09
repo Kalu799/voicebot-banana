@@ -190,6 +190,32 @@ Aucun redéploiement ni activation pendant cette préparation. Un nouveau déplo
 sera nécessaire pour les prendre en compte. Ne jamais versionner `.env.local` ;
 la clé d’essai expire et devra être renouvelée pour une démonstration ultérieure.
 
+### Activation et correction de permission — 9 novembre 2026
+
+Après go et vérification email Vercel réalisée par l’utilisateur, le verrou est
+séparé : `true` pour Production, `false` pour Preview et Development. Le fichier
+local conserve `false`. Redéploiement `CfSaJTjgtszz5ZT4j1T9bY4bjU1A`, code applicatif
+`71ba461`, Production Ready ; POST avec origine correcte mais sans code : `401`,
+réponse sans cache. Aucun contrôle d’accès ou pare-feu désactivé.
+
+Le premier démarrage depuis l’interface échoue avant connexion, avec le `502`
+générique. Diagnostic serveur direct, sans afficher clé ou jeton : ElevenLabs
+répond `401`, `missing_permissions`, permission manquante `convai_write`. Malgré
+GET, l’endpoint de jeton nécessite **ElevenAgents Écrire** ; Lire est insuffisant.
+Après accord ciblé, ce seul droit est changé et enregistré sur la même clé.
+Plafond de 2 000 crédits, expiration et autres permissions conservés ; aucune
+rotation de clé ni nouveau déploiement nécessaire pour cette correction de droit.
+
+Deux contrôles réussissent ensuite : endpoint fournisseur `200` avec jeton non
+vide, puis route Vercel avec origine et code valides `200`, jeton non vide et
+`Cache-Control: no-store`. Les jetons restent en mémoire et ne sont pas affichés.
+Ces contrôles n’ouvrent pas de session audio et ne valident pas encore `creer_note`.
+
+Le premier essai audio repris après correction crée ensuite une note réelle en
+environ 17 secondes. Conversation arrêtée et persistance après rechargement
+vérifiées dans l’interface le 9 novembre 2026 ; voir le guide agent. Le jeton est
+donc validé aussi dans le parcours SDK WebRTC, au-delà des seuls contrôles HTTP.
+
 ## Réponses et erreurs
 
 | Statut | Signification |

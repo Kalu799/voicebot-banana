@@ -12,12 +12,15 @@ des notes, de les consulter et modifier, de les mettre en corbeille et de les
 restaurer, ainsi que de télécharger et importer une sauvegarde JSON. Le panneau
 de simulation permet d'exécuter les six outils locaux sans microphone ni appel
 ElevenLabs. Le panneau vocal et le SDK sont préparés (seul `creer_note` est
-déclaré), avec démarrage/arrêt et transcription temporaire. Aucun parcours vocal
-réel validé ; la route reste désactivée jusqu’aux vérifications distantes.
+déclaré), avec démarrage/arrêt et transcription temporaire. Première création vocale
+réelle validée le 9 novembre 2026 : note visible, conversation arrêtée et note
+retrouvée après rechargement. L’accès vocal est activé en Production uniquement,
+avec code personnel et limitation Vercel. Les cinq autres outils restent à raccorder au SDK.
 
-[Version déployée avec la voix désactivée](https://project-bxwwf.vercel.app)
-— source `dev`, commit `71ba461`, vérifiée le 9 novembre 2026. Interface accessible,
-route GET refusée en `405` et POST en `503` ; aucun essai vocal réel. Cette adresse
+[Version de test avec accès vocal protégé](https://project-bxwwf.vercel.app)
+— code applicatif `71ba461`, redéployé le 9 novembre 2026 avec les variables serveur.
+POST sans code refusé en `401`, jeton réel reçu en `200` avec le code valide,
+première note vocale persistante vérifiée. Cette adresse
 possède ses propres notes locales, distinctes de celles de localhost.
 
 ![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
@@ -287,7 +290,9 @@ ou au démontage. Ces contrôles ne constituent pas un plafond global de dépens
 La [route serveur de jetons](api/README.md) est implémentée et testée
 avec un fournisseur simulé, désactivée par défaut. Un déploiement verrouillé est
 vérifié ; la limitation Vercel est publiée et son refus `429` vérifié sur le domaine
-principal. Secrets préparés côté serveur ; activation et premier essai vocal restent à faire. Aucun service
+principal. Secrets enregistrés et activation limitée à Production ; création vocale
+persistante validée, scénario complet restant à vérifier. La clé nécessite
+ElevenAgents Écrire (`convai_write`). Aucun service
 payant n'est activé.
 
 ## Store des notes
