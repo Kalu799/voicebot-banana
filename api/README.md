@@ -51,10 +51,10 @@ de Git. En production, HTTPS est nécessaire pour le code et le jeton. Le contr�
 d’origine est complémentaire : un client extérieur au navigateur peut fabriquer
 cet en-tête. Il ne constitue pas une authentification.
 
-## Limitation à configurer avant activation
+## Limitation avant activation
 
-La limitation n’est **pas implémentée dans cette fonction** : elle sera appliquée
-par une règle Vercel devant la route, et devra être vérifiée séparément.
+La limitation n’est **pas implémentée dans cette fonction** : une règle Vercel
+est publiée devant la route depuis le 9 novembre 2026, vérifiée séparément.
 Le verrou `VOICEBOT_VOIX_ACTIVE` est manuel : il ne détecte pas automatiquement
 la présence ou la suppression de cette règle.
 
@@ -144,6 +144,31 @@ en `302` vers Vercel Authentication ; cette protection est conservée.
 testé pendant ce déploiement. La vérification `429` reste à faire avant activation
 de la voix, ainsi que les contrôles du compte gratuit et des secrets côté serveur.
 Le succès de ce déploiement verrouillé ne valide pas une conversation réelle.
+
+### Limitation publiée et vérifiée — 9 novembre 2026
+
+Règle `Limiter les jetons BananaNavy`, identifiant
+`rule_limiter_les_jetons_banana_navy_3FGISp`, publiée sur le projet Hobby :
+Request Path Equals `/api/conversation-token`, fenêtre fixe de 60 secondes,
+deux demandes par adresse IP, action Too Many Requests (`429`). Aucune condition
+de méthode, de domaine ou d’authentification ajoutée. La fiche rouverte confirme
+les valeurs et le tableau de bord affiche une règle active, un événement limité.
+Aucun abonnement, option payante ou paiement activé pendant cette configuration.
+
+Contrôles sur `https://project-bxwwf.vercel.app`, sans code personnel ni clé :
+trois POST rapprochés donnent `503`, `503`, puis `429` (région d’entrée `cdg1`).
+Un POST plus d’une minute après donne à nouveau `503` et le message de verrou
+fermé ; GET `/` reste en `200`. Les demandes refusées ne créent pas de conversation.
+Ce résultat vérifie le domaine et la région exercés, sans prouver un plafond
+global ni la couverture effective de tous les alias de prévisualisation protégés.
+Le lien détaillé « View Traffic » de la fiche a renvoyé `404` ; le compteur de
+l’aperçu et les réponses HTTP ont permis de vérifier le blocage sans poursuivre
+le diagnostic de ce lien d’interface.
+
+Compte ElevenLabs contrôlé en lecture seule : Free, 6 299 crédits restants,
+recharge automatique désactivée ; la FAQ indique que le coût LLM est déduit des
+crédits. Les limites de l’agent sont publiées à cinq appels par jour et un appel
+simultané. La voix reste fermée, sans secrets réels ni appel fournisseur.
 
 ## Réponses et erreurs
 

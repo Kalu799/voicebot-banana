@@ -7,8 +7,29 @@ mais aucune conversation réelle n’a validé son comportement. Les six défini
 distantes sont configurées et associées à l’agent ; seul `creer_note` est déclaré
 dans le SDK côté navigateur, sans exécution réelle vérifiée.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
-fournisseur simulé, désactivée par défaut. La limitation Vercel et l’intégration
-réelle restent à vérifier avant son activation.
+fournisseur simulé, désactivée par défaut. La limitation Vercel est publiée et
+vérifiée sur le domaine principal ; secrets et intégration réelle restent à préparer.
+
+## Protections du premier essai — 9 novembre 2026
+
+Compte contrôlé : offre Free, 6 299 crédits restants, recharge automatique désactivée.
+La FAQ de l’abonnement indique que les coûts LLM sont déduits des crédits.
+Aucun réglage de facturation modifié ni paiement activé. Ce solde n’a pas été
+converti en minutes disponibles ; réserver les crédits aux essais courts.
+
+Authentification active, bursting désactivé, durée maximale 120 secondes et arrêt
+après 30 secondes de silence confirmés. Français, Gemini 3.5 Flash et voix Eric
+conservés pour le premier essai, sans écoute ni validation vocale à ce stade.
+
+Après go, deux changements uniquement sont publiés sur la branche distante
+ElevenLabs `Main` : limite quotidienne de 100 000 à **5 appels**, simultanéité de
+la limite du forfait (`-1`) à **1**. Fiche rechargée : valeurs conservées et bouton
+Publier désactivé. La file d’attente héritée (180 secondes) est inchangée ; cette
+limite de simultanéité ne signifie donc pas que les appels excédentaires sont
+immédiatement rejetés. Les bornes quotidiennes ne constituent pas un budget global.
+
+La règle Vercel deux demandes/minute/IP est publiée ; contrôle HTTP `503`, `503`,
+`429`, puis `503` après expiration réussi. Aucun secret ni conversation réelle.
 
 ## Préparation du SDK — 9 novembre 2026
 

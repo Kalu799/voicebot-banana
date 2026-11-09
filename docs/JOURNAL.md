@@ -713,3 +713,31 @@
 - Documentation : README, guide API et suivi actualisés. Limitation `429`, compte
   gratuit et secrets à vérifier avant activation vocale. Alignement de Node à
   proposer séparément. Aucun commit, push ou merge réalisé par l’assistant.
+
+## 9 novembre 2026 — Limites du premier essai vocal
+
+- Préparation : PR documentaire n° 4 fusionnée par l’utilisateur, `dev` propre au
+  commit `244d95c`. Alignement Node reporté pour préserver les six heures restantes.
+  Inspection distante en lecture seule, réglages expliqués et go reçu. Branche
+  `feature/validation-vocale` créée avant toute modification documentaire.
+- Compte : Free, 6 299 crédits restants, recharge automatique désactivée ; coûts
+  LLM déduits des crédits selon la FAQ du compte. Aucun paiement ni réglage de
+  facturation modifié. Authentification, bursting désactivé, 120 secondes maximum
+  et 30 secondes de silence confirmés. Modèle et voix conservés pour le premier essai.
+- ElevenLabs : diff limité à deux valeurs, puis publication sur `Main` distante :
+  cinq appels/jour et une conversation simultanée. Rechargement : valeurs conservées,
+  aucune publication en attente. File d’attente héritée inchangée à 180 secondes.
+- Vercel : règle `Limiter les jetons BananaNavy` publiée, chemin exact de l’API,
+  fenêtre fixe 60 secondes, deux demandes par IP, refus `429`, sans filtre
+  d’authentification/méthode/domaine. Aucun abonnement ou service payant activé.
+- Vérifications HTTP autorisées, sans secrets : à 09:50:53–54 (Paris), trois POST
+  donnent `503`, `503`, `429` ; à 09:52:24, POST de nouveau `503`, interface `200`.
+  Région d’entrée `cdg1`, règle rouverte avec valeurs exactes et compteur Vercel
+  « Rate Limited 1 ». Lien « View Traffic » renvoyant `404`, sans investigation
+  supplémentaire puisque le compteur global et le contrôle HTTP confirment le refus.
+- Portée : domaine principal testé ; autres alias/régions non exercés. Aucune
+  session, demande ElevenLabs ou consommation vocale ; verrou toujours fermé.
+- Documentation : README, guide API, guide agent et suivi actualisés. Aucun code
+  applicatif modifié, tests locaux non relancés pour cette configuration distante.
+  Suite à expliquer avant nouveau go : préparation du code personnel, de son
+  empreinte et de la clé serveur, puis activation pour un premier essai court.

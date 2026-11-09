@@ -286,7 +286,8 @@ avec arrêt après trente secondes sans message/audio reçu, au masquage de la p
 ou au démontage. Ces contrôles ne constituent pas un plafond global de dépenses.
 La [route serveur de jetons](api/README.md) est implémentée et testée
 avec un fournisseur simulé, désactivée par défaut. Un déploiement verrouillé est
-vérifié ; la limitation Vercel reste à configurer et vérifier avant activation. Aucun service
+vérifié ; la limitation Vercel est publiée et son refus `429` vérifié sur le domaine
+principal. Préparation des secrets et premier essai vocal restent à faire. Aucun service
 payant n'est activé.
 
 ## Store des notes
