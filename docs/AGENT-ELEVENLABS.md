@@ -4,13 +4,11 @@ Préparation puis configuration distante initiale réalisées le 8 novembre 2026
 Le SDK React et le panneau vocal sont intégrés depuis le 9 novembre 2026.
 Une première conversation réelle crée une note, visible puis retrouvée après
 rechargement. Les six définitions distantes sont configurées et associées à l’agent ;
-les six sont déclarés dans le code SDK. Seul `creer_note` est déjà déployé et
-validé vocalement ; les cinq nouveaux branchements attendent leur déploiement.
+les six sont déclarés dans le SDK, déployés et exercés en conversation réelle.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
 fournisseur simulé, désactivée par défaut. La limitation Vercel est publiée et
 vérifiée sur le domaine principal ; Production activée, jeton réel et premier
-parcours de création vocale persistante validés. Les cinq autres outils restent à
-déployer et valider vocalement.
+parcours de gestion vocale persistante validés sur une note de démonstration.
 
 ## Premier jalon vocal validé — 9 novembre 2026
 
@@ -23,8 +21,36 @@ présente, transcription et durée remises à zéro, conversation toujours arrê
 
 Ce contrôle valide une création via le SDK et sa persistance IndexedDB sur cette
 origine et ce navigateur. La variation de transcription du titre est conservée
-telle qu’observée. Aucun autre outil vocal ni parcours mobile encore validé ;
+telle qu’observée. À ce premier jalon, les autres outils restaient à vérifier ;
 l’ordre sauvegarde/résultat reste garanti par le store et les contrôles locaux.
+
+## Parcours vocal étendu vérifié — 9 novembre 2026
+
+Après fusion de la PR n° 5, commit `798641d`, déploiement Production
+`484mptLNMJ8Ydt4whB1XXETBcoC1` Ready à 11 h 04 sur le même domaine.
+Les variables de Production sont reprises par une reconstruction ; l’aperçu fermé
+n’est pas simplement réaffecté au domaine public.
+
+- Conversation de 50 secondes : recherche et lecture de « Test vocale Banana Navy »,
+  ajout de « Durée prévue 30 secondes » en conservant le texte, puis remplacement
+  de la durée par une minute. Contenu observé après arrêt et rechargement :
+  « Présenter le projet » puis « Durée prévue une minute. ».
+- Nouvelle conversation de 30 secondes : demande de mise en corbeille puis
+  recherche dans la corbeille et restauration. L’utilisateur confirme les deux
+  changements de compteurs ; transcription et note restaurée observées ensuite.
+  Après rechargement : Mes notes (1), Corbeille (0), même titre et contenu.
+- La création avait déjà été exercée au premier jalon. Les six outils sont ainsi
+  exercés sur ce navigateur et cette origine, sans nouvelle note ni simulation.
+- Contrôle à 390 × 844 px : disposition en une colonne, champs et boutons lisibles,
+  pas de débordement horizontal ; édition ouverte puis annulée sans modification.
+  Code mal formé refusé localement, code fictif au bon format refusé avec
+  « Code d’accès invalide. », sans conversation ni appel vocal.
+
+Ce parcours reprend les actions du scénario final sur la note de test existante,
+avec un titre différent. Il ne valide ni un microphone sur téléphone physique,
+ni les ambiguïtés entre notes, ni les pannes réelles pendant une conversation.
+Captures : [ordinateur](images/validation-vocale-ordinateur.jpg),
+[largeur mobile](images/validation-vocale-mobile.jpg).
 
 ## Protections du premier essai — 9 novembre 2026
 
@@ -75,13 +101,12 @@ la note ou l’erreur. `resultatPourAgent` mutualise l’attente et la conversio
 Le hook maintient le gestionnaire courant et le désenregistre au démontage.
 Recherche, lecture, modification, corbeille et restauration sont maintenant
 déclarées comme la création. Tests existants (quatre fichiers), compilation et
-montage local réussis ; cinq nouveaux branchements non encore déployés ni testés
-vocalement. Aucune définition distante, dépendance ou règle métier modifiée.
+montage local réussis, puis déploiement et vérifications vocales décrits ci-dessous. Aucune définition distante, dépendance ou règle métier modifiée.
 
 Le panneau décrit ci-dessous utilise désormais `startSession` après obtention du
 jeton ; l’enregistrement du gestionnaire seul ne le déclenche pas. Tests existants,
-compilation et affichage local vérifiés ; cela ne valide pas encore un appel
-d’outil depuis ElevenLabs. Avertissement Vite de poids du bundle : optimisation
+compilation et affichage local vérifiés ; les appels réels sont vérifiés séparément
+dans le parcours ci-dessous. Avertissement Vite de poids du bundle : optimisation
 du chargement reportée pour privilégier le parcours principal.
 
 ### Service client de jeton — 9 novembre 2026
@@ -593,7 +618,9 @@ les premiers essais à des notes de démonstration.
 
 ## Scénarios à valider lors de l’intégration
 
-Ces scénarios sont prévus ; ils n’ont pas été exécutés vocalement :
+État après les essais du 9 novembre : scénarios 1, 3 et 5 exercés vocalement ;
+scénarios 2, 4, 6 et 7 encore à vérifier ; scénario 8 partiellement vérifié
+(arrêt manuel et disposition mobile, sans téléphone physique). Scénarios de référence :
 
 1. Créer une note par conversation, constater la confirmation après sauvegarde,
    puis la retrouver après rechargement : premier jalon vocal.

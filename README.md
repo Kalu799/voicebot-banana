@@ -15,18 +15,21 @@ ElevenLabs. Le panneau vocal et le SDK déclarent les six outils, avec démarrag
 et transcription temporaire. Première création vocale
 réelle validée le 9 novembre 2026 : note visible, conversation arrêtée et note
 retrouvée après rechargement. L’accès vocal est activé en Production uniquement,
-avec code personnel et limitation Vercel. Les cinq nouveaux branchements sont
-préparés sur cette branche, en attente de déploiement et de validation vocale.
+avec code personnel et limitation Vercel. Les six outils ont été exercés vocalement : création, recherche, lecture,
+modification, mise en corbeille et restauration. Les modifications et la restauration
+sont conservées après rechargement.
 
 [Version de test avec accès vocal protégé](https://project-bxwwf.vercel.app)
-— code applicatif `71ba461`, redéployé le 9 novembre 2026 avec les variables serveur.
+— commit `798641d`, déployé en Production le 9 novembre 2026 à 11 h 04 avec les
+variables serveur de Production.
 POST sans code refusé en `401`, jeton réel reçu en `200` avec le code valide,
-première note vocale persistante vérifiée. Cette adresse
+six outils vocaux et persistance vérifiés sur une note de démonstration. Cette adresse
 possède ses propres notes locales, distinctes de celles de localhost.
 
-![Interface après import d'une sauvegarde de démonstration](docs/images/interface-sauvegardes-ordinateur.png)
+![Note restaurée par la voix et conservée après rechargement](docs/images/validation-vocale-ordinateur.jpg)
 
-Voir aussi [l'interface mobile](docs/images/interface-sauvegardes-mobile.png).
+Voir aussi [le contrôle à une largeur mobile de 390 px](docs/images/validation-vocale-mobile.jpg).
+Il vérifie la disposition, sans valider le microphone sur un téléphone physique.
 Le [guide du simulateur](docs/SIMULATION.md) propose un scénario reproductible
 avec les six outils et des notes de démonstration.
 
@@ -44,8 +47,8 @@ npm run dev
 
 Ouvrir l'adresse indiquée par Vite dans le terminal. Pour arrêter : `Ctrl+C`.
 Aucune clé API, aucun compte et aucune variable d'environnement ne sont nécessaires
-pour la gestion locale et le simulateur. La future connexion vocale utilisera la
-route serveur décrite dans [le guide API](api/README.md), désactivée par défaut.
+pour la gestion locale et le simulateur. La connexion vocale utilise la
+route serveur décrite dans [le guide API](api/README.md), désactivée par défaut en local.
 Ne jamais enregistrer de secrets dans Git.
 
 Pour démarrer aussi la route serveur dans l’environnement Vercel local :
@@ -94,7 +97,7 @@ la note doit être toujours visible. Voir [le guide de l'interface](docs/INTERFA
 | `src/services/notesBackup.js` | Prépare un fichier JSON et valide les notes à importer |
 | `src/services/notesTools.js` | Six outils locaux avec validation et résultats structurés |
 | `src/components/ConversationPanel.jsx` | Code personnel en mémoire, démarrage/arrêt, durée et messages temporaires |
-| `src/components/ConversationNotesProvider.jsx` | Provider SDK et déclaration de `creer_note` |
+| `src/components/ConversationNotesProvider.jsx` | Provider SDK et déclaration des six outils de notes |
 | `src/services/conversationAccess.js` | Demande du jeton au serveur, erreurs et annulation |
 | `src/utils/rechercheNotes.js` | Recherche normalisée, extraits et lecture par identifiant |
 | `tests/notesTools.test.js` | Tests automatisés de la recherche et des six outils |
@@ -255,9 +258,9 @@ affichées par `App` depuis le store. Si un import est enregistré mais sa relec
 Voir [le guide des sauvegardes](docs/SAUVEGARDES.md) pour les règles, les exemples
 et les vérifications effectuées.
 
-## Architecture prévue
+## Architecture
 
-La couche commune au simulateur et aux futurs client tools est documentée dans
+La couche commune au simulateur et aux client tools vocaux est documentée dans
 [OUTILS.md](docs/OUTILS.md). `creerOutilsNotes(store)` expose `creer_note`,
 `chercher_notes`, `lire_note`, `modifier_note`, `supprimer_note` et `restaurer_note`.
 Les mutations passent par le store ; les lectures utilisent `obtenirNotes()` pour
@@ -266,8 +269,8 @@ Le format est `{ succes: true, ... }` ou `{ succes: false, erreur }`.
 
 La recherche retourne cinq résultats par défaut (maximum vingt), avec extraits,
 sans envoyer toute la bibliothèque. Le simulateur appelle cette couche depuis
-l'interface ; la voix n'est pas encore connectée. Aucun appel ElevenLabs n'est
-effectué par cette couche.
+l'interface ; les six outils vocaux réutilisent les mêmes fonctions. Aucun appel
+ElevenLabs n'est effectué directement par cette couche locale.
 
 - React + Vite : interface et outils de développement.
 - Context + useReducer : centralisation des notes et des actions.
@@ -275,15 +278,14 @@ effectué par cette couche.
 - SDK React ElevenLabs et client tools : conversation et actions dans le navigateur.
 - Vercel : hébergement et fonction serveur pour les jetons de conversation.
 
-Flux cible : parole → agent → client tool → store → IndexedDB → confirmation à l'agent.
-La confirmation de réussite devra attendre la sauvegarde effective.
+Flux : parole → agent → client tool → store → IndexedDB → confirmation à l'agent.
+La confirmation de réussite attend la sauvegarde effective.
 
 La [préparation de l’agent français](docs/AGENT-ELEVENLABS.md) décrit les consignes
 proposées, le contrat des six outils et les prérequis aux essais vocaux. La
 configuration distante initiale est enregistrée ; voix et LLM restent provisoires.
-Les six outils sont définis côté ElevenLabs et déclarés dans le SDK. Seul
-`creer_note` est déjà déployé et validé vocalement ; les cinq nouveaux branchements
-restent à déployer et tester. Le panneau vocal demande le jeton
+Les six outils sont définis côté ElevenLabs, déclarés dans le SDK, déployés et
+exercés en conversation réelle sur le navigateur de test. Le panneau vocal demande le jeton
 avant de solliciter le microphone. `npm run dev:api` permet de servir cette route,
 avec le verrou fermé ; Vite seul ne la sert pas. Le code personnel est effacé du
 champ au démarrage ou à l’arrêt. Sessions limitées localement à deux minutes,
@@ -293,7 +295,7 @@ La [route serveur de jetons](api/README.md) est implémentée et testée
 avec un fournisseur simulé, désactivée par défaut. Un déploiement verrouillé est
 vérifié ; la limitation Vercel est publiée et son refus `429` vérifié sur le domaine
 principal. Secrets enregistrés et activation limitée à Production ; création vocale
-persistante validée, scénario complet restant à vérifier. La clé nécessite
+persistante, recherche, lecture, modification et aller-retour en corbeille validés. La clé nécessite
 ElevenAgents Écrire (`convai_write`). Aucun service
 payant n'est activé.
 
@@ -415,12 +417,20 @@ rechargement ; les notes enregistrées le sont.
 
 ## Limites et suite
 
-Création, lecture, modification et corbeille sont disponibles depuis la page.
-Aucun microphone n'est sollicité. L'export/import est disponible dans l'interface.
-L'agent vocal, le scénario final vocal complet et le lien public seront ajoutés
-plus tard. Les captures actuelles utilisent une note de démonstration
-sans données personnelles.
+Les six outils sont accessibles par la voix sur la version de test protégée. Le
+parcours a été effectué sur la note « Test vocale Banana Navy » : création,
+recherche et lecture, ajout de trente secondes, remplacement par une minute,
+rechargement, puis mise en corbeille et restauration dans une nouvelle conversation.
+Le titre diffère de celui du scénario initial ; aucune création supplémentaire
+n’a été faite pour la démonstration. Voir le [guide agent](docs/AGENT-ELEVENLABS.md).
 
-À terme, les notes resteront propres au navigateur et à l'appareil, sans
-synchronisation. L'export/import permet une sauvegarde manuelle. Les informations
-transmises à l'agent vocal passeront par ElevenLabs.
+Les notes sont propres au navigateur, à l’appareil et à l’origine du site, sans
+synchronisation entre onglets ou appareils. L’export/import permet une sauvegarde
+manuelle. Les échanges et notes transmis à l’agent passent par ElevenLabs.
+
+La disposition à 390 px et les refus de codes invalides sont vérifiés ; un essai
+sur téléphone physique avec microphone reste à faire. Ambiguïtés entre plusieurs
+notes, classement vocal, contenu hostile et panne réelle de stockage pendant une
+conversation restent à valider. Les tests locaux ne remplacent pas ces essais.
+La clé serveur d’essai expire après un jour : le maintien de la voix après cette
+échéance demandera son renouvellement. Aucun secret n’est inclus dans ce dépôt.
