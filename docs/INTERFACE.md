@@ -1,5 +1,26 @@
 # Interface — création, lecture, modification et corbeille
 
+## Disposition à deux espaces — 9 novembre 2026
+
+La conversation et sa transcription temporaire occupent la colonne de gauche.
+Le lien dépliant « Ouvrir le simulateur » donne accès aux outils de démonstration.
+À droite, quatre boutons sélectionnent Mes notes, Corbeille, Ajouter une note
+ou Sauvegarde. Les deux premiers affichent les compteurs issus du store.
+
+Le changement de vue ne démonte ni la conversation ni les panneaux de droite.
+Les brouillons de création et d’édition sont conservés, mais pas après rechargement.
+Après création réussie, `onEnregistre` ramène aux notes et le focus revient sur
+leur bouton de navigation. En cas d’échec, le formulaire reste visible avec la saisie.
+La transcription défile au-delà de 360 px ; sa zone peut recevoir le focus clavier.
+
+Cette disposition est vérifiée localement et reste à déployer. Les preuves vocales
+de la version publiée demeurent distinctes : aucun nouvel appel ElevenLabs n’a
+été lancé pour ce changement.
+
+![Nouvelle disposition sur ordinateur](images/interface-deux-colonnes-ordinateur.jpg)
+
+[Disposition mobile](images/interface-deux-colonnes-mobile.jpg).
+
 ## Responsabilités des composants
 
 | Fichier | Rôle |
@@ -113,7 +134,7 @@ après annulation/réouverture réussit.
 
 ## Présentation et accessibilité
 
-Le panneau « Simulation des outils » sous les listes appelle la couche commune
+Le panneau « Simulation des outils » replié à gauche appelle la couche commune
 sans microphone ni réseau. Ses actions sur les notes sont réelles et annoncées
 comme telles. Le sélecteur et la zone JSON possèdent des étiquettes, le résultat
 est associé au nom de l'outil et possède une zone défilable accessible au clavier.
@@ -121,12 +142,12 @@ Voir [SIMULATION.md](SIMULATION.md) pour le scénario et les contrôles effectu�
 
 Le panneau Sauvegardes propose désormais l'export JSON et la sélection d'une
 sauvegarde à importer, avec compteurs et messages. Il réutilise les services et
-le store et se place au-dessus du formulaire et des listes. Voir
+le store et s’ouvre via « Sauvegarde » dans la navigation de droite. Voir
 [le guide des sauvegardes](SAUVEGARDES.md) pour le fonctionnement et les essais.
 
 Conserver les couleurs initiales de BananaNavy : fond crème, texte bleu foncé et
 accent vert. Disposition en deux colonnes sur ordinateur, une colonne jusqu'à
-760 px. Les cartes et les titres peuvent couper les chaînes longues pour ne pas
+900 px. Les cartes et les titres peuvent couper les chaînes longues pour ne pas
 déborder sur les petits écrans.
 
 Les champs possèdent des étiquettes associées, le bouton une hauteur minimale de
@@ -137,14 +158,15 @@ Une vérification complète avec lecteur d'écran reste à réaliser.
 ## Démonstration manuelle reproductible
 
 1. Lancer `npm run dev` et ouvrir l'adresse donnée par Vite.
-2. Créer la note « Idée de vidéo BananaNavy », contenu « Présenter le voicebot et
+2. Choisir « Ajouter une note », puis créer la note « Idée de vidéo BananaNavy », contenu « Présenter le voicebot et
    ses premières notes. », puis sur une nouvelle ligne « Durée : trente secondes. ».
    Catégorie : « Idée » ; projet : « BananaNavy ».
-3. Vérifier la carte, les informations, la confirmation et les champs vidés.
+3. Vérifier le retour aux notes, la carte, les informations et la confirmation.
+   Rouvrir « Ajouter une note » pour constater que les champs sont vidés.
 4. Recharger la page : la note doit rester visible.
-5. Soumettre un titre composé d'espaces : vérifier le message et la conservation
+5. Ouvrir « Ajouter une note » et soumettre un titre composé d'espaces : vérifier le message et la conservation
    du formulaire. Corriger le titre puis enregistrer.
-6. Réduire la fenêtre : le formulaire et la liste doivent s'empiler sans déborder.
+6. Réduire la fenêtre : conversation puis espace de notes doivent s’empiler sans déborder.
 7. Cliquer sur Modifier : vérifier les champs préremplis. Modifier le contenu et
    annuler ; rouvrir pour vérifier que la note d'origine est conservée.
 8. Remplacer la durée par une minute, enregistrer et recharger : la modification
@@ -211,3 +233,21 @@ la conservation du brouillon a été vérifiée avec un refus de validation rée
 [Modification sur mobile](images/interface-edition-mobile.png) ·
 [Corbeille sur ordinateur](images/interface-corbeille-ordinateur.png) ·
 [Corbeille sur mobile](images/interface-corbeille-mobile.png)
+
+## Vérifications de la disposition — 9 novembre 2026
+
+- Tests existants et compilation réussis ; aucun changement du store, des outils,
+  du SDK ou de la route serveur.
+- Formulaire de création ouvert à la demande, brouillon conservé après navigation
+  vers Sauvegarde ; après succès, retour aux notes, confirmation et focus vérifiés.
+- Formulaire réinitialisé pour la création suivante ; brouillon d’édition conservé
+  lors d’un aller-retour dans la corbeille, modification et persistance vérifiées.
+- Mise en corbeille puis restauration depuis les nouvelles vues ; compteurs corrects.
+- Export téléchargé puis réimporté depuis Sauvegarde : zéro ajout, une note ignorée.
+- Simulateur déplié, recherche locale réussie ; code fictif saisi dans le panneau
+  vocal, bouton Démarrer resté disponible après navigation, puis champ vidé sans appel.
+  Cela contrôle le maintien de l’état local, pas une session audio réelle.
+- Contrôles à 320, 390, 900, 1024 et 1440 px : aucun débordement horizontal,
+  empilement jusqu’à 900 px, deux colonnes au-delà et identifiants DOM uniques.
+- Captures issues de notes créées manuellement pour cette vérification sur une
+  origine locale distincte ; la version publique et ses notes ne sont pas modifiées.

@@ -864,3 +864,24 @@
   validation du microphone mobile annoncée et aucun nouvel appel vocal lancé.
 - Guide du simulateur actualisé : les six outils sont déjà intégrés à l’agent,
   leur déduplication reste une limite. Aucun code applicatif ou réglage modifié.
+
+## 9 novembre 2026 — Conversation et notes en deux espaces
+
+- Avant la PR vers `main`, l’utilisateur demande une optimisation de l’interface.
+  Disposition et code présentés, go reçu ; branche `feature/interface-deux-colonnes`
+  créée depuis `dev` avant toute modification.
+- `App` sépare conversation/transcription et espace de notes. Navigation à quatre
+  boutons avec vues maintenues par `hidden`, simulateur dans un dépliant à gauche.
+  Après création, retour aux notes et focus sur leur bouton via le callback existant.
+- Styles : en-tête compact, deux colonnes au-delà de 900 px, navigation sur deux
+  lignes sous 1200 px, transcription défilante avec zone vide explicite.
+- Vérifications locales sur la compilation : brouillons de création/édition
+  conservés à la navigation, formulaire vidé après succès, modification, corbeille,
+  restauration et rechargement. Export téléchargé puis réimporté sans doublon.
+  Simulateur déplié et recherche exécutée, état du code fictif conservé après
+  navigation puis effacé sans démarrer de session.
+- Largeurs 320, 390, 900, 1024 et 1440 px : pas de débordement, points de rupture
+  conformes, identifiants DOM uniques. Captures ordinateur et mobile ajoutées.
+- Tests existants et build réussis, avertissement connu sur le bundle conservé.
+  Aucun changement des outils, du store, de la route, des secrets ou des dépendances.
+  Aucun crédit vocal consommé. Documentation actualisée, publication en attente.

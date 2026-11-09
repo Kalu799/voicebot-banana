@@ -26,9 +26,13 @@ POST sans code refusé en `401`, jeton réel reçu en `200` avec le code valide,
 six outils vocaux et persistance vérifiés sur une note de démonstration. Cette adresse
 possède ses propres notes locales, distinctes de celles de localhost.
 
-![Note restaurée par la voix et conservée après rechargement](docs/images/validation-vocale-ordinateur.jpg)
+![Nouvelle interface à deux colonnes, vérifiée localement](docs/images/interface-deux-colonnes-ordinateur.jpg)
 
-Voir aussi [le contrôle à une largeur mobile de 390 px](docs/images/validation-vocale-mobile.jpg).
+Cette nouvelle disposition est vérifiée localement, pas encore déployée.
+La [capture du parcours vocal publié](docs/images/validation-vocale-ordinateur.jpg)
+conserve la preuve de la version précédente.
+
+Voir aussi [la nouvelle disposition mobile](docs/images/interface-deux-colonnes-mobile.jpg).
 Il vérifie la disposition, sans valider le microphone sur un téléphone physique.
 Le [guide du simulateur](docs/SIMULATION.md) propose un scénario reproductible
 avec les six outils et des notes de démonstration.
@@ -373,6 +377,12 @@ La branche `feature/gestion-notes` regroupe le modèle, le stockage et le store.
 
 ## Interface de gestion des notes
 
+La navigation de droite propose « Mes notes », « Corbeille », « Ajouter une note »
+et « Sauvegarde ». Le formulaire s’ouvre avec « Ajouter une note » ; les sauvegardes
+s’ouvrent depuis « Sauvegarde ». Après création, retour aux notes avec confirmation
+et focus sur le bouton « Mes notes ». Les vues restent montées avec `hidden` pour
+conserver les brouillons tant que la page n’est pas rechargée.
+
 Le formulaire propose titre, contenu, catégorie et projet. Seul le titre est
 obligatoire. Les champs sont conservés localement dans `NoteForm` pendant la
 saisie ; une soumission appelle `ajouterNote` du store. Après sauvegarde réussie,
@@ -396,14 +406,17 @@ déplacer les cartes et d'annoncer leur réussite. Aucune suppression définitiv
 n'est proposée. Les listes restent montées : un brouillon d'édition est conservé
 lors d'un aller-retour entre les vues, tant que la page n'est pas rechargée.
 
-La disposition utilise deux colonnes sur ordinateur et une seule jusqu'à 760 px.
+La disposition place conversation et transcription à gauche, notes et navigation
+à droite. Elle utilise une colonne jusqu’à 900 px ; la navigation conserve deux
+boutons par ligne jusqu’à 1199 px, puis quatre au-delà.
 Les champs sont étiquetés, le focus clavier est visible et les confirmations et
 erreurs utilisent des régions accessibles. Voir [le guide de l'interface](docs/INTERFACE.md)
 pour le scénario de vérification et les limites.
 
 ## Mode de simulation locale
 
-Le panneau « Simulation des outils », sous les listes, propose les six outils,
+Le panneau « Simulation des outils », replié sous « Ouvrir le simulateur » à gauche,
+propose les six outils,
 des exemples de paramètres JSON et un bouton d'exécution. Les appels sont simulés,
 mais leurs effets sur IndexedDB sont réels. Le panneau le précise explicitement.
 Il ne sollicite ni microphone, ni SDK, ni minutes ElevenLabs.

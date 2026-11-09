@@ -5,7 +5,7 @@ export default function NotesList({ notes, corbeille = false, onConfirmer }) {
     return (
       <p className="liste-vide">
         {corbeille ? 'La corbeille est vide.'
-          : 'Aucune note pour le moment. Créez votre première note avec le formulaire.'}
+          : 'Aucune note pour le moment. Parlez à l’assistant ou choisissez « Ajouter une note ».'}
       </p>
     )
   }

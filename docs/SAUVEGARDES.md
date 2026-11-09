@@ -137,7 +137,7 @@ les autres navigateurs restent à vérifier.
 
 ## Utilisation depuis l'interface
 
-Le panneau Sauvegardes se trouve au-dessus du formulaire et des listes.
+Le panneau Sauvegardes s’ouvre avec « Sauvegarde » dans la navigation de droite.
 
 1. Cliquer sur « Exporter les notes » : le navigateur reçoit un fichier
    `voicebot-notes-AAAA-MM-JJ.json`, avec toutes les notes et la corbeille.
