@@ -6,11 +6,18 @@ import ToolsSimulator from './components/ToolsSimulator.jsx'
 import ConversationPanel from './components/ConversationPanel.jsx'
 import { useNotes } from './stores/useNotes.js'
 
+/**
+ * Écran principal : assemble la conversation, la navigation et les notes du store.
+ * La vue choisie et les confirmations restent locales à l'interface ; les notes
+ * sauvegardées appartiennent au NotesProvider. Aucun accès IndexedDB ici.
+ */
 export default function App() {
-  const { notes, chargement, erreur, rechargementRequis } = useNotes()
+  const { notes, chargement, erreur, rechargementRequis, supprimerDefinitivementNotes } = useNotes()
   const [vue, setVue] = useState('actives')
   const [confirmation, setConfirmation] = useState('')
   const boutonMesNotes = useRef(null)
+  const [vidageEnCours, setVidageEnCours] = useState(false)
+  const vidageVerrouille = useRef(false)
   // filter produit une nouvelle liste : le tri ne modifie pas celle du store.
   const notesActives = notes
     .filter(note => note.deletedAt === null)
@@ -19,16 +26,42 @@ export default function App() {
     .filter(note => note.deletedAt !== null)
     .sort((a, b) => Date.parse(b.deletedAt) - Date.parse(a.deletedAt))
 
+  /**
+   * Affiche le panneau demandé et efface la confirmation de la vue précédente.
+   * Les panneaux masqués restent montés : leurs brouillons ne sont pas réinitialisés.
+   */
   function afficherVue(prochaineVue) {
     setVue(prochaineVue)
     setConfirmation('')
   }
 
+  /**
+   * Callback appelé après création sauvegardée : revient aux notes actives,
+   * annonce la réussite et replace le focus hors du formulaire désormais masqué.
+   */
   function terminerCreation() {
     setVue('actives')
     setConfirmation('Note enregistrée.')
     // Le formulaire va être masqué : rendre le focus à une commande visible.
     boutonMesNotes.current?.focus()
+  }
+
+  async function viderCorbeille() {
+    if (chargement || rechargementRequis || vidageVerrouille.current || !notesSupprimees.length) return
+    const ids = notesSupprimees.map(note => note.id)
+    if (!window.confirm(`Supprimer définitivement les ${ids.length} note(s) de la corbeille ? Cette action est irréversible.`)) return
+    vidageVerrouille.current = true
+    setVidageEnCours(true)
+    setConfirmation('')
+    try {
+      await supprimerDefinitivementNotes(ids)
+      setConfirmation('Corbeille vidée.')
+    } catch {
+      // Le store affiche l’erreur ; aucune note n’est retirée en cas d’échec.
+    } finally {
+      vidageVerrouille.current = false
+      setVidageEnCours(false)
+    }
   }
 
   return (
@@ -107,7 +140,12 @@ export default function App() {
           <div id="vue-corbeille" hidden={vue !== 'corbeille'}
             aria-busy={chargement}>
             <h2>Corbeille</h2>
-            <p className="aide">Les notes mises de côté peuvent être restaurées.</p>
+            <p className="aide">Les notes mises de côté peuvent être restaurées ou supprimées définitivement.</p>
+            <button type="button" className="bouton-danger"
+              disabled={chargement || rechargementRequis || vidageEnCours || notesSupprimees.length === 0}
+              onClick={viderCorbeille}>
+              {vidageEnCours ? 'Suppression…' : 'Vider la corbeille'}
+            </button>
             {chargement ? <p role="status">Chargement des notes…</p>
               : rechargementRequis && notes.length === 0
                 ? <p>Rechargez la page pour retrouver vos notes.</p>

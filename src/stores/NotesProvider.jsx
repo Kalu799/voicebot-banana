@@ -5,21 +5,33 @@ import {
   preparerSuppression,
   preparerRestauration,
 } from '../utils/note.js'
-import { enregistrerNote, recupererNotes } from '../services/notesStorage.js'
+import { enregistrerNote, recupererNotes, effacerNotesEnCorbeille } from '../services/notesStorage.js'
 import { importerNotes } from '../services/notesBackup.js'
 import { NotesContext } from './NotesContext.js'
 import { etatInitialNotes, notesReducer } from './notesReducer.js'
 
+/**
+ * Coordonne l’état partagé et la persistance pour toute l’application.
+ * Les écritures sont séquentielles et précèdent les mises à jour React. Les refs
+ * conservent la dernière version sauvegardée entre deux rendus ; le reducer
+ * fournit la version affichée. La file ne synchronise pas plusieurs onglets.
+ */
 export function NotesProvider({ children }) {
   const [etat, dispatch] = useReducer(notesReducer, etatInitialNotes)
   const chargementReussi = useRef(false)
   // Dernière version sauvegardée, disponible même avant le prochain rendu React.
   const notesCourantes = useRef([])
+  // Chaque nouvelle opération attend cette promesse : pas de chevauchement
+  // entre les actions de ce provider, qu’elles viennent de la voix ou de l’interface.
   const fileActions = useRef(Promise.resolve())
 
   useEffect(() => {
     let ignore = false
 
+    /**
+     * Lit toutes les notes au montage. Ignore le résultat si cet effet a été nettoyé
+     * entre-temps ; un échec laisse les actions bloquées jusqu’au rechargement.
+     */
     async function charger() {
       try {
         const notes = await recupererNotes()
@@ -45,6 +57,10 @@ export function NotesProvider({ children }) {
     }
   }, [])
 
+  /**
+   * Refuse les opérations avant une lecture initiale réussie ou après une relecture
+   * échouée. Évite de travailler sur une bibliothèque vide ou périmée par erreur.
+   */
   function verifierDisponibilite() {
     if (!chargementReussi.current) {
       throw new Error(
@@ -53,6 +69,11 @@ export function NotesProvider({ children }) {
     }
   }
 
+  /**
+   * Ajoute une opération à la file et renvoie sa promesse au demandeur.
+   * Revérifie la disponibilité au moment de l’exécution, affiche les erreurs dans
+   * le store et les propage aussi à l’appelant. La file continue après un échec.
+   */
   async function executerAction(operation) {
     verifierDisponibilite()
 
@@ -76,6 +97,11 @@ export function NotesProvider({ children }) {
     return execution
   }
 
+  /**
+   * Renvoie une promesse de copies des dernières notes sauvegardées, corbeille
+   * comprise, après les opérations déjà en file. Les outils évitent ainsi de lire
+   * un ancien rendu React ou de modifier directement les objets du store.
+   */
   function obtenirNotes() {
     // La lecture attend les actions précédentes et renvoie des objets indépendants.
     return executerAction(() =>
@@ -83,6 +109,10 @@ export function NotesProvider({ children }) {
     )
   }
 
+  /**
+   * Construit et sauvegarde une note, puis l’ajoute à l’état affiché.
+   * Renvoie la note complète ; si IndexedDB échoue, aucune carte n’est ajoutée.
+   */
   function ajouterNote(champs) {
     return executerAction(async () => {
       const note = creerNote(champs)
@@ -98,6 +128,11 @@ export function NotesProvider({ children }) {
     })
   }
 
+  /**
+   * Mécanisme commun aux modifications et à la corbeille : retrouve la note par id,
+   * applique la fonction métier preparer, sauvegarde puis remplace la note du store.
+   * Si preparer renvoie le même objet, l’opération est sans effet : pas d’écriture.
+   */
   function changerNote(id, preparer) {
     return executerAction(async () => {
       if (typeof id !== 'string' || !id.trim()) {
@@ -123,20 +158,57 @@ export function NotesProvider({ children }) {
     })
   }
 
+  /**
+   * Modifie uniquement les champs transmis. valeursInitiales, fourni par le
+   * formulaire, permet de refuser les conflits sur ces champs ; l’outil vocal
+   * n’en fournit pas et travaille sur la dernière note connue du provider.
+   */
   function modifierNote(id, changements, valeursInitiales) {
     return changerNote(id, note =>
       preparerModification(note, changements, valeursInitiales),
     )
   }
 
+  /**
+   * Place une note en corbeille par son id, sans effacer son contenu ni son identité.
+   */
   function supprimerNote(id) {
     return changerNote(id, preparerSuppression)
   }
 
+  /**
+   * Réactive une note par son id et attend sa sauvegarde avant confirmation.
+   */
   function restaurerNote(id) {
     return changerNote(id, preparerRestauration)
   }
 
+  /**
+   * Actions réservées à l’interface. Les ids viennent de la confirmation et sont
+   * revérifiés après les actions en file, pour préserver les notes restaurées.
+   */
+  function supprimerDefinitivementNotes(ids) {
+    const cibles = [...ids]
+    return executerAction(async () => {
+      for (const id of cibles) {
+        const note = notesCourantes.current.find(note => note.id === id)
+        if (note && note.deletedAt === null) {
+          throw new Error('Seules les notes en corbeille peuvent être supprimées définitivement.')
+        }
+      }
+      await effacerNotesEnCorbeille(cibles)
+      if (chargementReussi.current) {
+        notesCourantes.current = notesCourantes.current.filter(note => !cibles.includes(note.id))
+        dispatch({ type: 'NOTES_EFFACEES', ids: cibles })
+      }
+    })
+  }
+
+  /**
+   * Importe puis relit la base dans une seule opération de la file.
+   * Si l’écriture réussit mais pas la relecture, expose les compteurs sur l’erreur
+   * et bloque le store : l’utilisateur doit recharger pour retrouver un état fiable.
+   */
   function importerSauvegarde(fichier) {
     return executerAction(async () => {
       const resultat = await importerNotes(fichier)
@@ -179,6 +251,7 @@ export function NotesProvider({ children }) {
       modifierNote,
       supprimerNote,
       restaurerNote,
+      supprimerDefinitivementNotes,
       importerSauvegarde,
     }}>
       {children}

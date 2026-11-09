@@ -1,11 +1,18 @@
 import { fusionnerNotes, recupererNotes } from './notesStorage.js'
 
+/**
+ * Reconnaît un objet non nul et non tableau pour vérifier la structure du JSON.
+ */
 function estObjet(valeur) {
   return valeur !== null
     && typeof valeur === 'object'
     && !Array.isArray(valeur)
 }
 
+/**
+ * Accepte uniquement une chaîne ISO identique à la sortie de toISOString().
+ * Une date interprétable mais non canonique est refusée, ainsi qu’une date invalide.
+ */
 function estDateISO(valeur) {
   if (typeof valeur !== 'string') return false
 
@@ -13,7 +20,12 @@ function estDateISO(valeur) {
   return !Number.isNaN(date.getTime()) && date.toISOString() === valeur
 }
 
-/** Valide le fichier entier avant de transmettre des notes au stockage. */
+/**
+ * Valide l’enveloppe version 1, les textes, les dates et l’unicité des ids.
+ * Renvoie une nouvelle liste ne contenant que les champs prévus du modèle.
+ * Le premier défaut provoque une erreur avec sa position ; aucune écriture n’a
+ * encore lieu, donc un fichier partiellement correct ne sera pas importé à moitié.
+ */
 function validerSauvegarde(sauvegarde) {
   if (!estObjet(sauvegarde) || sauvegarde.version !== 1) {
     throw new Error('Format de sauvegarde non reconnu : version 1 attendue.')
@@ -80,6 +92,12 @@ export async function exporterNotes() {
   )
 }
 
+/**
+ * Lit un File/Blob, parse et valide tout son JSON, puis fusionne sans écraser
+ * les ids déjà présents. Renvoie la promesse de { importees, ignorees }.
+ * Les erreurs de lecture, de format ou de transaction sont propagées à l’interface
+ * via le store ; la sélection du fichier reste une responsabilité du composant.
+ */
 export async function importerNotes(fichier) {
   if (!(fichier instanceof Blob)) {
     throw new Error('Sélectionnez un fichier de sauvegarde JSON.')

@@ -30,6 +30,10 @@ Commenter en français les intentions et les mécanismes moins évidents.
 
 ## Organisation Git
 
+Toute modification de code ou de documentation se fait sur une branche dédiée,
+jamais directement sur `main` ou `dev`. Cette règle a été rappelée explicitement
+par l’utilisateur pendant la revue du 9 novembre 2026.
+
 Le dépôt est initialisé dans `voicebot`. `main` conserve la version stable pour
 la présentation ; `dev` reçoit les fonctionnalités terminées et testées.
 Une branche `feature/...` est créée depuis `dev` pour chaque grosse fonctionnalité.

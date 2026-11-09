@@ -905,3 +905,28 @@
 - Reprise à 13 h 10 Paris : environ 3 h 20 jusqu’à l’objectif 16 h 30, limite
   absolue 17 h 30. Étapes suivantes réservées à l’utilisateur : commit, PR vers
   `dev`, puis PR `dev` vers `main` ; contrôler ensuite le déploiement automatique.
+
+## 9 novembre 2026 — Commentaires, documentation et préparation de l’oral
+
+- Demande : permettre à une personne extérieure de comprendre les fonctions,
+  simplifier la documentation et préparer la présentation selon le mail du projet.
+- Organisation : branche `docs/commentaires-et-presentation`. Début de saisie des
+  commentaires sur l’arbre de travail de `main` avant vérification, puis création
+  de la branche avec tous les changements non commités dès le rappel utilisateur.
+  Aucun commit ni fusion sur `main` ou `dev` ; règle de branche rappelée dans DEMARCHE.
+- Réalisation : commentaires de fonctions en français (rôle, paramètres utiles,
+  résultat, effets et erreurs), explications de la file, des transactions, des
+  conflits d’édition et du cycle de conversation ; repères dans les styles.
+- Documentation : README recentré sur prise en main et architecture ; contenu
+  détaillé antérieur conservé dans REFERENCE-TECHNIQUE. CODE explique les fonctions
+  et le trajet d’une demande. PRESENTATION propose récit, minutage et questions
+  liés à autonomie, débrouillardise, curiosité, structure et implication.
+- Transparence : durée orale proposée, pas imposée par le mail ; contributions
+  personnelles à préciser sans inventer d’essais, de comparaisons ou d’acquis.
+  Slides non produites à ce stade, préparation du contenu pour l’étape suivante.
+- Vérifications : tests Node des quatre fichiers réussis, build réussi, seul
+  avertissement connu du bundle volumineux. Comparaison syntaxique des 22 fichiers
+  JS/JSX contre HEAD : aucune logique changée ; CSS inchangé hors commentaires.
+  Aucun appel ElevenLabs, consommation vocale ou changement distant.
+- Suite : relire ensemble le récit, préparer les slides et répéter les questions.
+  Aucun commit/push/PR réalisé par l’assistant.

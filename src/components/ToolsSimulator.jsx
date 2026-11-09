@@ -19,6 +19,11 @@ const exemples = {
   restaurer_note: { id: 'IDENTIFIANT_DE_LA_NOTE' },
 }
 
+/**
+ * Permet d’appeler les six outils communs avec du JSON, sans microphone ni réseau
+ * ElevenLabs. Les écritures sont réelles. Les paramètres et le dernier résultat
+ * restent dans l’état du composant et disparaissent au rechargement.
+ */
 export default function ToolsSimulator() {
   const store = useNotes()
   const outils = creerOutilsNotes(store)
@@ -32,12 +37,21 @@ export default function ToolsSimulator() {
   const [resultat, setResultat] = useState(null)
   const indisponible = store.chargement || store.rechargementRequis || enCours
 
+  /**
+   * Charge l’exemple JSON de l’outil choisi, sans exécuter d’action.
+   * Le précédent résultat garde son propre nom d’outil pour éviter toute confusion.
+   */
   function changerOutil(evenement) {
     const nom = evenement.target.value
     setOutil(nom)
     setParametres(JSON.stringify(exemples[nom], null, 2))
   }
 
+  /**
+   * Parse le JSON, vérifie le nom de l’outil et attend l’adaptateur partagé.
+   * Affiche un résultat structuré même en cas de JSON invalide ; conserve la saisie
+   * pour correction et libère le verrou dans tous les cas.
+   */
   async function executer(evenement) {
     evenement.preventDefault()
     if (indisponible || verrou.current) return

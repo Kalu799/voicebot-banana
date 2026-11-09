@@ -2,12 +2,21 @@ import { useId, useRef, useState } from 'react'
 import { exporterNotes } from '../services/notesBackup.js'
 import { useNotes } from '../stores/useNotes.js'
 
+/**
+ * Transforme les compteurs renvoyés par l’import en message avec accord singulier/pluriel.
+ */
 function decrireImport({ importees, ignorees }) {
   const ajout = importees === 1 ? 'note ajoutée' : 'notes ajoutées'
   const ignore = ignorees === 1 ? 'note ignorée' : 'notes ignorées'
   return `${importees} ${ajout} et ${ignorees} ${ignore}.`
 }
 
+/**
+ * Pilote export et import depuis l’interface, avec un verrou local d’opération.
+ * Le service crée le fichier ; ce composant demande son téléchargement. L’import
+ * passe par le store pour actualiser les notes. Les erreurs d’export sont locales,
+ * celles d’import sont affichées par App depuis le store.
+ */
 export default function NotesBackup() {
   const { importerSauvegarde, chargement, rechargementRequis } = useNotes()
   const identifiant = useId()
@@ -18,6 +27,10 @@ export default function NotesBackup() {
   const [erreurLocale, setErreurLocale] = useState('')
   const indisponible = chargement || rechargementRequis || Boolean(operation)
 
+  /**
+   * Prend immédiatement le verrou, nomme l’opération et efface les anciens messages.
+   * Renvoie false si indisponible pour empêcher un second export/import simultané.
+   */
   function commencer(nom) {
     if (indisponible || verrou.current) return false
 
@@ -28,11 +41,19 @@ export default function NotesBackup() {
     return true
   }
 
+  /**
+   * Libère le verrou et réactive les commandes après réussite ou erreur.
+   */
   function terminer() {
     verrou.current = false
     setOperation('')
   }
 
+  /**
+   * Lit la base via le service et demande le téléchargement avec un lien temporaire.
+   * Retire le lien et libère l’URL après usage ; ne peut pas certifier que
+   * l’utilisateur a effectivement conservé le fichier sur son disque.
+   */
   async function exporter() {
     if (!commencer('export')) return
 
@@ -60,6 +81,11 @@ export default function NotesBackup() {
     }
   }
 
+  /**
+   * Récupère le premier fichier choisi, réinitialise le sélecteur et appelle le store.
+   * Distingue l’import refusé de l’import déjà écrit dont seule la relecture échoue ;
+   * dans ce dernier cas, conserve les compteurs connus pour informer l’utilisateur.
+   */
   async function importer(evenement) {
     const selection = evenement.currentTarget
     const fichier = selection.files?.[0]

@@ -3,6 +3,12 @@ import { useConversation } from '@elevenlabs/react'
 import { obtenirJetonConversation } from '../services/conversationAccess.js'
 import { useNotes } from '../stores/useNotes.js'
 
+/**
+ * Pilote l’accès vocal : code en mémoire, demande de jeton, session WebRTC et
+ * transcription temporaire. Le SDK gère la connexion/audio ; les outils sont
+ * enregistrés séparément par ConversationNotesProvider. Les refs protègent les
+ * opérations asynchrones, l’état React fournit les informations affichées.
+ */
 export default function ConversationPanel() {
   const { chargement, rechargementRequis } = useNotes()
   const [code, setCode] = useState('')
@@ -15,6 +21,8 @@ export default function ConversationPanel() {
   const tentative = useRef(null)
 
   const { startSession, endSession, status, isSpeaking } = useConversation({
+    // Événement SDK : démarre les horloges seulement après connexion confirmée.
+    // Une connexion sans tentative active est immédiatement fermée.
     onConnect() {
       const courante = tentative.current
       if (!courante) {
@@ -27,17 +35,20 @@ export default function ConversationPanel() {
       setEtape('conversation')
     },
 
+    // Une déconnexion termine aussi la tentative et annule sa requête de jeton.
     onDisconnect() {
       tentative.current?.controleur.abort()
       tentative.current = null
       setEtape('repos')
     },
 
+    // Le détail fournisseur n’est pas affiché ; un message générique est présenté.
     onError() {
       if (!tentative.current) return
       arreter('La conversation a rencontré une erreur.')
     },
 
+    // Seuls les messages reçus par une tentative active alimentent la transcription.
     onMessage({ message, role }) {
       if (!tentative.current) return
       tentative.current.activite = performance.now()
@@ -57,6 +68,11 @@ export default function ConversationPanel() {
     },
   })
 
+  /**
+   * Invalide immédiatement la tentative, annule la demande de jeton et ferme le SDK.
+   * Réinitialise code/étape et affiche éventuellement une raison. Réutilisé par
+   * le bouton, les erreurs et les limites de durée ; ne supprime pas les notes.
+   */
   const arreter = useCallback((raison = '') => {
     const courante = tentative.current
     tentative.current = null
@@ -69,6 +85,10 @@ export default function ConversationPanel() {
     setInformation(raison)
   }, [endSession])
 
+  // Surveillance locale toutes les 500 ms : connexion limitée à 30 s, conversation
+  // à 120 s et absence de message/audio reçu à 30 s. Ce ne sont pas des plafonds
+  // de facturation serveur. Le nettoyage ferme aussi la session au démontage ;
+  // pagehide/visibilitychange la ferment quand l’utilisateur quitte ou masque la page.
   useEffect(() => {
     const minuterie = window.setInterval(() => {
       const courante = tentative.current
@@ -108,6 +128,12 @@ export default function ConversationPanel() {
     }
   }, [arreter])
 
+  /**
+   * Démarre uniquement sur soumission explicite et si le store est disponible.
+   * Crée une tentative identifiable, demande le jeton puis efface le champ du code.
+   * Après attente, vérifie que cette tentative est encore courante avant d’ouvrir
+   * WebRTC ; un arrêt entre-temps rend le jeton tardif inutilisable par ce flux.
+   */
   async function demarrer(evenement) {
     evenement.preventDefault()
     if (tentative.current || chargement || rechargementRequis) return

@@ -1,6 +1,9 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
 
-// Toutes les réponses interdisent la mise en cache, notamment celle du jeton.
+/**
+ * Construit une réponse JSON HTTP avec interdiction de cache, quel que soit
+ * le statut. Accepte des en-têtes complémentaires, par exemple Allow sur un 405.
+ */
 function repondre(statut, donnees, entetes = {}) {
   return Response.json(donnees, {
     status: statut,
@@ -11,11 +14,19 @@ function repondre(statut, donnees, entetes = {}) {
   })
 }
 
+/**
+ * Calcule SHA-256 en Buffer de longueur fixe pour comparer le code à son empreinte
+ * configurée. Le code reçu n’est ni persisté ni renvoyé au navigateur.
+ */
 function empreinte(valeur) {
   return createHash('sha256').update(valeur).digest()
 }
 
-// Le serveur conserve une empreinte du code, pas le code lui-même.
+/**
+ * Extrait un code Bearer au format strict, calcule son empreinte et la compare
+ * avec timingSafeEqual. L’empreinte attendue doit avoir été validée par la route.
+ * Le contrôle d’origine complémentaire ne remplace pas ce contrôle d’accès.
+ */
 function accesAutorise(autorisation, empreinteAttendue) {
   const correspondance =
     /^Bearer ([A-Za-z0-9_-]{32,128})$/.exec(autorisation ?? '')
@@ -28,11 +39,23 @@ function accesAutorise(autorisation, empreinteAttendue) {
   )
 }
 
-// Les dépendances sont remplaçables dans les tests, sans appel réel.
+/**
+ * Fabrique le gestionnaire HTTP à partir de l’environnement et du transport fetch.
+ * Les tests injectent leurs propres valeurs sans secret ni appel ElevenLabs.
+ * Seul ce module serveur lit la clé API. La limitation IP Vercel est configurée
+ * hors de cette fonction ; aucune limitation distribuée n’est implémentée ici.
+ */
 export function creerRouteJeton({
   env = process.env,
   demander = fetch,
 } = {}) {
+
+  /**
+   * Contrôle dans l’ordre : méthode, activation, configuration, origine puis code.
+   * Après autorisation seulement, demande un jeton pour l’agent fixé côté serveur,
+   * avec délai de 10 s. Renvoie le jeton en 200 ou une erreur publique sans secret.
+   * Ne reçoit ni notes ni audio : ceux-ci passent par la conversation dans le SDK.
+   */
   return async function traiterDemande(requete) {
     if (requete.method !== 'POST') {
       return repondre(405, {
@@ -40,7 +63,7 @@ export function creerRouteJeton({
       }, { Allow: 'POST' })
     }
 
-    // Ce verrou restera fermé jusqu’à la vérification de la protection Vercel.
+    // Verrou explicite : seule la valeur exacte true ouvre cette route dans cet environnement.
     if (env.VOICEBOT_VOIX_ACTIVE !== 'true') {
       return repondre(503, {
         erreur: 'L’accès vocal est désactivé.',

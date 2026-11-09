@@ -9,6 +9,12 @@ const champsVides = {
   projet: '',
 }
 
+/**
+ * Formulaire partagé : note absente pour créer, note fournie pour éditer.
+ * Conserve un brouillon local et la photographie d’ouverture ; en édition seuls
+ * les champs changés sont soumis avec leurs valeurs initiales pour détecter
+ * les conflits. onEnregistre est appelé après sauvegarde ; onAnnuler ferme l’édition.
+ */
 export default function NoteForm({ note = null, onAnnuler, onEnregistre }) {
   const { ajouterNote, modifierNote, chargement, rechargementRequis } = useNotes()
   const identifiant = useId()
@@ -25,12 +31,20 @@ export default function NoteForm({ note = null, onAnnuler, onEnregistre }) {
   const soumissionEnCours = useRef(false)
   const indisponible = chargement || rechargementRequis || sauvegarde
 
+  /**
+   * Met à jour un seul champ du brouillon et efface l’ancienne confirmation.
+   */
   function changerChamp(evenement) {
     const { name, value } = evenement.target
     setChamps(precedents => ({ ...precedents, [name]: value }))
     setConfirmation('')
   }
 
+  /**
+   * Intercepte le formulaire, verrouille les doubles envois et attend le store.
+   * Vide les champs seulement après création réussie ; en cas d’échec garde la
+   * saisie. Le store affiche l’erreur, le finally libère toujours le verrou.
+   */
   async function soumettre(evenement) {
     evenement.preventDefault()
     if (indisponible || soumissionEnCours.current) return

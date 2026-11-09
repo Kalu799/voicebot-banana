@@ -113,3 +113,24 @@ brouillons, corbeille et sauvegardes vérifiés sur la compilation locale. Aucun
 problème bloquant identifié pour le périmètre démonstration. Cela ne valide pas
 les essais complémentaires listés plus haut. Poids du bundle, alignement Node et
 avis des dépendances de développement restent différés.
+
+## Relecture pédagogique et préparation de l’oral — 9 novembre 2026
+
+Travail local sur `docs/commentaires-et-presentation`, sans commit, push ni fusion.
+Les premiers commentaires ont été saisis avant contrôle de branche ; tous les
+changements non commités ont ensuite été portés sur cette branche dédiée.
+Aucun commit ajouté à `main` ou `dev` pendant cette intervention.
+
+- Commentaires français étendus aux fonctions de l’interface, du store, des
+  services, des utilitaires et de la route ; sections CSS expliquées.
+- README raccourci, ancien contenu détaillé conservé dans REFERENCE-TECHNIQUE.md.
+- [Guide du code](CODE.md) ajouté : responsabilités, contrats, parcours et limites.
+- [Préparation de présentation](PRESENTATION.md) ajoutée : trame de 8–10 minutes
+  proposée, notes orales, questions/réponses et critères du mail. Slides à préparer
+  ensuite avec le porteur du projet ; la durée officielle reste inconnue.
+- Tests Node et build réussis ; avertissement existant sur le poids du bundle.
+  Comparaison des arbres syntaxiques des 22 fichiers JS/JSX : logique inchangée.
+  Aucune nouvelle session vocale ni modification distante pour cette relecture.
+
+Prochaine étape : appropriation du récit et préparation des slides. L’utilisateur
+reste responsable des commits et des PR selon le circuit branche → dev → main.
