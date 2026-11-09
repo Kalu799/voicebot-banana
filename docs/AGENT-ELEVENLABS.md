@@ -1,13 +1,53 @@
 # Préparation de l’agent ElevenLabs français
 
 Préparation puis configuration distante initiale réalisées le 8 novembre 2026.
-Aucun SDK, microphone ou appel ElevenLabs n’est branché à l’application. Les
-consignes sont enregistrées dans l’agent distant, mais aucune conversation réelle
-n’a validé son comportement. Les six définitions distantes sont configurées et
-associées à l’agent ; leur branchement au navigateur reste à réaliser.
+Le SDK React est préparé depuis le 9 novembre 2026, sans démarrage de conversation
+ni demande de microphone. Les consignes sont enregistrées dans l’agent distant,
+mais aucune conversation réelle n’a validé son comportement. Les six définitions
+distantes sont configurées et associées à l’agent ; seul `creer_note` est déclaré
+dans le SDK côté navigateur, sans exécution réelle vérifiée.
 La [route serveur de jetons](../api/README.md) est implémentée et testée avec un
 fournisseur simulé, désactivée par défaut. La limitation Vercel et l’intégration
 réelle restent à vérifier avant son activation.
+
+## Préparation du SDK — 9 novembre 2026
+
+`@elevenlabs/react@1.21.1` est installé en version exacte ; le lockfile résout
+`@elevenlabs/client@1.35.0`. Dans `src/main.jsx`, `NotesProvider` englobe
+`ConversationNotesProvider`, qui installe le `ConversationProvider` du SDK.
+
+Le composant sans affichage `OutilCreationNote` déclare `creer_note` avec
+`useConversationClientTool`. Le gestionnaire réutilise `creerOutilsNotes(store)` :
+validation, action du store et transaction IndexedDB sont conservées. Il attend
+le résultat, puis le renvoie comme texte JSON contenant `succes` et le résumé de
+la note ou l’erreur. Le hook maintient le gestionnaire courant et le désenregistre
+au démontage. Les cinq autres outils ne sont pas encore déclarés dans le SDK.
+
+Aucun `startSession`, appel de la route de jetons, champ de code d’accès ou bouton
+vocal n’est ajouté à ce stade. L’enregistrement du gestionnaire ne le déclenche
+pas. Tests existants, compilation et affichage de l’interface locale vérifiés ;
+cela ne valide pas encore un appel d’outil depuis ElevenLabs. Vite signale le
+bundle principal de 846,62 kB (233,40 kB gzip) ; optimisation du chargement reportée.
+
+### Service client de jeton — 9 novembre 2026
+
+`src/services/conversationAccess.js` prépare la demande au serveur, sans être
+encore appelé par l’interface. `obtenirJetonConversation(codeAcces, signal)`
+valide le format du code, puis envoie un POST sur `/api/conversation-token`
+avec le code personnel dans l’en-tête Bearer. Aucune clé ElevenLabs, persistance
+du jeton ou relance automatique n’est ajoutée. Cache et redirections sont refusés.
+
+L’attente est limitée à quinze secondes par défaut ; un signal fourni par
+l’appelant permet d’annuler la demande. Les statuts 401, 403, 429 et 503 ont des
+messages français distincts. Les autres erreurs, les pannes et les réponses
+invalides restent génériques, sans affichage du corps brut. Seul un jeton textuel
+non vide est renvoyé à l’appelant.
+
+Sept scénarios dans `tests/conversationAccess.test.js` remplacent le transport
+réseau : validation locale, requête autorisée, refus HTTP, JSON/jeton invalide,
+pannes/expiration simulée, annulation et délai configuré. Ils ne valident ni un
+échange HTTP réel ni une session SDK, et n’attendent pas réellement quinze secondes.
+Tests et compilation réussis ; champ de code et commandes vocales restent à ajouter.
 
 ## Configuration distante constatée le 8 novembre 2026
 

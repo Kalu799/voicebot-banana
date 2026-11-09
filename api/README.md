@@ -74,9 +74,35 @@ jetons, pas les minutes consommées par une conversation. Le quota, le coût LLM
 et l’absence de dépassement autorisé restent à vérifier côté ElevenLabs avant essai.
 
 Ordre avant toute activation réelle : configurer et vérifier la règle Vercel
-avec un fournisseur simulé, contrôler les conditions de facturation ElevenLabs,
+avec la voix désactivée, contrôler les conditions de facturation ElevenLabs,
 préparer les secrets et l’origine exacte, puis ouvrir explicitement le verrou
 après explication et accord. Garder le verrou fermé si la protection est retirée.
+
+### Préparation théorique et essais reportés — 8 novembre 2026
+
+Le projet `voicebot-banana` a été créé dans l’espace Vercel `Ouais`, dont
+l’offre Hobby a été constatée. Aucun déploiement ni règle de limitation appliqué.
+L’import direct de `feature/integration-elevenlabs` a été refusé par l’interface ;
+le projet a été créé vide. Aucun dépôt Git connecté pendant cette préparation.
+
+À la demande de l’utilisateur, la configuration et les essais distants sont
+reportés au moment de la pull request vers `dev`. La procédure reste théorique :
+
+1. Déployer la révision contenant la route, avec `VOICEBOT_VOIX_ACTIVE=false`
+   et sans clé ElevenLabs ; vérifier la branche et le commit effectivement servis.
+2. Vérifier les conditions gratuites affichées puis appliquer la règle : chemin
+   exact `/api/conversation-token`, fenêtre fixe de 60 secondes, deux demandes
+   par IP, action `429`, sans condition sur le code d’accès.
+3. Vérifier d’abord un POST en `503` avec le message de verrou fermé, puis des
+   POST rapprochés déclenchant `429` et un retour à `503` après expiration de la
+   fenêtre. Contrôler les événements du pare-feu et les domaines réellement utilisés,
+   y compris le déploiement de prévisualisation s’il sert aux essais.
+
+Le pare-feu intervient avant la fonction : ce contrôle ne nécessite ni fournisseur
+simulé dans le déploiement ni accès réel à ElevenLabs. Il valide uniquement la
+limitation distante ; les tests Node conservent le fournisseur simulé pour la route.
+Une PR seule ne prouve ni le déploiement de la bonne révision ni la protection.
+Maintenir le verrou fermé jusqu’à ces vérifications.
 
 ## Réponses et erreurs
 
@@ -169,6 +195,13 @@ Pour arrêter un serveur lancé dans son terminal : `Ctrl+C`. Arrêter l’insta
 précédente avant de relancer la commande sur le même port.
 
 ### Audit de l’outillage ajouté
+
+Décision du 8 novembre 2026 : suspendre les corrections exhaustives des dépendances
+de développement pour privilégier la V1 démontrable. Le dernier relevé consigné
+est de 29 signalements (10 modérés, 19 élevés, zéro critique), zéro en production ;
+ce n’est pas un audit actuel ni une garantie d’absence de risque. Les avis restants
+et le réexamen des overrides constituent une dette ; ne traiter immédiatement que
+ce qui affecte directement notre usage ou bloque le parcours.
 
 Lors de l’installation le 8 novembre 2026, `npm audit` signalait **38 vulnérabilités** dans l’arbre de
 dépendances de développement introduit par la CLI : 16 modérées, 21 élevées et

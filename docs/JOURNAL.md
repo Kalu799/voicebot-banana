@@ -588,3 +588,73 @@
   les usages de ces bibliothèques dans la CLI ; overrides à réexaminer à sa mise à jour.
 - Suite : examiner les avis restants, notamment les deux familles de versions de
   `path-to-regexp`, avant de proposer une correction distincte après explication et go.
+
+## 8 novembre 2026 — Reprise V1 et préparation Vercel
+
+- Inspection en lecture seule : cadrage, suivi, journal, guides API et agent,
+  code et Git vérifiés. Branche `feature/integration-elevenlabs`, commit `efc86f7`,
+  arbre propre. SDK absent ; sauvegarde attendue avant résultat des outils.
+- Vérifications : `npm test` réussi (trois fichiers), `git diff --check` réussi,
+  puis `npm run build` réussi après accord pour l’étape Vercel. Aucun nouvel audit.
+- Périmètre retenu : environ 8 à 9 heures disponibles pour une V1 démontrable,
+  sans garantie ; première note vocale persistante prioritaire et point de contrôle
+  après environ trois heures. Interface conservée, vérifications centrées sur le
+  parcours principal. Corrections exhaustives de la CLI suspendues ; dette
+  historique de 29 signalements de développement, zéro en production au dernier
+  relevé, à réexaminer si notre usage est affecté ou bloqué.
+- Après go, connexion Vercel réalisée par l’utilisateur ; espace `Ouais` sur
+  Hobby constaté. Import direct de la branche refusé (« Could not access the
+  repository »). Projet vide créé puis renommé `voicebot-banana`, sans connexion
+  Git, déploiement, règle de limitation ni secret ajouté. Aucun paiement activé.
+- Ajustement demandé : reporter configuration et essais distants au moment de la
+  PR vers `dev`. Procédure théorique consignée dans le guide API : voix fermée,
+  deux demandes par minute et IP, contrôle `503`, puis `429`, puis retour à `503`.
+  Aucun mode simulé à ajouter au serveur déployé pour vérifier le pare-feu.
+- Suite : présenter le branchement SDK, d’abord `creer_note`, avec code commenté
+  avant nouveau go. Préparer localement sans connexion réelle ; activation vocale
+  conditionnée à la protection distante vérifiée et au contrôle du compte gratuit.
+
+## 9 novembre 2026 — SDK React et déclaration de creer_note
+
+- Préparation : branche `feature/integration-elevenlabs` vérifiée ; les trois
+  documents modifiés lors de l’étape précédente sont conservés. Code présenté
+  puis go explicite reçu pour cette seule étape.
+- Réalisation : installation exacte de `@elevenlabs/react@1.21.1`, lockfile
+  actualisé, `ConversationNotesProvider.jsx` ajouté et intégré dans `main.jsx`
+  sous `NotesProvider`. `creer_note` utilise la couche d’outils existante et renvoie
+  son résultat JSON après sauvegarde. Aucun autre outil ni démarrage ajouté.
+- Environnement : installation initialement bloquée par la résolution réseau du
+  bac à sable, puis réussie après autorisation. Serveur Vite local autorisé sur
+  `127.0.0.1:4175` après refus d’écoute dans le bac à sable.
+- Vérifications : exports réels du SDK contrôlés ; `npm ls --depth=0`, `npm test`
+  (trois fichiers) et `npm run build` réussis. Interface observée dans le navigateur,
+  sans mutation des notes, session ni demande de microphone. Le parcours vocal
+  et l’exécution du gestionnaire par le SDK restent à valider.
+- Limites : bundle principal de 846,62 kB (233,40 kB gzip), avertissement Vite
+  au-delà de 500 kB ; optimisation reportée. Installation : 29 signalements npm
+  (10 modérés, 19 élevés), sans correction automatique ; pas de nouvel audit
+  séparé des dépendances de production pendant cette étape.
+- Documentation : suivi et guide agent actualisés. Prochaine étape à expliquer
+  avant nouveau go : demande du jeton depuis le navigateur pour préparer les
+  commandes de démarrage et d’arrêt. La route reste verrouillée ; vérification
+  distante et contrôle du compte gratuit requis avant tout essai vocal réel.
+
+## 9 novembre 2026 — Service client de demande du jeton
+
+- Préparation : go explicite reçu pour le code présenté ; branche
+  `feature/integration-elevenlabs` et modifications existantes vérifiées et conservées.
+- Réalisation : `src/services/conversationAccess.js` ajouté. Format du code validé
+  avant envoi, POST relatif avec Bearer, cache et redirections refusés, délai de
+  quinze secondes par défaut ou signal d’annulation fourni. Messages adaptés aux
+  refus importants ; corps brut et détails de panne non exposés. Aucune relance,
+  sauvegarde de code/jeton ou clé ElevenLabs côté client.
+- Vérifications : sept scénarios ajoutés dans `tests/conversationAccess.test.js`,
+  sans réseau, avec valeurs fictives. Validation sans requête, jeton valide, refus
+  HTTP, JSON/jeton invalide, panne/expiration simulée, annulation et délai configuré
+  vérifiés. `npm test` réussi (quatre fichiers), `npm run build` réussi.
+- Limites : délai vérifié sans attente réelle ; aucun HTTP réel, démarrage SDK,
+  microphone ou appel ElevenLabs. Service non appelé par l’interface à ce stade.
+  Avertissement de poids du bundle inchangé ; aucune dépendance supplémentaire.
+- Documentation : guide agent et suivi actualisés. Suite à présenter avant nouveau
+  go : panneau vocal avec code en mémoire, demande annulable, démarrage/arrêt,
+  durée et fermeture automatique. Route verrouillée jusqu’à validation distante.
