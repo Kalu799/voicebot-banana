@@ -6,6 +6,8 @@ import ConversationNotesProvider
   from './components/ConversationNotesProvider.jsx'
 import './styles.css'
 
+// Point d’entrée : le store entoure le pont ElevenLabs pour que les outils vocaux
+// utilisent les mêmes notes et actions que les formulaires et le simulateur.
 // StrictMode aide à repérer certains problèmes pendant le développement.
 createRoot(document.getElementById('root')).render(
   <StrictMode>

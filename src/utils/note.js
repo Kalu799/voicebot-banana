@@ -1,6 +1,9 @@
 /**
  * Construit une nouvelle note en mémoire, sans la sauvegarder.
  * Les champs fournis doivent être des chaînes de caractères.
+ * Renvoie un nouvel objet avec UUID, dates ISO et deletedAt à null.
+ * Nettoie titre/catégorie/projet, préserve les espaces du contenu et refuse
+ * un titre vide. L’appelant reste responsable de valider les types en entrée.
  */
 export function creerNote({
   titre,
@@ -29,7 +32,12 @@ export function creerNote({
   }
 }
 
-/** Compare le brouillon à son état d'ouverture, sans inclure les champs intacts. */
+/**
+ * Renvoie les seuls champs éditables réellement changés depuis l’ouverture.
+ * initial est la photographie d’ouverture et brouillon la saisie actuelle.
+ * Ne pas renvoyer les champs intacts évite d’écraser une modification vocale
+ * intervenue entre-temps sur un autre champ. Aucun de ces objets n’est modifié.
+ */
 export function preparerChangementsEdition(initial, brouillon) {
   const changements = {}
 
@@ -47,7 +55,14 @@ export function preparerChangementsEdition(initial, brouillon) {
   return changements
 }
 
-/** Prépare les champs éditables et vérifie les éventuels conflits du formulaire. */
+/**
+ * Calcule la prochaine version d’une note active, sans écrire dans la base.
+ * Refuse champs inconnus, types invalides, titre vide et note en corbeille.
+ * Si valeursInitiales est fourni, refuse un champ changé depuis l’ouverture,
+ * sauf si la valeur demandée est déjà celle de la note courante.
+ * Préserve id/createdAt ; renvoie le même objet si rien ne change, sinon une
+ * copie avec updatedAt actualisé. Les erreurs annulent toute la préparation.
+ */
 export function preparerModification(note, changements, valeursInitiales) {
   if (note.deletedAt !== null) {
     throw new Error('Restaurez la note avant de la modifier.')
@@ -109,6 +124,11 @@ export function preparerModification(note, changements, valeursInitiales) {
   return { ...resultat, updatedAt: new Date().toISOString() }
 }
 
+/**
+ * Renvoie une copie mise en corbeille avec dates de suppression et de mise à jour.
+ * Renvoie l’objet d’origine si la note est déjà supprimée : répéter est sans effet.
+ * Cette fonction ne sauvegarde pas et ne supprime jamais physiquement la note.
+ */
 export function preparerSuppression(note) {
   if (note.deletedAt !== null) return note
 
@@ -116,6 +136,10 @@ export function preparerSuppression(note) {
   return { ...note, deletedAt: maintenant, updatedAt: maintenant }
 }
 
+/**
+ * Renvoie une copie active (deletedAt à null) avec updatedAt actualisé.
+ * Une note déjà active est renvoyée telle quelle, sans changement de date.
+ */
 export function preparerRestauration(note) {
   if (note.deletedAt === null) return note
 

@@ -1,3 +1,5 @@
+// État avant la première lecture IndexedDB. Une liste vide n’indique donc pas
+// encore une bibliothèque vide : il faut attendre la fin de chargement.
 export const etatInitialNotes = {
   notes: [],
   chargement: true,
@@ -5,7 +7,13 @@ export const etatInitialNotes = {
   rechargementRequis: false,
 }
 
-/** Calcule le nouvel état sans modifier le précédent ni accéder au stockage. */
+/**
+ * Applique une action du provider et renvoie un nouvel état pour React.
+ * Ne sauvegarde rien : NOTE_AJOUTEE et NOTE_MISE_A_JOUR arrivent après l’écriture.
+ * CHARGEMENT_ECHOUE garde les notes affichées mais impose un rechargement ;
+ * ERREUR_ACTION signale un échec ponctuel sans verrouiller toutes les actions.
+ * Une action inconnue est une erreur de programmation et provoque une exception.
+ */
 export function notesReducer(etat, action) {
   switch (action.type) {
     case 'NOTES_CHARGEES':

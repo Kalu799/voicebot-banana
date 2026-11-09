@@ -6,6 +6,11 @@ import ToolsSimulator from './components/ToolsSimulator.jsx'
 import ConversationPanel from './components/ConversationPanel.jsx'
 import { useNotes } from './stores/useNotes.js'
 
+/**
+ * Écran principal : assemble la conversation, la navigation et les notes du store.
+ * La vue choisie et les confirmations restent locales à l'interface ; les notes
+ * sauvegardées appartiennent au NotesProvider. Aucun accès IndexedDB ici.
+ */
 export default function App() {
   const { notes, chargement, erreur, rechargementRequis } = useNotes()
   const [vue, setVue] = useState('actives')
@@ -19,11 +24,19 @@ export default function App() {
     .filter(note => note.deletedAt !== null)
     .sort((a, b) => Date.parse(b.deletedAt) - Date.parse(a.deletedAt))
 
+  /**
+   * Affiche le panneau demandé et efface la confirmation de la vue précédente.
+   * Les panneaux masqués restent montés : leurs brouillons ne sont pas réinitialisés.
+   */
   function afficherVue(prochaineVue) {
     setVue(prochaineVue)
     setConfirmation('')
   }
 
+  /**
+   * Callback appelé après création sauvegardée : revient aux notes actives,
+   * annonce la réussite et replace le focus hors du formulaire désormais masqué.
+   */
   function terminerCreation() {
     setVue('actives')
     setConfirmation('Note enregistrée.')

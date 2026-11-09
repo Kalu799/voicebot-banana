@@ -5,6 +5,13 @@ const messages = {
   503: 'L’accès vocal est désactivé ou indisponible.',
 }
 
+/**
+ * Demande un jeton temporaire à la route de même origine avec le code personnel.
+ * Valide le format avant le réseau, respecte le signal d’annulation (15 s par
+ * défaut) et renvoie seulement la chaîne token. Ne persiste ni code ni jeton.
+ * Traduit les refus HTTP et les erreurs de transport/JSON en messages affichables,
+ * sans relance automatique susceptible de consommer le quota.
+ */
 export async function obtenirJetonConversation(
   codeAcces,
   signal = AbortSignal.timeout(15_000),
@@ -47,6 +54,6 @@ export async function obtenirJetonConversation(
     throw new Error('Réponse de conversation invalide.')
   }
 
-  // Le futur bouton utilisera ce jeton sans le stocker durablement.
+  // Le panneau transmet ce jeton au SDK sans le stocker durablement.
   return resultat.token
 }

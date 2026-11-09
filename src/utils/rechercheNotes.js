@@ -1,3 +1,7 @@
+/**
+ * Prépare un texte pour comparer sans casse, accents ni espaces aux extrémités.
+ * La valeur originale de la note n’est jamais modifiée.
+ */
 function normaliser(texte) {
   return texte
     .normalize('NFD')
@@ -6,7 +10,14 @@ function normaliser(texte) {
     .trim()
 }
 
-/** Recherche pure ; les paramètres sont validés par la couche des outils. */
+/**
+ * Recherche pure sur une liste déjà chargée ; les outils valident les paramètres.
+ * Tous les mots doivent apparaître quelque part dans les champs réunis.
+ * Catégorie et projet sont des filtres exacts après normalisation ; corbeille
+ * choisit exclusivement notes actives ou supprimées. Trie par updatedAt décroissant.
+ * Renvoie total avant limitation et au plus limite résumés avec extrait de 160
+ * caractères. Aucun accès réseau/stockage et aucune mutation de la liste source.
+ */
 export function chercherNotes(notes, {
   texte = '',
   categorie = '',
@@ -45,6 +56,10 @@ export function chercherNotes(notes, {
   }
 }
 
+/**
+ * Retrouve une note par id exact, active ou en corbeille, et renvoie une copie
+ * complète. Lève une erreur si l’id n’existe pas ; aucun accès au stockage.
+ */
 export function lireNote(notes, id) {
   const note = notes.find(note => note.id === id)
   if (!note) throw new Error('Note introuvable.')
