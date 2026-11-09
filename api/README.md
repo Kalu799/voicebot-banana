@@ -1,8 +1,8 @@
 # Route serveur de jetons de conversation
 
 Implémentation ajoutée le 8 novembre 2026, **désactivée par défaut**. Les tests
-utilisent un fournisseur simulé ; la route n’a pas été déployée ni exercée avec
-ElevenLabs. Aucun secret réel n’a été créé ou renseigné pendant cette étape.
+utilisent un fournisseur simulé. La route est déployée depuis le 9 novembre 2026
+avec le verrou fermé ; aucun accès réel à ElevenLabs ni secret réel ajouté.
 
 ## Fichiers et flux
 
@@ -105,6 +105,45 @@ simulé dans le déploiement ni accès réel à ElevenLabs. Il valide uniquement
 limitation distante ; les tests Node conservent le fournisseur simulé pour la route.
 Une PR seule ne prouve ni le déploiement de la bonne révision ni la protection.
 Maintenir le verrou fermé jusqu’à ces vérifications.
+
+### Déploiement verrouillé vérifié — 9 novembre 2026
+
+Après fusion de la PR n° 3, le dépôt `Kalu799/voicebot-banana` est connecté au
+projet Vercel existant, sur Hobby. Déploiement manuel depuis `dev`, commit
+`71ba461d948a2cf51f330071e84efd6ce1f5e61c`, identifié `GhNXoPtnAkPcpYrykBSc5yAS74Hg`.
+Le formulaire proposait une prévisualisation ; Vercel a finalement classé ce premier
+déploiement dans l’environnement **Production**. La branche Git `main` est inchangée.
+
+Réglages : preset Vite, racine du dépôt (champ vide), build `npm run build`, sortie
+`dist`, machine Basic et concurrence à la demande désactivée. Variable non secrète
+`VOICEBOT_VOIX_ACTIVE=false` enregistrée pour Production, Preview et Development.
+Aucune clé ElevenLabs, empreinte de code ou origine réelle ajoutée.
+
+Le réglage Node 24.x est supplanté par `engines.node: ">=22.12.0"` : Vercel
+annonce Node 26.x pour ce déploiement. Le build réussit, avec avertissements sur
+cette plage ouverte, le poids du bundle et l’outillage npm. La CLI locale du projet
+est ignorée ; le build distant utilise la CLI Vercel 65.11.0. Aucun correctif de
+dépendances ni modification de `package.json` appliqué pendant cette étape.
+Un alignement explicite de la version Node reste à proposer séparément.
+
+Contrôles HTTP sans authentification sur [l’adresse principale](https://project-bxwwf.vercel.app) :
+
+| Demande | Résultat constaté |
+| --- | --- |
+| GET `/` | `200`, interface et panneau vocal affichés |
+| GET `/api/conversation-token` | `405`, `Allow: POST`, JSON « Méthode non autorisée. », `Cache-Control: no-store` |
+| POST `/api/conversation-token` | `503`, JSON « L’accès vocal est désactivé. », `Cache-Control: no-store` |
+
+Dans l’interface, un code fictif au format valide affiche « L’accès vocal est
+désactivé ou indisponible. » et le champ est effacé, sans démarrer de session.
+Aucune note créée pendant ces contrôles. L’alias
+`voicebot-banana-git-dev-ouais.vercel.app` redirige les contrôles non authentifiés
+en `302` vers Vercel Authentication ; cette protection est conservée.
+
+À la demande de l’utilisateur, aucun pare-feu de limitation n’est configuré ni
+testé pendant ce déploiement. La vérification `429` reste à faire avant activation
+de la voix, ainsi que les contrôles du compte gratuit et des secrets côté serveur.
+Le succès de ce déploiement verrouillé ne valide pas une conversation réelle.
 
 ## Réponses et erreurs
 

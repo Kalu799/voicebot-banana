@@ -9,9 +9,9 @@
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
 | 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
 | 7. Client tools | En cours | SDK et panneau de conversation préparés, `creer_note` déclaré ; cinq autres branchements et parcours vocaux réels à faire |
-| 8. Route serveur protégée | En cours | Contrôles d’accès testés avec fournisseur simulé et route désactivée vérifiée sous Vercel local ; limitation distante et intégration réelle à vérifier |
+| 8. Route serveur protégée | En cours | Contrôles locaux simulés et route déployée avec verrou fermé vérifiés ; limitation distante et intégration réelle à vérifier |
 | 9. Parcours complets et mobile | À faire | Persistance, ambiguïtés, erreurs et interactions vérifiées |
-| 10. Déploiement Vercel | À faire | Adresse stable et démonstration reproductible |
+| 10. Déploiement Vercel | En cours | Version verrouillée de `dev` (`71ba461`) publiée et vérifiée ; démonstration vocale à valider |
 
 La [préparation de l’agent](AGENT-ELEVENLABS.md) décrit les réglages proposés et
 les scénarios à valider ainsi que la configuration distante initiale réalisée.
@@ -27,6 +27,12 @@ le poids du bundle consigné dans le guide agent, optimisation reportée.
 La [route de jetons](../api/README.md) est ajoutée et
 testée avec un fournisseur simulé, désactivée par défaut. La règle de limitation
 Vercel n’est pas encore configurée et doit être vérifiée avant activation.
+Déploiement verrouillé vérifié le 9 novembre 2026 sur
+[project-bxwwf.vercel.app](https://project-bxwwf.vercel.app) : interface `200`,
+route GET `405`, POST `503`, refus vocal affiché avec code fictif. Dépôt connecté,
+preset Vite, voix désactivée pour tous les environnements. Aucun secret ElevenLabs
+ajouté. Pare-feu et essais réels restent reportés. Vercel utilise Node 26.x malgré
+le réglage 24.x, à cause de la plage ouverte du manifeste ; écart consigné au guide API.
 La commande `npm run dev:api` sert l’interface et la route avec le verrou fermé,
 sans compte lié. Les avis npm des dépendances de développement de la CLI sont
 documentés dans le [guide API](../api/README.md). Une correction ciblée impose

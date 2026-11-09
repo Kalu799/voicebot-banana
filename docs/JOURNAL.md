@@ -684,3 +684,32 @@
 - Documentation : README, guide API, guide agent et suivi actualisés. Commit à
   proposer à l’utilisateur ; prochaine étape : préparer sa PR vers `dev` et le
   contrôle Vercel verrouillé avant le premier essai de création vocale persistante.
+
+## 9 novembre 2026 — Déploiement Vercel avec la voix désactivée
+
+- Préparation : commit utilisateur `b957b20`, puis PR n° 3 fusionnée par
+  l’utilisateur. Branche courante `dev`, commit `71ba461`, arbre propre avant
+  intervention. Étape expliquée puis go reçu ; pare-feu explicitement reporté.
+- Réalisation distante : dépôt GitHub connecté au projet `voicebot-banana`
+  sur Hobby, preset Vite, sortie `dist`, racine du dépôt. Variable Config
+  `VOICEBOT_VOIX_ACTIVE=false` pour Production, Preview et Development ; aucun
+  secret réel ajouté. Déploiement manuel de `dev`, révision exacte confirmée.
+- Résultat : déploiement `GhNXoPtnAkPcpYrykBSc5yAS74Hg` Ready. Vercel classe le
+  premier déploiement en Production malgré le formulaire de prévisualisation ;
+  cela ne modifie pas la branche Git `main`. Adresse principale :
+  https://project-bxwwf.vercel.app.
+- Vérifications : build distant réussi ; interface HTTP `200` et affichage réel
+  vérifiés ; GET API `405` avec `Allow: POST`, POST API `503` avec message de
+  désactivation, deux réponses API sans cache. Code fictif saisi dans le panneau :
+  refus vocal affiché et champ effacé. Aucune note créée, aucun microphone,
+  appel ElevenLabs ou session réelle. Contrôles réseau autorisés après échec DNS
+  dans le bac à sable.
+- Protection existante conservée : l’alias de branche dev redirige en `302`
+  vers Vercel Authentication sans authentification. Les contrôles applicatifs
+  sont faits sur le domaine principal ; aucun contournement ni désactivation.
+- Écart constaté : réglage Node 24.x supplanté par la plage `>=22.12.0` du
+  manifeste, Node 26.x utilisé ; CLI distante 65.11.0, CLI locale ignorée.
+  Avertissements Node, npm et poids du bundle consignés, sans correction globale.
+- Documentation : README, guide API et suivi actualisés. Limitation `429`, compte
+  gratuit et secrets à vérifier avant activation vocale. Alignement de Node à
+  proposer séparément. Aucun commit, push ou merge réalisé par l’assistant.
