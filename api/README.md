@@ -2,7 +2,9 @@
 
 Implémentation ajoutée le 8 novembre 2026, **désactivée par défaut**. Les tests
 utilisent un fournisseur simulé. La route est déployée depuis le 9 novembre 2026
-avec le verrou fermé ; aucun accès réel à ElevenLabs ni secret réel ajouté.
+initialement avec le verrou fermé. Depuis le 9 novembre, Production dispose des
+secrets serveur et du verrou ouvert après accord ; jeton et parcours vocal réels
+vérifiés. Les paragraphes datés ci-dessous conservent les étapes historiques.
 
 ## Fichiers et flux
 
@@ -16,7 +18,7 @@ avec le verrou fermé ; aucun accès réel à ElevenLabs ni secret réel ajouté
 Flux cible : navigateur → pare-feu Vercel → `POST /api/conversation-token` →
 contrôle du code d’accès → ElevenLabs → jeton WebRTC → navigateur.
 Le SDK et le panneau de saisie du code sont préparés depuis le 9 novembre 2026,
-sans conversation réelle validée. Le panneau utilise `src/services/conversationAccess.js`
+avec conversations réelles validées le même jour. Le panneau utilise `src/services/conversationAccess.js`
 pour demander le jeton ; il n’ouvre la connexion WebRTC qu’après une réponse valide.
 
 Le navigateur envoie `Authorization: Bearer <code-personnel>` et doit utiliser
@@ -215,6 +217,19 @@ Le premier essai audio repris après correction crée ensuite une note réelle e
 environ 17 secondes. Conversation arrêtée et persistance après rechargement
 vérifiées dans l’interface le 9 novembre 2026 ; voir le guide agent. Le jeton est
 donc validé aussi dans le parcours SDK WebRTC, au-delà des seuls contrôles HTTP.
+
+### Six outils déployés — 9 novembre 2026
+
+Après fusion de la PR n° 5 vers `dev`, reconstruction du commit
+`798641d9d61f8f57efdaa41e70dbfb6697e30de5` avec l’environnement **Production**,
+sans modification des variables ni protections. Vérification email effectuée par
+l’utilisateur. Déploiement `484mptLNMJ8Ydt4whB1XXETBcoC1`, Ready à 11 h 04,
+associé à `https://project-bxwwf.vercel.app` ; branche Git `main` inchangée.
+
+Recherche, lecture, modification, corbeille et restauration exercées depuis cette
+version ; contenu préservé après rechargement. La création avait déjà été validée.
+Un code fictif au format valide est ensuite refusé depuis l’interface, sans session.
+Voir les preuves et limites dans le [guide agent](../docs/AGENT-ELEVENLABS.md).
 
 ## Réponses et erreurs
 

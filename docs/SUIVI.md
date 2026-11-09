@@ -7,51 +7,53 @@
 | 3. Stockage IndexedDB et export/import | Terminé | Services et commandes d'interface vérifiés : persistance, JSON téléchargé, restauration, validation et conflits |
 | 4. Store Context + useReducer | Terminé | Chargement, création, modification, corbeille et import avec actualisation vérifiés ; erreurs et besoin de rechargement gérés |
 | 5. Interface minimale et simulation | Terminé | Gestion manuelle, export/import et six outils depuis le simulateur vérifiés ; paramètres invalides et persistance contrôlés |
-| 6. Agent ElevenLabs français | En cours | Agent créé, consignes françaises et authentification enregistrées ; voix et LLM provisoires, comportement à valider |
-| 7. Client tools | En cours | Six outils déclarés dans le SDK ; création vocale persistante validée, cinq nouveaux branchements à déployer et valider vocalement |
+| 6. Agent ElevenLabs français | Parcours principal validé | Consignes françaises, voix et outils exercés ; ambiguïtés et cas limites encore à vérifier |
+| 7. Client tools | Terminé pour le parcours principal | Six outils déployés et exercés vocalement ; persistance après modification et restauration vérifiée |
 | 8. Route serveur protégée | Terminé sur le domaine principal | Refus `401`, limitation `429`, jeton `200` et connexion audio réels vérifiés ; clé côté serveur |
-| 9. Parcours complets et mobile | En cours | Première création vocale, arrêt et persistance vérifiés ; scénario complet, ambiguïtés et mobile à faire |
-| 10. Déploiement Vercel | En cours | Code `71ba461` redéployé avec accès vocal protégé en Production ; démonstration vocale à valider |
+| 9. Parcours complets et mobile | En cours | Parcours vocal principal et disposition à 390 px vérifiés ; ambiguïtés, pannes réelles et téléphone physique à faire |
+| 10. Déploiement Vercel | Version de test validée | Commit `798641d` Ready en Production, accès protégé et six outils vocaux exercés ; livraison stable sur `main` à préparer |
 
-La [préparation de l’agent](AGENT-ELEVENLABS.md) décrit les réglages proposés et
-les scénarios à valider ainsi que la configuration distante initiale réalisée.
-Les six outils sont configurés et associés à l’agent côté ElevenLabs.
-Le SDK `@elevenlabs/react@1.21.1` est installé depuis le 9 novembre 2026 et
-les six outils sont déclarés via le provider ; `creer_note` est validé en
-conversation réelle. Les cinq nouveaux branchements sont vérifiés localement
-(tests, compilation, montage de l’interface), sans déploiement à ce stade.
-Le service client de jeton est raccordé au panneau : code en mémoire, démarrage/arrêt,
-durée, messages temporaires et fermetures automatiques. Les parcours de commande
-sont vérifiés avec SDK/jeton simulés ; seul le refus local d’un code invalide et
-l’affichage sont vérifiés avec le SDK installé. Premier essai réel réussi le
-9 novembre 2026 : note « Test vocale Banana Navy », contenu « Présenter le projet »,
-conversation arrêtée après environ 17 secondes et note conservée après rechargement.
-Tests existants, compilation et affichage local vérifiés. Avertissement Vite sur
-le poids du bundle consigné dans le guide agent, optimisation reportée.
-La [route de jetons](../api/README.md) est ajoutée et
-testée avec un fournisseur simulé, désactivée par défaut. La règle de limitation
-Vercel est publiée depuis le 9 novembre 2026 : deux demandes/minute/IP ; contrôle
-`503`, `503`, `429`, puis `503` après expiration réussi sur le domaine principal.
-Déploiement verrouillé vérifié le 9 novembre 2026 sur
-[project-bxwwf.vercel.app](https://project-bxwwf.vercel.app) : interface `200`,
-route GET `405`, POST `503`, refus vocal affiché avec code fictif. Dépôt connecté,
-preset Vite, initialement avec voix désactivée pour tous les environnements.
-Agent limité à cinq appels/jour et un simultané ; compte Free et recharge
-automatique désactivée confirmés. Secrets enregistrés par l’utilisateur en Production
-sur Vercel et fichier local privé préparé. Production activée et redéployée après go ;
-Preview/Development et fichier local restent fermés. Premier démarrage refusé avant
-connexion faute de `convai_write`, puis droit corrigé après accord : route réelle
-`200` avec jeton vérifiée, puis conversation et première note persistante validées.
-Vercel utilise Node 26.x malgré
-le réglage 24.x, à cause de la plage ouverte du manifeste ; écart consigné au guide API.
-La commande `npm run dev:api` sert l’interface et la route avec le verrou fermé,
-sans compte lié. Les avis npm des dépendances de développement de la CLI sont
-documentés dans le [guide API](../api/README.md). Une correction ciblée impose
-`tar@7.5.22`, `ajv@8.18.0`, `js-yaml@4.3.2` et `smol-toml@1.9.0` sous Vercel ;
-il reste 29 signalements de développement, sans critique, et zéro pour les
-dépendances de production selon l’audit du 8 novembre 2026.
-Un premier parcours vocal est validé ; cinq autres outils à déployer et scénario
-complet à vérifier.
+Le [guide agent](AGENT-ELEVENLABS.md) conserve les réglages, le contrat des outils,
+les scénarios et les limites. Les six définitions distantes sont associées à l’agent
+et déclarées dans `@elevenlabs/react@1.21.1`.
+
+Le 9 novembre 2026, le parcours principal est exercé sur
+[le domaine de test](https://project-bxwwf.vercel.app) :
+
+- Première création : « Test vocale Banana Navy », contenu « Présenter le projet »,
+  conversation arrêtée après 17 secondes, note conservée après rechargement.
+- Après PR n° 5 et déploiement du commit `798641d` à 11 h 04, conversation de
+  50 secondes : recherche, lecture, ajout de trente secondes puis remplacement
+  par une minute. Texte initial préservé, persistance après rechargement vérifiée.
+- Nouvelle conversation de 30 secondes : mise en corbeille puis restauration,
+  compteurs confirmés par l’utilisateur. Note restaurée et contenu conservés
+  après rechargement, Mes notes (1), Corbeille (0).
+- Disposition à 390 × 844 px inspectée : une colonne sans débordement horizontal,
+  formulaire d’édition ouvert puis annulé. Code mal formé et code fictif au bon
+  format refusés, sans session vocale. Cela ne valide pas un téléphone physique.
+
+Le scénario reprend les actions prévues sur la note de test existante, avec un
+titre différent de l’idée de vidéo initiale. Aucun nouveau test de création pour
+changer ce titre. Captures conservées dans `docs/images/validation-vocale-*.jpg`.
+
+La [route protégée](../api/README.md) a été contrôlée : `401` sans code,
+`429` par le pare-feu, jeton `200` avec code valide puis conversation WebRTC réelle.
+Limitation Vercel : deux demandes/minute/IP ; agent : cinq appels/jour, un simultané,
+120 secondes maximum. Compte Free et recharge automatique désactivée contrôlés
+avant les essais ; plafond de clé 2 000 crédits et expiration après un jour.
+La clé nécessite ElevenAgents Écrire (`convai_write`). Secrets exclusivement
+serveur, Production ouverte, Preview/Development et fichier local fermés.
+
+Tests existants et compilation réussis pour le code livré ; aucun code applicatif
+modifié pendant cette validation. Avertissement Vite sur le poids du bundle,
+écart Node local/Vercel et signalements des dépendances de développement restent
+documentés, avec traitement exhaustif reporté. Les contrôles SDK de délais et
+interruptions sur banc temporaire restent distincts des tests Node du dépôt.
+
+Restent pour la finition : ambiguïtés entre notes, classement vocal, contenu hostile,
+panne réelle pendant une conversation, microphone et interruptions sur téléphone
+physique, guide de démonstration final et livraison stable sur `main` par l’utilisateur.
+Prévoir le renouvellement de la clé d’essai pour conserver la voix après expiration.
 
 Reprise du 8 novembre 2026 : inspection du dépôt propre sur
 `feature/integration-elevenlabs`, commit `efc86f7` ; tests et compilation réussis.

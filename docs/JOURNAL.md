@@ -820,3 +820,34 @@
 - Portée : seule la création est encore validée sur le déploiement existant ;
   cinq nouveaux branchements à publier après les opérations Git de l’utilisateur,
   puis scénario vocal complet à effectuer. Documentation actualisée.
+
+## 9 novembre 2026 — Parcours vocal principal et largeur mobile vérifiés
+
+- Après commit utilisateur `52399ba` et fusion de la PR n° 5, `dev` est propre
+  au commit `798641d`. Go reçu, branche `feature/validation-demo` créée avant
+  toute modification. Aucun commit, push, PR ni merge réalisé par l’assistant.
+- Vercel : aperçu de `798641d` déjà Ready, reconstruit explicitement en Production
+  avec les réglages existants. Vérification email réalisée par l’utilisateur.
+  Déploiement `484mptLNMJ8Ydt4whB1XXETBcoC1` Ready à 11 h 04 sur le domaine
+  principal ; variables, accès hors Production et protections conservés.
+- Essai utilisateur de 50 secondes : recherche et lecture de la note existante,
+  ajout de trente secondes sans perte du texte, remplacement par une minute.
+  Transcription et contenu observés ; après rechargement, « Présenter le projet »
+  puis « Durée prévue une minute. » toujours présents.
+- Essai utilisateur suivant de 30 secondes : mise en corbeille puis recherche et
+  restauration. Les deux transitions de compteurs sont confirmées par l’utilisateur ;
+  transcription de l’échange et retour de la note observés. Après rechargement :
+  une note active, zéro en corbeille, titre et contenu inchangés.
+- Les six outils ont ainsi été exercés vocalement, création comprise au jalon
+  précédent. Le parcours utilise la note de test existante au lieu d’une nouvelle
+  idée de vidéo ; aucune nouvelle création pour reproduire exactement le titre.
+- Contrôle 390 × 844 px : panneau vocal, champs, boutons et simulateur inspectés,
+  une colonne sans débordement horizontal. Édition ouverte puis annulée sans
+  modification, largeur par défaut rétablie. Code court refusé localement puis
+  code fictif au format valide refusé par le serveur ; aucune session ouverte.
+- Captures ordinateur et mobile ajoutées ; README, suivi, guide agent et guide
+  API actualisés. Aucun code applicatif, dépendance ou réglage distant modifié
+  pendant la finition documentaire. Pas de nouveau test vocal consommé.
+- Limites : téléphone physique et microphone mobile, ambiguïtés entre plusieurs
+  notes, classement vocal, contenu hostile et panne réelle restent à vérifier.
+  Clé d’essai expirante à renouveler pour une démonstration après son échéance.
