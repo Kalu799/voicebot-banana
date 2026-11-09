@@ -20,20 +20,25 @@ modification, mise en corbeille et restauration. Les modifications et la restaur
 sont conservées après rechargement.
 
 [Version de test avec accès vocal protégé](https://project-bxwwf.vercel.app)
-— commit `798641d`, déployé en Production le 9 novembre 2026 à 11 h 04 avec les
-variables serveur de Production.
+— commit `1667550`, déployé en Production le 9 novembre 2026 à 11 h 50 avec les
+variables serveur de Production. La livraison de cette version sur Git `main`
+reste à effectuer.
 POST sans code refusé en `401`, jeton réel reçu en `200` avec le code valide,
-six outils vocaux et persistance vérifiés sur une note de démonstration. Cette adresse
+six outils vocaux et persistance vérifiés sur une note de démonstration avant
+la réorganisation visuelle. Après cette publication, les quatre vues et la
+conservation de la note sont vérifiées sans nouvel appel vocal. Cette adresse
 possède ses propres notes locales, distinctes de celles de localhost.
 
-![Nouvelle interface à deux colonnes, vérifiée localement](docs/images/interface-deux-colonnes-ordinateur.jpg)
+![Interface à deux colonnes avec des notes de démonstration locales](docs/images/interface-deux-colonnes-ordinateur.jpg)
 
-Cette nouvelle disposition est vérifiée localement, pas encore déployée.
+Cette disposition est publiée sur le domaine habituel. La capture ci-dessus
+illustre les contrôles locaux avec des notes de démonstration ; voir aussi
+[le site après publication](docs/images/interface-publiee-ordinateur.jpg).
 La [capture du parcours vocal publié](docs/images/validation-vocale-ordinateur.jpg)
 conserve la preuve de la version précédente.
 
 Voir aussi [la nouvelle disposition mobile](docs/images/interface-deux-colonnes-mobile.jpg).
-Il vérifie la disposition, sans valider le microphone sur un téléphone physique.
+Ces contrôles vérifient la disposition, sans valider le microphone sur un téléphone physique.
 Le [guide du simulateur](docs/SIMULATION.md) propose un scénario reproductible
 avec les six outils et des notes de démonstration.
 Le [guide de démonstration](docs/DEMONSTRATION.md) rassemble les consignes vocales,
