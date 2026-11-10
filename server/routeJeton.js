@@ -40,6 +40,19 @@ function accesAutorise(autorisation, empreinteAttendue) {
 }
 
 /**
+ * Indication publique sans secret ni appel fournisseur. Route séparée du jeton
+ * pour ne pas consommer sa limite Vercel de deux demandes par minute.
+ */
+export function creerRouteConfigurationAcces({ env = process.env } = {}) {
+  return async function traiterConfiguration(requete) {
+    if (requete.method !== 'GET') {
+      return repondre(405, { erreur: 'Méthode non autorisée.' }, { Allow: 'GET' })
+    }
+    return repondre(200, { codeRequis: env.VOICEBOT_ACCES_PUBLIC !== 'true' })
+  }
+}
+
+/**
  * Fabrique le gestionnaire HTTP à partir de l’environnement et du transport fetch.
  * Les tests injectent leurs propres valeurs sans secret ni appel ElevenLabs.
  * Seul ce module serveur lit la clé API. La limitation IP Vercel est configurée
@@ -51,12 +64,14 @@ export function creerRouteJeton({
 } = {}) {
 
   /**
-   * Contrôle dans l’ordre : méthode, activation, configuration, origine puis code.
+   * POST contrôle : activation, configuration, origine puis code si nécessaire.
    * Après autorisation seulement, demande un jeton pour l’agent fixé côté serveur,
    * avec délai de 10 s. Renvoie le jeton en 200 ou une erreur publique sans secret.
    * Ne reçoit ni notes ni audio : ceux-ci passent par la conversation dans le SDK.
    */
   return async function traiterDemande(requete) {
+    // Seul le serveur décide : masquer le champ côté navigateur ne donne aucun accès.
+    const codeRequis = env.VOICEBOT_ACCES_PUBLIC !== 'true'
     if (requete.method !== 'POST') {
       return repondre(405, {
         erreur: 'Méthode non autorisée.',
@@ -85,7 +100,7 @@ export function creerRouteJeton({
         && agentId?.trim()
         && origine
         && new URL(origine).origin === origine
-        && /^[a-f0-9]{64}$/i.test(codeHash ?? ''),
+        && (!codeRequis || /^[a-f0-9]{64}$/i.test(codeHash ?? '')),
       )
     } catch {
       configurationValide = false
@@ -103,7 +118,7 @@ export function creerRouteJeton({
       })
     }
 
-    if (!accesAutorise(
+    if (codeRequis && !accesAutorise(
       requete.headers.get('authorization'),
       codeHash,
     )) {

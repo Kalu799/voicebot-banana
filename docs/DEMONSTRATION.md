@@ -1,5 +1,10 @@
 # Démontrer BananaNavy V1
 
+Un mode sans code est préparé et testé localement le 10 novembre sur
+`feature/acces-demo-sans-code`, sans déploiement. Il est désactivé par défaut ;
+voir le [guide API](../api/README.md#mode-démo-sans-code--10-novembre-2026).
+Les instructions de code ci-dessous restent celles du déploiement existant.
+
 Ce guide propose une démonstration courte et un parcours de secours sans voix.
 Les résultats constatés le 9 novembre 2026 sont séparés des essais à réaliser.
 

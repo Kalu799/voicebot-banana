@@ -1,5 +1,14 @@
 # Suivi des tâches et jalons
 
+## Mode démo sans code — 10 novembre 2026
+
+Préparé sur `feature/acces-demo-sans-code` depuis `dev` propre. Activation serveur
+explicite, mode protégé conservé par défaut. Tests Node et build réussis ; recette
+visuelle locale des modes public, protégé et panne de configuration avec fournisseur
+simulé. Aucun appel vocal réel ni consommation de crédits pour ces vérifications.
+Intégration dans `dev`, recette vocale réelle puis essai de déploiement restent à
+valider avec l’utilisateur. Aucun commit, push, fusion ou déploiement effectué.
+
 | Étape | État | Critère de réussite |
 | --- | --- | --- |
 | 1. Initialiser React + Vite et préparer le dossier API | Terminé | Installation et compilation réussies, page accessible localement (HTTP vérifié) |

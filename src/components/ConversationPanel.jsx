@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useConversation } from '@elevenlabs/react'
-import { obtenirJetonConversation } from '../services/conversationAccess.js'
+import { obtenirConfigurationAcces, obtenirJetonConversation } from '../services/conversationAccess.js'
 import { useNotes } from '../stores/useNotes.js'
 
 /**
@@ -12,6 +12,8 @@ import { useNotes } from '../stores/useNotes.js'
 export default function ConversationPanel() {
   const { chargement, rechargementRequis } = useNotes()
   const [code, setCode] = useState('')
+  const [codeRequis, setCodeRequis] = useState(true)
+  const [accesCharge, setAccesCharge] = useState(false)
   const [etape, setEtape] = useState('repos')
   const [information, setInformation] = useState('')
   const [secondes, setSecondes] = useState(0)
@@ -19,6 +21,26 @@ export default function ConversationPanel() {
 
   // Une référence bloque immédiatement les doubles clics et les retours obsolètes.
   const tentative = useRef(null)
+
+  useEffect(() => {
+    const controleur = new AbortController()
+    const signal = AbortSignal.any([
+      controleur.signal,
+      AbortSignal.timeout(15_000),
+    ])
+    obtenirConfigurationAcces(signal)
+      .then(configuration => {
+        if (!controleur.signal.aborted) setCodeRequis(configuration.codeRequis)
+      })
+      .catch(() => {
+        // En cas de panne, conserver le formulaire protégé. La route serveur
+        // reste l’autorité et refusera tout accès sans code en mode privé.
+      })
+      .finally(() => {
+        if (!controleur.signal.aborted) setAccesCharge(true)
+      })
+    return () => controleur.abort()
+  }, [])
 
   const { startSession, endSession, status, isSpeaking } = useConversation({
     // Événement SDK : démarre les horloges seulement après connexion confirmée.
@@ -136,7 +158,7 @@ export default function ConversationPanel() {
    */
   async function demarrer(evenement) {
     evenement.preventDefault()
-    if (tentative.current || chargement || rechargementRequis) return
+    if (tentative.current || chargement || rechargementRequis || !accesCharge) return
     if (status === 'connecting' || status === 'connected') return
 
     const courante = {
@@ -158,7 +180,7 @@ export default function ConversationPanel() {
         courante.controleur.signal,
         AbortSignal.timeout(15_000),
       ])
-      const attente = obtenirJetonConversation(code, signal)
+      const attente = obtenirJetonConversation(code, signal, { codeRequis })
       setCode('')
       const token = await attente
 
@@ -201,17 +223,22 @@ export default function ConversationPanel() {
       </p>
 
       <form className="commandes-conversation" onSubmit={demarrer}>
-        <label htmlFor="code-conversation">Code d’accès personnel</label>
-        <input
-          id="code-conversation"
-          type="password"
-          autoComplete="off"
-          value={code}
-          onChange={evenement => setCode(evenement.target.value)}
-          disabled={occupe}
-        />
+        {codeRequis && (
+          <>
+            <label htmlFor="code-conversation">Code d’accès personnel</label>
+            <input
+              id="code-conversation"
+              type="password"
+              autoComplete="off"
+              value={code}
+              onChange={evenement => setCode(evenement.target.value)}
+              disabled={occupe}
+            />
+          </>
+        )}
         <button type="submit"
-          disabled={occupe || chargement || rechargementRequis || !code}>
+          disabled={occupe || chargement || rechargementRequis || !accesCharge
+            || (codeRequis && !code)}>
           Démarrer
         </button>
         <button type="button" disabled={!occupe}

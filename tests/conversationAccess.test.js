@@ -1,6 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { obtenirJetonConversation } from '../src/services/conversationAccess.js'
+import { obtenirConfigurationAcces, obtenirJetonConversation } from '../src/services/conversationAccess.js'
+import { creerRouteConfigurationAcces, creerRouteJeton } from '../server/routeJeton.js'
+import { createHash } from 'node:crypto'
 
 // Le transport est remplacé dans chaque test : aucun réseau ni secret réel.
 const code = 'code-fictif-de-test-avec-plus-de-32-caracteres'
@@ -119,4 +121,62 @@ test('accès client : demande une limite de quinze secondes par défaut', async 
   await obtenirJetonConversation(code)
   assert.deepEqual(minuterie.mock.calls[0].arguments, [15_000])
   assert.equal(transport.mock.calls[0].arguments[1].signal, signal)
+})
+
+test('accès client : configuration publique minimale et erreurs de configuration', async t => {
+  let reponse
+  const signal = new AbortController().signal
+  const transport = t.mock.method(globalThis, 'fetch', async () => reponse)
+  for (const codeRequis of [true, false]) {
+    reponse = Response.json({ codeRequis, autre: 'ignoré' })
+    assert.deepEqual(await obtenirConfigurationAcces(signal), { codeRequis })
+  }
+  assert.deepEqual(transport.mock.calls[0].arguments, [
+    '/api/conversation-access',
+    { method: 'GET', cache: 'no-store', redirect: 'error', signal },
+  ])
+  for (reponse of [Response.json({}), Response.json({ codeRequis: 'false' }),
+    new Response('non JSON'), new Response('', { status: 503 })]) {
+    await assert.rejects(obtenirConfigurationAcces(signal))
+  }
+})
+
+test('accès client : mode public sans code ni en-tête d’authentification', async t => {
+  const transport = t.mock.method(globalThis, 'fetch', async () =>
+    Response.json({ token: 'jeton-fictif' }))
+  assert.equal(await obtenirJetonConversation('', undefined, { codeRequis: false }), 'jeton-fictif')
+  assert.deepEqual(transport.mock.calls[0].arguments[1].headers, {})
+})
+
+test('accès complet simulé : public, retour au mode privé et refus d’un client obsolète', async t => {
+  const env = {
+    VOICEBOT_VOIX_ACTIVE: 'true',
+    VOICEBOT_ACCES_PUBLIC: 'true',
+    VOICEBOT_ORIGINE: 'https://voicebot.example',
+    ELEVENLABS_API_KEY: 'cle-fictive',
+    ELEVENLABS_AGENT_ID: 'agent-fictif',
+    VOICEBOT_CODE_ACCES_SHA256: createHash('sha256').update(code).digest('hex'),
+  }
+  let appelsFournisseur = 0
+  const route = creerRouteJeton({ env, demander: async () => {
+    appelsFournisseur += 1
+    return Response.json({ token: 'jeton-fictif' })
+  } })
+  const routeConfiguration = creerRouteConfigurationAcces({ env })
+  t.mock.method(globalThis, 'fetch', (url, options) =>
+    (url === '/api/conversation-access' ? routeConfiguration : route)(new Request(
+    new URL(url, env.VOICEBOT_ORIGINE),
+    { ...options, headers: { ...options.headers, origin: env.VOICEBOT_ORIGINE } },
+  )))
+  assert.deepEqual(await obtenirConfigurationAcces(), { codeRequis: false })
+  assert.equal(await obtenirJetonConversation('', undefined, { codeRequis: false }), 'jeton-fictif')
+  env.VOICEBOT_ACCES_PUBLIC = 'false'
+  assert.deepEqual(await obtenirConfigurationAcces(), { codeRequis: true })
+  // Une page encore ouverte en mode public ne contourne pas le contrôle serveur.
+  await assert.rejects(obtenirJetonConversation('', undefined, { codeRequis: false }), {
+    message: 'Code d’accès invalide.',
+  })
+  assert.equal(appelsFournisseur, 1)
+  assert.equal(await obtenirJetonConversation(code), 'jeton-fictif')
+  assert.equal(appelsFournisseur, 2)
 })

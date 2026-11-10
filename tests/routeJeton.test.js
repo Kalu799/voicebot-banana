@@ -1,8 +1,9 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { creerRouteJeton } from '../server/routeJeton.js'
+import { creerRouteConfigurationAcces, creerRouteJeton } from '../server/routeJeton.js'
 import routeVercel from '../api/conversation-token.js'
+import routeConfigurationVercel from '../api/conversation-access.js'
 
 // Données fictives : aucune clé ni aucun jeton réels dans ce banc de test.
 const code = 'code-fictif-de-test-avec-plus-de-32-caracteres'
@@ -189,4 +190,62 @@ test('route jeton : entrée Vercel reliée au gestionnaire Web', async () => {
   // GET est refusé avant tout accès aux variables ou au réseau.
   const reponse = await routeVercel.fetch(requete({ method: 'GET' }))
   assert.equal(reponse.status, 405)
+})
+
+test('route jeton : le mode protégé reste le défaut et GET ne révèle aucun secret', async () => {
+  for (const valeur of [undefined, '', 'false', 'TRUE', '1', 'true']) {
+    const banc = preparer({ env: { ...configuration, VOICEBOT_ACCES_PUBLIC: valeur } })
+    const routeConfiguration = creerRouteConfigurationAcces({
+      env: { ...configuration, VOICEBOT_ACCES_PUBLIC: valeur },
+    })
+    const reponse = await routeConfiguration(requete({ method: 'GET', headers: { authorization: null } }))
+    assert.equal(reponse.status, 200)
+    assert.equal(reponse.headers.get('cache-control'), 'no-store')
+    assert.deepEqual(await reponse.json(), { codeRequis: valeur !== 'true' })
+    assert.equal(banc.appels.length, 0)
+    if (valeur !== 'true') {
+      await verifierRefus(banc, requete({ headers: { authorization: null } }), 401)
+    }
+  }
+})
+
+test('configuration d’accès : entrée Vercel et méthode GET uniquement', async () => {
+  const reponse = await routeConfigurationVercel.fetch(requete({ method: 'GET' }))
+  assert.equal(reponse.status, 200)
+  assert.equal(typeof (await reponse.json()).codeRequis, 'boolean')
+  for (const method of ['POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD']) {
+    const refus = await routeConfigurationVercel.fetch(requete({ method }))
+    assert.equal(refus.status, 405)
+    assert.equal(refus.headers.get('allow'), 'GET')
+    assert.equal(refus.headers.get('cache-control'), 'no-store')
+  }
+})
+
+test('route jeton : accès public explicite sans code ni empreinte, puis retour au mode protégé', async () => {
+  const env = { ...configuration, VOICEBOT_ACCES_PUBLIC: 'true' }
+  delete env.VOICEBOT_CODE_ACCES_SHA256
+  const banc = preparer({ env })
+  const demande = () => requete({ headers: { authorization: null } })
+  assert.equal((await banc.route(demande())).status, 200)
+  assert.equal(banc.appels.length, 1)
+  // Sans activation explicite, l'absence d'empreinte referme l'accès.
+  delete env.VOICEBOT_ACCES_PUBLIC
+  assert.equal((await banc.route(demande())).status, 503)
+  env.VOICEBOT_CODE_ACCES_SHA256 = configuration.VOICEBOT_CODE_ACCES_SHA256
+  assert.equal((await banc.route(demande())).status, 401)
+  assert.equal((await banc.route(requete())).status, 200)
+  assert.equal(banc.appels.length, 2)
+})
+
+test('route jeton : le mode public conserve verrou, origine, configuration et gestion des pannes', async () => {
+  const env = { ...configuration, VOICEBOT_ACCES_PUBLIC: 'true' }
+  for (const nom of ['ELEVENLABS_API_KEY', 'ELEVENLABS_AGENT_ID', 'VOICEBOT_ORIGINE']) {
+    await verifierRefus(preparer({ env: { ...env, [nom]: undefined } }), requete(), 503)
+  }
+  await verifierRefus(preparer({ env: { ...env, VOICEBOT_VOIX_ACTIVE: 'false' } }), requete(), 503)
+  await verifierRefus(preparer({ env }), requete({ headers: { origin: 'https://autre.example' } }), 403)
+  const banc = preparer({ env, fournisseur: () => new Response('refus privé', { status: 401 }) })
+  const reponse = await banc.route(requete({ headers: { authorization: null } }))
+  assert.equal(reponse.status, 502)
+  assert.deepEqual(await reponse.json(), { erreur: 'Impossible d’obtenir un accès à la conversation.' })
 })
