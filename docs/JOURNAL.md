@@ -930,3 +930,23 @@
   Aucun appel ElevenLabs, consommation vocale ou changement distant.
 - Suite : relire ensemble le récit, préparer les slides et répéter les questions.
   Aucun commit/push/PR réalisé par l’assistant.
+
+## 10 novembre 2026 — Mode démo sans code, validation locale
+
+- Après go, branche `feature/acces-demo-sans-code` créée depuis `dev` propre.
+  Objectif : faciliter les essais pendant la présentation sans modifier le
+  déploiement actuel avant validation locale et intégration dans `dev`.
+- Ajout de `VOICEBOT_ACCES_PUBLIC`, désactivé par défaut. Le mode public masque
+  le code et autorise la demande de jeton sans code ; la clé reste côté serveur.
+- Lecture du mode via `GET /api/conversation-access`, séparée du POST de jeton
+  afin de préserver la règle Vercel de deux demandes par minute sur ce dernier.
+  Repli du formulaire vers le mode protégé si la configuration est indisponible.
+- Tests : accès public, code toujours exigé par défaut, réactivation du mode
+  protégé, client obsolète refusé, verrou/origine/configuration/fournisseur,
+  configuration publique minimale et contrat client-serveur sans réseau réel.
+- `npm test` et `npm run build` réussis ; avertissement du bundle volumineux
+  toujours présent. Recette visuelle locale avec données fictives : bouton
+  Démarrer disponible sans code en mode public, champ et bouton protégé corrects,
+  panne de configuration conservant le formulaire protégé. Aucun audio réel.
+- Aucun secret local modifié, commit, push, fusion ni déploiement effectué.
+  Intégration dans `dev` et essai vocal réel restent à organiser avec l’utilisateur.

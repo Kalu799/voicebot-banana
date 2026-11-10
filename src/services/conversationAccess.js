@@ -5,9 +5,25 @@ const messages = {
   503: 'L’accès vocal est désactivé ou indisponible.',
 }
 
+/** Lit uniquement le mode public d’accès, sans clé, code ou jeton. */
+export async function obtenirConfigurationAcces(signal = AbortSignal.timeout(15_000)) {
+  const reponse = await fetch('/api/conversation-access', {
+    method: 'GET',
+    cache: 'no-store',
+    redirect: 'error',
+    signal,
+  })
+  if (!reponse.ok) throw new Error('Configuration d’accès indisponible.')
+  const resultat = await reponse.json()
+  if (typeof resultat?.codeRequis !== 'boolean') {
+    throw new Error('Configuration d’accès invalide.')
+  }
+  return { codeRequis: resultat.codeRequis }
+}
+
 /**
- * Demande un jeton temporaire à la route de même origine avec le code personnel.
- * Valide le format avant le réseau, respecte le signal d’annulation (15 s par
+ * Demande un jeton temporaire à la route de même origine, avec code en mode privé.
+ * Valide le code si requis, respecte le signal d’annulation (15 s par
  * défaut) et renvoie seulement la chaîne token. Ne persiste ni code ni jeton.
  * Traduit les refus HTTP et les erreurs de transport/JSON en messages affichables,
  * sans relance automatique susceptible de consommer le quota.
@@ -15,9 +31,10 @@ const messages = {
 export async function obtenirJetonConversation(
   codeAcces,
   signal = AbortSignal.timeout(15_000),
+  { codeRequis = true } = {},
 ) {
   // Appliquer le même format que le serveur avant tout envoi.
-  if (!/^[A-Za-z0-9_-]{32,128}$/.test(codeAcces ?? '')) {
+  if (codeRequis && !/^[A-Za-z0-9_-]{32,128}$/.test(codeAcces ?? '')) {
     throw new Error('Le format du code d’accès est invalide.')
   }
 
@@ -26,7 +43,7 @@ export async function obtenirJetonConversation(
     // Même origine, aucun secret dans l’URL et aucune relance automatique.
     reponse = await fetch('/api/conversation-token', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${codeAcces}` },
+      headers: codeRequis ? { Authorization: `Bearer ${codeAcces}` } : {},
       cache: 'no-store',
       redirect: 'error',
       signal,

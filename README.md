@@ -61,6 +61,12 @@ Vite seul ne sert pas cette API. La configuration vocale et les variables serveu
 sont décrites dans le [guide API](api/README.md) et [.env.example](.env.example).
 Ne jamais préfixer un secret par `VITE_` ni l’ajouter à Git.
 
+Un mode démo sans code est préparé sur `feature/acces-demo-sans-code`.
+Il reste désactivé par défaut : seule la variable serveur
+`VOICEBOT_ACCES_PUBLIC=true` l’active. Les tests locaux sont décrits dans le
+[guide API](api/README.md#mode-démo-sans-code--10-novembre-2026).
+Cette modification n’est pas encore déployée.
+
 ## Comment une demande devient une note
 
 ```text

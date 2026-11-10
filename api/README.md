@@ -1,5 +1,41 @@
 # Route serveur de jetons de conversation
 
+## Mode démo sans code — 10 novembre 2026
+
+Modification locale sur `feature/acces-demo-sans-code`, créée depuis `dev`.
+Aucune fusion ni mise en production effectuée pour cette modification.
+
+- `VOICEBOT_ACCES_PUBLIC` absent ou différent de la chaîne exacte `true` :
+  fonctionnement protégé habituel, empreinte valide et code personnel requis.
+- `VOICEBOT_ACCES_PUBLIC=true` : le formulaire masque le champ du code et le
+  serveur accepte le POST sans code. L’empreinte peut rester configurée pour
+  permettre un retour simple au mode protégé.
+- `GET /api/conversation-access` renvoie seulement `{ "codeRequis": true }`
+  ou `false`, sans cache, secret ni appel fournisseur. Cette route est séparée
+  de `/api/conversation-token` pour ne pas consommer sa limitation Vercel.
+- Une panne de lecture de cette configuration conserve le formulaire protégé.
+  Le serveur contrôle toujours lui-même l’accès, même si une ancienne page
+  continue d’envoyer des demandes sans code après désactivation du mode public.
+
+Le verrou `VOICEBOT_VOIX_ACTIVE`, l’origine exacte, la clé serveur, l’agent fixé,
+les délais et les protections Vercel sont conservés. Le mode public permet à
+toute personne ayant le lien d’utiliser la voix : la règle IP ne constitue pas
+un plafond global de consommation. Aucun secret ne doit devenir une variable `VITE_`.
+
+Ordre de validation : tests et build sur la branche, recette locale, intégration
+dans `dev` par l’utilisateur, puis essai du déploiement seulement après validation.
+Ne pas ouvrir le mode public en Production pendant cette phase.
+Pour un essai vocal local ultérieur, utiliser un serveur qui sert les deux routes
+API (Vite seul ne suffit pas) et conserver une origine correspondant exactement
+à son URL. `npm run dev:api` force volontairement la voix à rester désactivée.
+
+Pour une activation distante ultérieure approuvée : déployer le code et définir
+`VOICEBOT_ACCES_PUBLIC=true` uniquement dans l’environnement testé, puis redéployer
+pour appliquer cette variable. Pour revenir au code personnel, définir `false`
+et redéployer avec une empreinte valide. Aucun changement distant effectué ici.
+
+Les sections ci-dessous décrivent le fonctionnement protégé et l’historique.
+
 Implémentation ajoutée le 8 novembre 2026, **désactivée par défaut**. Les tests
 utilisent un fournisseur simulé. La route est déployée depuis le 9 novembre 2026
 initialement avec le verrou fermé. Depuis le 9 novembre, Production dispose des
